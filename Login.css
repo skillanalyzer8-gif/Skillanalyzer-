@@ -1,0 +1,173 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#14091f url("images/worldmap.png") no-repeat center center;
+    background-size:cover;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.login-container{
+    width:390px;
+    min-height:844px;
+    padding:35px 25px;
+    position:relative;
+    color:white;
+}
+
+.overlay{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(20,9,31,.35);
+    z-index:-1;
+}
+
+.logo-section{
+    text-align:center;
+    margin-top:15px;
+}
+
+.logo{
+    width:150px;
+    height:150px;
+    object-fit:contain;
+}
+
+.logo-section h2{
+    margin-top:8px;
+    font-size:22px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+.purple{
+    color:#b14cff;
+}
+
+.heading{
+    margin-top:35px;
+    margin-bottom:40px;
+}
+
+.heading h1{
+    font-size:55px;
+    font-weight:300;
+    line-height:60px;
+}
+
+.back{
+    color:#d84cff;
+    font-weight:bold;
+}
+
+.input-box{
+    width:100%;
+    height:65px;
+    background:#4d4560;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    padding:0 20px;
+    margin-bottom:25px;
+}
+
+.input-box i{
+    color:#d7d7d7;
+    font-size:20px;
+}
+
+.input-box input{
+    flex:1;
+    margin-left:15px;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:white;
+    font-size:18px;
+}
+
+.input-box input::placeholder{
+    color:#d5d5d5;
+}
+
+.eye{
+    cursor:pointer;
+}
+
+.remember{
+    margin-bottom:25px;
+    font-size:15px;
+}
+
+.remember input{
+    margin-right:8px;
+}
+
+.login-btn{
+    width:100%;
+    height:65px;
+    border:none;
+    border-radius:35px;
+    font-size:24px;
+    color:white;
+    cursor:pointer;
+    background:linear-gradient(90deg,#ff007f,#8f00ff);
+}
+
+.login-btn:hover{
+    opacity:.9;
+}
+
+.forgot{
+    display:block;
+    margin-top:25px;
+    color:white;
+    text-decoration:underline;
+    font-size:18px;
+}
+
+.signup{
+    margin-top:140px;
+    text-align:center;
+    font-size:20px;
+}
+
+.signup a{
+    color:#d84cff;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+@media(max-width:420px){
+
+.login-container{
+
+width:100%;
+padding:25px;
+
+}
+
+.heading h1{
+
+font-size:50px;
+
+}
+
+.logo{
+
+width:135px;
+height:135px;
+
+}
+
+}
