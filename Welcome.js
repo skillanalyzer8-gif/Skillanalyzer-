@@ -1,11 +1,11 @@
 function login(){
 
-    window.location.href="login.html";
+    window.location.href="Login.html";
 
 }
 
 function signup(){
 
-    window.location.href="register.html";
+    window.location.href="Register.html";
 
 }
