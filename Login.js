@@ -39,7 +39,7 @@ function login() {
 
     alert("Login Successful!");
 
-    window.location.href = "dashboard.html";
+    window.location.href = "Dashboard.html";
 
 }
 
@@ -59,6 +59,6 @@ document.querySelector(".forgot").addEventListener("click", function(e){
 
 document.querySelector(".signup a").addEventListener("click", function(){
 
-    window.location.href="register.html";
+    window.location.href="Register.html";
 
 });
