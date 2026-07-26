@@ -1,5 +1,5 @@
 setTimeout(function(){
 
-    window.location.href="welcome.html";
+    window.location.href="Welcome.html";
 
 },3000);
