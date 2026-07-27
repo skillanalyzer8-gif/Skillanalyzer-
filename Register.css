@@ -1,0 +1,131 @@
+*{
+        margin:0;
+            padding:0;
+                box-sizing:border-box;
+                    font-family:'Poppins',sans-serif;
+                    }
+
+                    body{
+
+                        display:flex;
+                            justify-content:center;
+                                align-items:center;
+
+                                    height:100vh;
+
+                                        background:linear-gradient(135deg,#12091F,#25113A,#5B2C83);
+
+                                        }
+
+                                        .container{
+
+                                            width:380px;
+
+                                                background:white;
+
+                                                    padding:40px;
+
+                                                        border-radius:20px;
+
+                                                            text-align:center;
+
+                                                                box-shadow:0 15px 40px rgba(0,0,0,.3);
+
+                                                                }
+
+                                                                h1{
+
+                                                                    color:#5B2C83;
+
+                                                                        margin-bottom:10px;
+
+                                                                        }
+
+                                                                        p{
+
+                                                                            color:#666;
+
+                                                                                margin-bottom:30px;
+
+                                                                                }
+
+                                                                                input{
+
+                                                                                    width:100%;
+
+                                                                                        padding:15px;
+
+                                                                                            margin-bottom:18px;
+
+                                                                                                border:none;
+
+                                                                                                    border-radius:10px;
+
+                                                                                                        background:#f2f2f2;
+
+                                                                                                            font-size:15px;
+
+                                                                                                                outline:none;
+
+                                                                                                                }
+
+                                                                                                                input:focus{
+
+                                                                                                                    border:2px solid #7B2CBF;
+
+                                                                                                                        background:white;
+
+                                                                                                                        }
+
+                                                                                                                        button{
+
+                                                                                                                            width:100%;
+
+                                                                                                                                padding:15px;
+
+                                                                                                                                    border:none;
+
+                                                                                                                                        border-radius:10px;
+
+                                                                                                                                            background:#7B2CBF;
+
+                                                                                                                                                color:white;
+
+                                                                                                                                                    font-size:17px;
+
+                                                                                                                                                        cursor:pointer;
+
+                                                                                                                                                            transition:.3s;
+
+                                                                                                                                                            }
+
+                                                                                                                                                            button:hover{
+
+                                                                                                                                                                background:#5A189A;
+
+                                                                                                                                                                }
+
+                                                                                                                                                                .login-link{
+
+                                                                                                                                                                    margin-top:20px;
+
+                                                                                                                                                                        color:#555;
+
+                                                                                                                                                                        }
+
+                                                                                                                                                                        .login-link a{
+
+                                                                                                                                                                            color:#7B2CBF;
+
+                                                                                                                                                                                text-decoration:none;
+
+                                                                                                                                                                                    font-weight:600;
+
+                                                                                                                                                                                    }
+
+                                                                                                                                                                                    .login-link a:hover{
+
+                                                                                                                                                                                        text-decoration:underline;
+
+                                                                                                                                                                                        }
+}
