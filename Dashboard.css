@@ -1,1 +1,235 @@
 
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+
+    background:linear-gradient(135deg,#12091F,#25113A,#5B2C83);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    min-height:100vh;
+
+}
+
+.container{
+
+    width:390px;
+    min-height:100vh;
+
+    background:#fff;
+
+    padding:25px;
+
+}
+
+header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+header h2{
+
+    color:#5B2C83;
+
+}
+
+header p{
+
+    color:gray;
+
+}
+
+.profile{
+
+    width:60px;
+    height:60px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+}
+
+.banner{
+
+    background:linear-gradient(135deg,#7B2CBF,#9D4EDD);
+
+    color:white;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    margin-bottom:25px;
+
+}
+
+.banner h3{
+
+    margin-bottom:10px;
+
+}
+
+.banner p{
+
+    font-size:14px;
+
+    margin-bottom:20px;
+
+}
+
+.banner button{
+
+    border:none;
+
+    background:white;
+
+    color:#7B2CBF;
+
+    padding:12px 20px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+}
+
+.title{
+
+    margin-bottom:15px;
+
+    color:#5B2C83;
+
+}
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:15px;
+
+    margin-bottom:25px;
+
+}
+
+.card{
+
+    background:#F5F0FF;
+
+    border-radius:15px;
+
+    text-align:center;
+
+    padding:20px;
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.card i{
+
+    font-size:30px;
+
+    color:#7B2CBF;
+
+    margin-bottom:10px;
+
+}
+
+.progress-box{
+
+    background:#F5F0FF;
+
+    padding:20px;
+
+    border-radius:15px;
+
+}
+
+.progress{
+
+    width:100%;
+
+    height:12px;
+
+    background:#ddd;
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+    margin-bottom:10px;
+
+}
+
+.fill{
+
+    width:80%;
+
+    height:100%;
+
+    background:#7B2CBF;
+
+}
+
+.progress-box p{
+
+    color:#555;
+
+}
+
+nav{
+
+    position:fixed;
+
+    bottom:0;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:390px;
+
+    display:flex;
+
+    justify-content:space-around;
+
+    background:white;
+
+    padding:15px 0;
+
+    box-shadow:0 -3px 15px rgba(0,0,0,.1);
+
+}
+
+nav a{
+
+    color:#7B2CBF;
+
+    font-size:24px;
+
+    text-decoration:none;
+
+}
