@@ -1,15 +1,15 @@
 *{
-
     margin:0;
     padding:0;
     box-sizing:border-box;
     font-family:'Poppins',sans-serif;
-
     }
 
     body{
 
-    height:100vh;
+    background:linear-gradient(135deg,#12091F,#25113A,#5B2C83);
+
+    min-height:100vh;
 
     display:flex;
 
@@ -17,137 +17,253 @@
 
     align-items:center;
 
-    background:linear-gradient(135deg,#12091F,#25113A,#5B2C83);
-
-    overflow:hidden;
+    padding:25px;
 
     }
 
     .container{
 
-    width:100%;
+    width:420px;
 
-    max-width:430px;
-
-    padding:20px;
+    max-width:100%;
 
     }
 
-    .card{
-
-    background:white;
-
-    border-radius:25px;
-
-    padding:35px;
+    .header{
 
     text-align:center;
 
-    box-shadow:0 20px 45px rgba(0,0,0,.3);
-
-    }
-
-    .ai-icon{
-
-    font-size:70px;
-
-    margin-bottom:15px;
-
-    animation:pulse 2s infinite;
-
-    }
-
-    h1{
-
-    color:#5B2C83;
-
-    font-size:28px;
-
-    margin-bottom:12px;
-
-    }
-
-    .subtitle{
-
-    color:#7B2CBF;
-
-    font-weight:600;
-
     margin-bottom:25px;
-
-    }
-
-    .message{
-
-    background:#F4EEFF;
-
-    padding:20px;
-
-    border-radius:15px;
-
-    line-height:1.8;
-
-    color:#444;
-
-    margin-bottom:25px;
-
-    }
-
-    .scan-box{
-
-    position:relative;
-
-    height:90px;
-
-    border:2px solid #7B2CBF;
-
-    border-radius:12px;
-
-    overflow:hidden;
-
-    margin-bottom:30px;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-weight:bold;
-
-    color:#5B2C83;
-
-    }
-
-    .scan-line{
-
-    position:absolute;
-
-    width:100%;
-
-    height:5px;
-
-    background:#00F5FF;
-
-    animation:scan 2s linear infinite;
-
-    }
-
-    button{
-
-    width:100%;
-
-    padding:16px;
-
-    background:#7B2CBF;
 
     color:white;
 
-    border:none;
+    }
 
-    border-radius:12px;
+    .header h1{
+
+    font-size:30px;
+
+    margin-bottom:8px;
+
+    }
+
+    .header p{
 
     font-size:18px;
+
+    color:#CFAEFF;
+
+    font-weight:600;
+
+    }
+
+    .header span{
+
+    font-size:14px;
+
+    color:#DADADA;
+
+    }
+
+    .mission{
+
+    background:white;
+
+    border-radius:22px;
+
+    padding:22px;
+
+    box-shadow:0 12px 35px rgba(0,0,0,.25);
+
+    margin-bottom:22px;
+
+    }
+
+    .live{
+
+    background:#F44336;
+
+    color:white;
+
+    padding:6px 12px;
+
+    border-radius:30px;
+
+    font-size:12px;
+
+    font-weight:600;
+
+    }
+
+    .mission h2{
+
+    margin-top:18px;
+
+    color:#5B2C83;
+
+    margin-bottom:18px;
+
+    }
+
+    .details p{
+
+    margin:10px 0;
+
+    font-size:15px;
+
+    }
+
+    .question{
+
+    color:white;
+
+    margin-bottom:18px;
+
+    }
+
+    .options{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+
+    }
+
+    .option{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    border:3px solid transparent;
+
+    }
+
+    .option i{
+
+    font-size:28px;
+
+    color:#7B2CBF;
+
+    }
+
+    .option h4{
+
+    color:#5B2C83;
+
+    margin-bottom:4px;
+
+    }
+
+    .option p{
+
+    font-size:13px;
+
+    color:#666;
+
+    }
+
+    .option:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 10px 25px rgba(123,44,191,.3);
+
+    }
+
+    .option.active{
+
+    background:#7B2CBF;
+
+    border-color:white;
+
+    }
+
+    .option.active i,
+
+    .option.active h4,
+
+    .option.active p{
+
+    color:white;
+
+    }
+
+    .analysis{
+
+    margin-top:25px;
+
+    margin-bottom:20px;
+
+    }
+
+    .bar{
+
+    width:100%;
+
+    height:12px;
+
+    background:rgba(255,255,255,.25);
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+    }
+
+    .fill{
+
+    width:0%;
+
+    height:100%;
+
+    background:#00E676;
+
+    transition:1s;
+
+    }
+
+    .analysis p{
+
+    margin-top:10px;
+
+    color:white;
+
+    text-align:center;
+
+    }
+
+    #nextBtn{
+
+    width:100%;
+
+    padding:17px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:#9D4EDD;
+
+    color:white;
+
+    font-size:18px;
+
+    font-weight:600;
 
     cursor:pointer;
 
@@ -155,49 +271,11 @@
 
     }
 
-    button:hover{
+    #nextBtn:hover{
 
-    background:#5A189A;
+    background:#7B2CBF;
 
     transform:scale(1.03);
-
-    }
-
-    @keyframes scan{
-
-    0%{
-
-    top:-5px;
-
-    }
-
-    100%{
-
-    top:100%;
-
-    }
-
-    }
-
-    @keyframes pulse{
-
-    0%{
-
-    transform:scale(1);
-
-    }
-
-    50%{
-
-    transform:scale(1.08);
-
-    }
-
-    100%{
-
-    transform:scale(1);
-
-    }
 
     }
 }
