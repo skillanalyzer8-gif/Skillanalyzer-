@@ -6,13 +6,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dashboard</title>
+<title>Developer Mindset</title>
 
-<link rel="stylesheet" href="Dashboard.css">
+<link rel="stylesheet" href="DeveloperMindset.css">
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
 
@@ -20,97 +18,57 @@
 
 <div class="container">
 
-<header>
+<h1>🧠 Developer Mindset Challenge</h1>
 
-<div>
+<p class="subtitle">
+Don't answer like a student.<br>
+Think like a Software Engineer.
+</p>
 
-<h2>Hello, Thanu 👋</h2>
+<div class="card">
 
-<p>Welcome Back</p>
+<h2>Scenario 1</h2>
 
-</div>
+<p>
 
-<img src="Logo.jpg" class="profile">
+Your app suddenly crashes after an update and 5,000 users report the problem.
 
-</header>
+What will you do first?
 
-<div class="banner">
+</p>
 
-<h3>Skill Analyzer</h3>
+<button onclick="selectOption(this)">
+A. Rewrite the whole project
+</button>
 
-<p>Discover your strengths and improve your career path.</p>
+<button onclick="selectOption(this)">
+B. Read user reviews first
+</button>
 
-<button onclick="window.location.href='DeveloperMindset.html'">
-Start Assessment
+<button onclick="selectOption(this)">
+C. Check crash logs and reproduce the bug
+</button>
+
+<button onclick="selectOption(this)">
+D. Wait for users to stop complaining
 </button>
 
 </div>
 
-<h3 class="title">Categories</h3>
+<div class="bottom">
 
-<div class="grid">
+<button class="next"
+onclick="alert('Next Scenario Coming Soon!')">
 
-<div class="card" onclick="window.location.href='DeveloperMindset.html'">
+Next →
 
-<i class="fa-solid fa-code"></i>
-
-<p>Software Development</p>
-
-</div>
-
-<div class="card" onclick="window.location.href='UIUX.html'">
-
-<i class="fa-solid fa-palette"></i>
-
-<p>UI / UX Design</p>
-
-</div>
-
-<div class="card" onclick="window.location.href='Entrepreneur.html'">
-
-<i class="fa-solid fa-lightbulb"></i>
-
-<p>Entrepreneurship</p>
-
-</div>
-
-<div class="card" onclick="window.location.href='Leadership.html'">
-
-<i class="fa-solid fa-users"></i>
-
-<p>Leadership</p>
+</button>
 
 </div>
 
 </div>
 
-<h3 class="title">Progress</h3>
-
-<div class="progress-box">
-
-<div class="progress">
-
-<div class="fill"></div>
-
-</div>
-
-<p>80% Completed</p>
-
-</div>
-
-<nav>
-
-<a href="#"><i class="fa-solid fa-house"></i></a>
-
-<a href="#"><i class="fa-solid fa-chart-line"></i></a>
-
-<a href="#"><i class="fa-solid fa-user"></i></a>
-
-</nav>
-
-</div>
-
-<script src="Dashboard.js"></script>
+<script src="DeveloperMindset.js"></script>
 
 </body>
 
