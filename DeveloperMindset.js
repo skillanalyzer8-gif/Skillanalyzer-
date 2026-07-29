@@ -1,6 +1,10 @@
-function startAssessment(){
+function selectOption(button){
 
-    window.location.href="Incident1.html";
+    const buttons=document.querySelectorAll(".card button");
+
+    buttons.forEach(btn=>btn.classList.remove("selected"));
+
+    button.classList.add("selected");
 
     }
 }
