@@ -45,6 +45,6 @@ options.forEach(option => {
 
                                                                                                                                                                                 nextBtn.addEventListener("click", function () {
 
-                                                                                                                                                                                    window.location.href = "Incident2.html";
+                                                                                                                                                                                    window.location.href = "AIBreifing.html";
 
                                                                                                                                                                                     });
