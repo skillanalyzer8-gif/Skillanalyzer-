@@ -233,3 +233,17 @@ nav a{
     text-decoration:none;
 
 }
+.option.active{
+
+    transform:scale(1.03);
+
+    box-shadow:0 0 25px rgba(157,78,221,.6);
+
+    }
+
+    #nextBtn:disabled{
+
+    cursor:not-allowed;
+
+    }
+}
