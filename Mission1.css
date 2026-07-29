@@ -1,0 +1,192 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+    }
+
+    body{
+
+    background:linear-gradient(135deg,#12091F,#25113A,#5B2C83);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    min-height:100vh;
+
+    padding:20px;
+
+    }
+
+    .container{
+
+    width:420px;
+    max-width:100%;
+
+    }
+
+    .incident{
+
+    background:rgba(255,255,255,0.12);
+
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,0.2);
+
+    border-radius:22px;
+
+    padding:25px;
+
+    color:white;
+
+    margin-bottom:25px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.35);
+
+    }
+
+    .live{
+
+    display:inline-block;
+
+    background:#F44336;
+
+    padding:8px 15px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    margin-bottom:18px;
+
+    animation:pulse 1.2s infinite;
+
+    }
+
+    .incident h2{
+
+    margin-bottom:20px;
+
+    }
+
+    .stats{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:12px;
+
+    }
+
+    .stats div{
+
+    background:rgba(255,255,255,.15);
+
+    padding:15px;
+
+    border-radius:15px;
+
+    text-align:center;
+
+    }
+
+    .stats h3{
+
+    font-size:22px;
+
+    margin-bottom:6px;
+
+    }
+
+    .stats p{
+
+    font-size:12px;
+
+    }
+
+    .questionBox{
+
+    background:white;
+
+    border-radius:22px;
+
+    padding:25px;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.25);
+
+    }
+
+    .questionBox h2{
+
+    color:#5B2C83;
+
+    margin-bottom:12px;
+
+    }
+
+    .question{
+
+    color:#555;
+
+    margin-bottom:25px;
+
+    line-height:1.6;
+
+    }
+
+    .option{
+
+    background:#F5F0FF;
+
+    padding:18px;
+
+    border-radius:15px;
+
+    margin-bottom:15px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    border:2px solid transparent;
+
+    font-weight:500;
+
+    }
+
+    .option:hover{
+
+    transform:translateY(-4px);
+
+    background:#EEE5FF;
+
+    }
+
+    .option.active{
+
+    background:#7B2CBF;
+
+    color:white;
+
+    border:2px solid white;
+
+    box-shadow:0 0 20px rgba(123,44,191,.5);
+
+    }
+
+    @keyframes pulse{
+
+    0%,100%{
+    transform:scale(1);
+    }
+
+    50%{
+    transform:scale(1.05);
+    }
+
+    }
+}
