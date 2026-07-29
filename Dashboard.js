@@ -1,6 +1,3 @@
-document.querySelector("button").addEventListener("click",function(){
-
-        alert("Assessment will start soon!");
-
-        });
-})
+document.querySelector(".banner button").addEventListener("click", function () {
+            alert("Assessment will start soon!");
+            });
