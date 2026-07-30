@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mission 4 - Memory Leak Investigation</title>
+
+<link rel="stylesheet" href="Mission4.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<h1>💻 AI Developer Mindset</h1>
+
+<p>Mission 04 of 10</p>
+
+<span>Performance Optimization Challenge</span>
+
+</div>
+
+<div class="monitor">
+
+<div class="live">
+
+🟢 LIVE SYSTEM MONITOR
+
+</div>
+
+<h2>Memory Leak Investigation</h2>
+
+<div class="metric">
+
+<p>CPU Usage</p>
+
+<div class="bar">
+
+<div class="cpu-fill"></div>
+
+</div>
+
+<span id="cpuValue">82%</span>
+
+</div>
+
+<div class="metric">
+
+<p>RAM Usage</p>
+
+<div class="bar">
+
+<div class="ram-fill"></div>
+
+</div>
+
+<span id="ramValue">98%</span>
+
+</div>
+
+<div class="metric">
+
+<p>Disk Usage</p>
+
+<div class="bar">
+
+<div class="disk-fill"></div>
+
+</div>
+
+<span id="diskValue">32%</span>
+
+</div>
+
+<div class="metric">
+
+<p>Network</p>
+
+<div class="bar">
+
+<div class="network-fill"></div>
+
+</div>
+
+<span id="networkValue">45%</span>
+
+</div>
+
+</div>
+
+<div class="brief">
+
+<h3>🤖 AI Alert</h3>
+
+<p>
+
+Application response time has increased dramatically.
+
+Users are experiencing severe lag.
+
+Find the primary bottleneck before the server crashes.
+
+</p>
+
+</div>
+
+<h3 class="question">
+
+Which resource is causing the major issue?
+
+</h3>
+
+<div class="options">
+
+<div class="option">
+
+<i class="fa-solid fa-microchip"></i>
+
+<div>
+
+<h4>CPU Overload</h4>
+
+<p>Processor utilization is very high.</p>
+
+</div>
+
+</div>
+
+<div class="option">
+
+<i class="fa-solid fa-memory"></i>
+
+<div>
+
+<h4>Memory Leak</h4>
+
+<p>RAM usage keeps increasing continuously.</p>
+
+</div>
+
+</div>
+
+<div class="option">
+
+<i class="fa-solid fa-wifi"></i>
+
+<div>
+
+<h4>Network Congestion</h4>
+
+<p>Internet traffic is slowing requests.</p>
+
+</div>
+
+</div>
+
+<div class="option">
+
+<i class="fa-solid fa-hard-drive"></i>
+
+<div>
+
+<h4>Disk Failure</h4>
+
+<p>Storage performance has degraded.</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="analysis">
+
+<div class="progress">
+
+<div class="fill"></div>
+
+</div>
+
+<p>🤖 Waiting for your diagnosis...</p>
+
+<button id="nextBtn">
+
+Continue to Mission 5 →
+
+</button>
+
+</div>
+
+</div>
+
+<script src="Mission4.js"></script>
+
+</body>
+
+</html>
