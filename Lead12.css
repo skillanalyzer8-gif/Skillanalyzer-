@@ -1,0 +1,493 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+    }
+
+    body{
+
+    overflow:hidden;
+    background:#010409;
+    color:white;
+
+    }
+
+    /*=========================
+    BACKGROUND
+    =========================*/
+
+    #binaryRain{
+
+    position:fixed;
+    width:100%;
+    height:100%;
+    z-index:-4;
+
+    background:
+    linear-gradient(
+    180deg,
+    #000814,
+    #001219,
+    #000814);
+
+    }
+
+    /* Scanlines */
+
+    .scanlines{
+
+    position:fixed;
+
+    width:100%;
+    height:100%;
+
+    background:
+
+    repeating-linear-gradient(
+
+    0deg,
+
+    rgba(255,255,255,.03),
+
+    rgba(255,255,255,.03) 2px,
+
+    transparent 2px,
+
+    transparent 5px);
+
+    pointer-events:none;
+
+    z-index:-2;
+
+    animation:scan 7s linear infinite;
+
+    }
+
+    @keyframes scan{
+
+    100%{
+
+    transform:translateY(5px);
+
+    }
+
+    }
+
+    /* Glitch */
+
+    .glitchOverlay{
+
+    position:fixed;
+
+    width:100%;
+    height:100%;
+
+    background:
+
+    rgba(0,255,255,.02);
+
+    mix-blend-mode:screen;
+
+    animation:glitch 4s infinite;
+
+    z-index:-1;
+
+    }
+
+    @keyframes glitch{
+
+    0%,95%,100%{
+
+    opacity:0;
+
+    }
+
+    96%{
+
+    opacity:.3;
+
+    }
+
+    97%{
+
+    opacity:0;
+
+    }
+
+    98%{
+
+    opacity:.4;
+
+    }
+
+    }
+
+    /*=========================
+    BOOT SCREEN
+    =========================*/
+
+    #bootScreen{
+
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:black;
+
+    z-index:50;
+
+    }
+
+    #bootScreen h1{
+
+    font-size:45px;
+
+    color:#00ff99;
+
+    text-shadow:
+
+    0 0 20px #00ff99;
+
+    margin-bottom:25px;
+
+    }
+
+    #bootText{
+
+    font-size:20px;
+
+    font-family:monospace;
+
+    color:#00ff99;
+
+    }
+
+    /*=========================
+    GAME SCREEN
+    =========================*/
+
+    #gameScreen{
+
+    display:none;
+
+    padding:25px;
+
+    max-width:430px;
+
+    margin:auto;
+
+    }
+
+    /* HUD */
+
+    .hud{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+    }
+
+    .left h2{
+
+    font-size:26px;
+
+    color:#00e5ff;
+
+    }
+
+    .left p{
+
+    font-size:13px;
+
+    color:#94A3B8;
+
+    }
+
+    .status{
+
+    padding:10px 16px;
+
+    border-radius:30px;
+
+    background:#991B1B;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    animation:danger 1s infinite;
+
+    }
+
+    .red{
+
+    display:inline-block;
+
+    width:10px;
+    height:10px;
+
+    background:red;
+
+    border-radius:50%;
+
+    margin-right:8px;
+
+    box-shadow:0 0 15px red;
+
+    }
+
+    @keyframes danger{
+
+    50%{
+
+    background:#DC2626;
+
+    }
+
+    }
+
+    /*=========================
+    TERMINAL
+    =========================*/
+
+    .terminal{
+
+    background:#03141f;
+
+    border:2px solid #00e5ff;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    margin-bottom:25px;
+
+    box-shadow:
+
+    0 0 25px rgba(0,229,255,.3);
+
+    }
+
+    .terminalHeader{
+
+    display:flex;
+
+    align-items:center;
+
+    padding:12px;
+
+    background:#082F49;
+
+    }
+
+    .circle{
+
+    width:12px;
+
+    height:12px;
+
+    border-radius:50%;
+
+    margin-right:8px;
+
+    }
+
+    .circle.red{
+
+    background:#ef4444;
+
+    }
+
+    .circle.yellow{
+
+    background:#facc15;
+
+    }
+
+    .circle.green{
+
+    background:#22c55e;
+
+    }
+
+    .terminalHeader span{
+
+    margin-left:10px;
+
+    font-size:14px;
+
+    }
+
+    .terminalBody{
+
+    padding:20px;
+
+    font-family:monospace;
+
+    font-size:16px;
+
+    color:#67e8f9;
+
+    min-height:95px;
+
+    }
+
+    /*=========================
+    MISSION CARD
+    =========================*/
+
+    .missionCard{
+
+    background:
+
+    rgba(0,255,255,.08);
+
+    padding:20px;
+
+    border-left:5px solid cyan;
+
+    border-radius:18px;
+
+    margin-bottom:25px;
+
+    }
+
+    .missionCard h2{
+
+    margin-bottom:10px;
+
+    color:#22d3ee;
+
+    }
+
+    .missionCard p{
+
+    line-height:1.8;
+
+    color:#dbeafe;
+
+    }
+
+    /*=========================
+    FIREWALL
+    =========================*/
+
+    .firewall{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    padding:25px;
+
+    border-radius:25px;
+
+    background:
+
+    rgba(255,255,255,.05);
+
+    margin-bottom:30px;
+
+    box-shadow:
+
+    0 0 30px rgba(255,0,0,.25);
+
+    }
+
+    .shield{
+
+    font-size:95px;
+
+    animation:pulse 2s infinite;
+
+    filter:drop-shadow(0 0 25px red);
+
+    }
+
+    .firewall h2{
+
+    margin-top:15px;
+
+    color:#ff5555;
+
+    }
+
+    .firewall p{
+
+    margin-top:8px;
+
+    color:#cbd5e1;
+
+    }
+
+    @keyframes pulse{
+
+    50%{
+
+    transform:scale(1.08);
+
+    }
+
+    }
+
+    /*=========================
+    BUTTON
+    =========================*/
+
+    #beginMission{
+
+    width:100%;
+
+    padding:18px;
+
+    border:none;
+
+    border-radius:15px;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    background:
+
+    linear-gradient(90deg,#06b6d4,#2563eb);
+
+    color:white;
+
+    transition:.4s;
+
+    box-shadow:
+
+    0 0 20px rgba(6,182,212,.5);
+
+    }
+
+    #beginMission:hover{
+
+    transform:scale(1.05);
+
+    box-shadow:
+
+    0 0 40px cyan;
+
+    }
+}
