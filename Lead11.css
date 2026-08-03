@@ -1,0 +1,489 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+    }
+
+    body{
+
+    overflow:hidden;
+
+    background:#050816;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    height:100vh;
+
+    color:white;
+
+    }
+
+    /* ========================= */
+    /* BACKGROUND */
+    /* ========================= */
+
+    .background{
+
+    position:fixed;
+
+    width:100%;
+
+    height:100%;
+
+    overflow:hidden;
+
+    background:
+
+    radial-gradient(circle at center,#0B1028,#050816 75%);
+
+    }
+
+    /* Moving Fog */
+
+    .fog{
+
+    position:absolute;
+
+    width:220%;
+
+    height:220%;
+
+    background:
+
+    radial-gradient(circle,
+    rgba(0,255,255,.06),
+    transparent 70%);
+
+    animation:fogMove 30s linear infinite;
+
+    filter:blur(45px);
+
+    }
+
+    @keyframes fogMove{
+
+    0%{
+
+    transform:translate(-25%,-20%) rotate(0deg);
+
+    }
+
+    100%{
+
+    transform:translate(10%,15%) rotate(360deg);
+
+    }
+
+    }
+
+    /* ========================= */
+    /* LASERS */
+    /* ========================= */
+
+    .laser{
+
+    position:absolute;
+
+    width:2px;
+
+    height:100%;
+
+    background:cyan;
+
+    box-shadow:
+
+    0 0 10px cyan,
+
+    0 0 25px cyan,
+
+    0 0 45px cyan;
+
+    animation:laserMove 4s linear infinite;
+
+    opacity:.5;
+
+    }
+
+    .laser1{
+
+    left:20%;
+
+    }
+
+    .laser2{
+
+    left:50%;
+
+    animation-delay:1s;
+
+    }
+
+    .laser3{
+
+    left:80%;
+
+    animation-delay:2s;
+
+    }
+
+    @keyframes laserMove{
+
+    0%{
+
+    opacity:.1;
+
+    }
+
+    50%{
+
+    opacity:1;
+
+    }
+
+    100%{
+
+    opacity:.1;
+
+    }
+
+    }
+
+    /* ========================= */
+    /* CONTAINER */
+    /* ========================= */
+
+    .container{
+
+    position:relative;
+
+    z-index:5;
+
+    width:410px;
+
+    background:
+
+    rgba(20,25,50,.92);
+
+    border:
+
+    2px solid rgba(0,255,255,.2);
+
+    border-radius:28px;
+
+    padding:25px;
+
+    backdrop-filter:blur(10px);
+
+    box-shadow:
+
+    0 0 30px rgba(0,255,255,.15);
+
+    }
+
+    /* ========================= */
+    /* HEADER */
+    /* ========================= */
+
+    .header{
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+    }
+
+    .header h1{
+
+    font-size:30px;
+
+    color:#00F5FF;
+
+    text-shadow:
+
+    0 0 15px cyan;
+
+    }
+
+    .header p{
+
+    margin-top:5px;
+
+    color:#C7D2FE;
+
+    }
+
+    /* ========================= */
+    /* STORY */
+    /* ========================= */
+
+    .story{
+
+    background:
+
+    rgba(0,255,255,.08);
+
+    border-left:
+
+    5px solid cyan;
+
+    padding:18px;
+
+    border-radius:18px;
+
+    margin-bottom:25px;
+
+    }
+
+    .story h2{
+
+    margin-bottom:10px;
+
+    color:#67E8F9;
+
+    }
+
+    .story p{
+
+    line-height:1.7;
+
+    color:#E5E7EB;
+
+    }
+
+    /* ========================= */
+    /* MACHINE */
+    /* ========================= */
+
+    .machine{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+    }
+
+    /* CORE */
+
+    .core{
+
+    width:120px;
+
+    height:120px;
+
+    border-radius:50%;
+
+    background:
+
+    radial-gradient(circle,
+
+    #67E8F9,
+
+    #06B6D4,
+
+    #0F172A);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:52px;
+
+    animation:
+
+    spin 6s linear infinite,
+
+    pulse 2s infinite;
+
+    box-shadow:
+
+    0 0 30px cyan,
+
+    0 0 60px cyan;
+
+    margin-bottom:30px;
+
+    }
+
+    @keyframes spin{
+
+    100%{
+
+    transform:rotate(360deg);
+
+    }
+
+    }
+
+    @keyframes pulse{
+
+    50%{
+
+    transform:scale(1.08);
+
+    }
+
+    }
+
+    /* PANEL */
+
+    .panel{
+
+    display:grid;
+
+    grid-template-columns:
+
+    repeat(5,55px);
+
+    gap:14px;
+
+    }
+
+    /* ENERGY BUTTON */
+
+    .energy{
+
+    width:55px;
+
+    height:55px;
+
+    border-radius:50%;
+
+    border:none;
+
+    cursor:pointer;
+
+    background:
+
+    linear-gradient(
+
+    145deg,
+
+    #1E293B,
+
+    #334155);
+
+    box-shadow:
+
+    0 0 10px rgba(0,255,255,.25);
+
+    transition:.35s;
+
+    position:relative;
+
+    overflow:hidden;
+
+    }
+
+    .energy::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:10px;
+
+    height:10px;
+
+    background:cyan;
+
+    border-radius:50%;
+
+    top:50%;
+
+    left:50%;
+
+    transform:translate(-50%,-50%);
+
+    box-shadow:
+
+    0 0 15px cyan,
+
+    0 0 30px cyan;
+
+    animation:blink 1.5s infinite;
+
+    }
+
+    @keyframes blink{
+
+    50%{
+
+    opacity:.3;
+
+    }
+
+    }
+
+    .energy:hover{
+
+    transform:scale(1.18);
+
+    box-shadow:
+
+    0 0 20px cyan,
+
+    0 0 40px cyan;
+
+    }
+
+    /* ========================= */
+    /* STATUS */
+    /* ========================= */
+
+    .status{
+
+    margin-top:25px;
+
+    padding:18px;
+
+    background:
+
+    rgba(255,255,255,.05);
+
+    border-radius:18px;
+
+    text-align:center;
+
+    }
+
+    .status h3{
+
+    color:#22D3EE;
+
+    margin-bottom:8px;
+
+    }
+
+    .status p{
+
+    color:#E2E8F0;
+
+    font-weight:500;
+
+    animation:textGlow 2s infinite;
+
+    }
+
+    @keyframes textGlow{
+
+    50%{
+
+    text-shadow:
+
+    0 0 10px cyan;
+
+    }
+
+    }
+}
