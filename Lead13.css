@@ -414,5 +414,41 @@
 
     0 0 40px cyan;
 
+    }.shake{
+
+        animation:shake .4s;
+
+        }
+
+        @keyframes shake{
+
+        0%{transform:translateX(0);}
+        20%{transform:translateX(-10px);}
+        40%{transform:translateX(10px);}
+        60%{transform:translateX(-10px);}
+        80%{transform:translateX(10px);}
+        100%{transform:translateX(0);}
+
+        }
+
+        .particle{
+
+        position:fixed;
+
+        width:8px;
+
+        height:8px;
+
+        border-radius:50%;
+
+        background:cyan;
+
+        box-shadow:0 0 15px cyan;
+
+        pointer-events:none;
+
+        z-index:999;
+
+        }
     }
 }
