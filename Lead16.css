@@ -1,0 +1,427 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+    }
+
+    body{
+
+    overflow:hidden;
+    height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:#0B1026;
+    color:white;
+
+    }
+
+    /*=========================
+    BACKGROUND
+    =========================*/
+
+    .background{
+
+    position:fixed;
+    width:100%;
+    height:100%;
+
+    overflow:hidden;
+
+    background:
+    linear-gradient(180deg,#08111F,#151B54,#08111F);
+
+    }
+
+    .stars{
+
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    background-image:
+    radial-gradient(white 1px,transparent 1px);
+
+    background-size:55px 55px;
+
+    opacity:.18;
+
+    animation:starsMove 80s linear infinite;
+
+    }
+
+    @keyframes starsMove{
+
+    100%{
+
+    transform:translateY(-1500px);
+
+    }
+
+    }
+
+    .clouds{
+
+    position:absolute;
+
+    width:200%;
+    height:200%;
+
+    background:
+
+    radial-gradient(circle,
+    rgba(255,255,255,.05),
+    transparent 65%);
+
+    filter:blur(45px);
+
+    animation:cloudMove 45s linear infinite;
+
+    }
+
+    @keyframes cloudMove{
+
+    100%{
+
+    transform:translateX(-400px);
+
+    }
+
+    }
+
+    .dreamGlow{
+
+    position:absolute;
+
+    width:500px;
+    height:500px;
+
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    border-radius:50%;
+
+    background:
+
+    radial-gradient(circle,
+    rgba(147,197,253,.25),
+    transparent 70%);
+
+    filter:blur(50px);
+
+    animation:glow 4s infinite;
+
+    }
+
+    @keyframes glow{
+
+    50%{
+
+    transform:translate(-50%,-50%) scale(1.1);
+
+    }
+
+    }
+
+    /*=========================
+    CONTAINER
+    =========================*/
+
+    .container{
+
+    width:430px;
+
+    padding:24px;
+
+    background:rgba(15,23,42,.92);
+
+    border-radius:28px;
+
+    border:2px solid rgba(147,197,253,.2);
+
+    backdrop-filter:blur(15px);
+
+    box-shadow:
+
+    0 0 35px rgba(147,197,253,.25);
+
+    }
+
+    /*=========================
+    HEADER
+    =========================*/
+
+    .header{
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+    }
+
+    .header h1{
+
+    font-size:30px;
+
+    color:#C084FC;
+
+    text-shadow:
+
+    0 0 18px #C084FC;
+
+    }
+
+    .header p{
+
+    margin-top:6px;
+
+    color:#CBD5E1;
+
+    }
+
+    /*=========================
+    BRIEFING
+    =========================*/
+
+    .briefing{
+
+    padding:18px;
+
+    background:
+
+    rgba(192,132,252,.08);
+
+    border-left:5px solid #C084FC;
+
+    border-radius:18px;
+
+    margin-bottom:22px;
+
+    }
+
+    .briefing h2{
+
+    margin-bottom:10px;
+
+    color:#DDD6FE;
+
+    }
+
+    .briefing p{
+
+    line-height:1.7;
+
+    color:#E2E8F0;
+
+    }
+
+    /*=========================
+    DREAM WORLD
+    =========================*/
+
+    .dreamWorld{
+
+    position:relative;
+
+    height:280px;
+
+    border-radius:22px;
+
+    background:
+
+    linear-gradient(#1E1B4B,#0F172A);
+
+    overflow:hidden;
+
+    border:2px solid rgba(192,132,252,.25);
+
+    margin-bottom:22px;
+
+    }
+
+    /* Floating Islands */
+
+    .island{
+
+    position:absolute;
+
+    width:70px;
+    height:70px;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    font-size:34px;
+
+    border-radius:50%;
+
+    background:
+
+    rgba(255,255,255,.08);
+
+    box-shadow:
+
+    0 0 20px rgba(192,132,252,.4);
+
+    animation:floatIsland 4s ease-in-out infinite;
+
+    cursor:pointer;
+
+    transition:.35s;
+
+    }
+
+    .island:hover{
+
+    transform:scale(1.12);
+
+    box-shadow:
+
+    0 0 35px #C084FC;
+
+    }
+
+    .hope{
+
+    top:20px;
+    left:35px;
+
+    }
+
+    .fear{
+
+    top:35px;
+    right:40px;
+
+    animation-delay:.8s;
+
+    }
+
+    .anger{
+
+    left:50%;
+
+    top:95px;
+
+    transform:translateX(-50%);
+
+    animation-delay:1.5s;
+
+    }
+
+    .sadness{
+
+    bottom:35px;
+    left:70px;
+
+    animation-delay:2.2s;
+
+    }
+
+    .trust{
+
+    bottom:25px;
+    right:60px;
+
+    animation-delay:3s;
+
+    }
+
+    @keyframes floatIsland{
+
+    50%{
+
+    transform:translateY(-12px);
+
+    }
+
+    }
+
+    /*=========================
+    STATUS
+    =========================*/
+
+    .status{
+
+    padding:16px;
+
+    border-radius:18px;
+
+    background:
+
+    rgba(255,255,255,.05);
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+    }
+
+    .status h3{
+
+    color:#C084FC;
+
+    margin-bottom:8px;
+
+    }
+
+    .status p{
+
+    font-weight:bold;
+
+    color:#E2E8F0;
+
+    }
+
+    /*=========================
+    BUTTON
+    =========================*/
+
+    .controls button{
+
+    width:100%;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:16px;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    background:
+
+    linear-gradient(90deg,#8B5CF6,#C084FC);
+
+    color:white;
+
+    transition:.35s;
+
+    box-shadow:
+
+    0 0 20px rgba(192,132,252,.4);
+
+    }
+
+    .controls button:hover{
+
+    transform:scale(1.05);
+
+    box-shadow:
+
+    0 0 40px #C084FC;
+
+    }
+}
