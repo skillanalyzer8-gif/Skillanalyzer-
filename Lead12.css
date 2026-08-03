@@ -489,5 +489,53 @@
 
     0 0 40px cyan;
 
+    }.node{
+
+        width:65px;
+        height:65px;
+
+        border-radius:18px;
+
+        background:#0F172A;
+
+        border:2px solid #00E5FF;
+
+        cursor:pointer;
+
+        transition:.3s;
+
+        box-shadow:0 0 15px rgba(0,229,255,.3);
+
+        }
+
+        .node:hover{
+
+        transform:scale(1.12);
+
+        box-shadow:0 0 25px cyan;
+
+        }
+
+        .node.active{
+
+        background:#00E5FF;
+
+        transform:scale(.95);
+
+        }
+
+        #gameStatus{
+
+        margin-top:25px;
+
+        text-align:center;
+
+        font-size:18px;
+
+        color:#67E8F9;
+
+        font-weight:bold;
+
+        }
     }
 }
