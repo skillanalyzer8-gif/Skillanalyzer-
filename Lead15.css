@@ -1,0 +1,442 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+    }
+
+    body{
+
+    overflow:hidden;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#020617;
+    color:white;
+
+    }
+
+    /*==========================
+    BACKGROUND
+    ==========================*/
+
+    .background{
+
+    position:fixed;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+
+    background:
+    radial-gradient(circle,#0F172A,#020617 80%);
+
+    }
+
+    .stars{
+
+    position:absolute;
+    width:100%;
+    height:100%;
+
+    background-image:
+    radial-gradient(white 1px,transparent 1px);
+
+    background-size:45px 45px;
+
+    opacity:.15;
+
+    animation:starsMove 70s linear infinite;
+
+    }
+
+    @keyframes starsMove{
+
+    100%{
+
+    transform:translateY(-1200px);
+
+    }
+
+    }
+
+    .clockGlow{
+
+    position:absolute;
+
+    width:420px;
+    height:420px;
+
+    border-radius:50%;
+
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    background:
+
+    radial-gradient(circle,
+    rgba(96,165,250,.25),
+    transparent 70%);
+
+    filter:blur(40px);
+
+    animation:pulse 3s infinite;
+
+    }
+
+    @keyframes pulse{
+
+    50%{
+
+    transform:translate(-50%,-50%) scale(1.08);
+
+    }
+
+    }
+
+    .timeParticles{
+
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    background:
+    radial-gradient(#60A5FA 1px,transparent 1px);
+
+    background-size:90px 90px;
+
+    opacity:.2;
+
+    animation:particles 20s linear infinite;
+
+    }
+
+    @keyframes particles{
+
+    100%{
+
+    transform:translateY(-1000px);
+
+    }
+
+    }
+
+    /*==========================
+    CONTAINER
+    ==========================*/
+
+    .container{
+
+    width:430px;
+
+    background:rgba(15,23,42,.94);
+
+    padding:24px;
+
+    border-radius:28px;
+
+    border:2px solid rgba(96,165,250,.2);
+
+    backdrop-filter:blur(12px);
+
+    box-shadow:
+    0 0 35px rgba(96,165,250,.25);
+
+    }
+
+    /*==========================
+    HEADER
+    ==========================*/
+
+    .header{
+
+    text-align:center;
+    margin-bottom:20px;
+
+    }
+
+    .header h1{
+
+    font-size:30px;
+    color:#60A5FA;
+    text-shadow:0 0 18px #60A5FA;
+
+    }
+
+    .header p{
+
+    margin-top:6px;
+    color:#CBD5E1;
+
+    }
+
+    /*==========================
+    BRIEF
+    ==========================*/
+
+    .briefing{
+
+    background:rgba(96,165,250,.08);
+
+    padding:18px;
+
+    border-left:5px solid #60A5FA;
+
+    border-radius:18px;
+
+    margin-bottom:22px;
+
+    }
+
+    .briefing h2{
+
+    margin-bottom:10px;
+
+    color:#93C5FD;
+
+    }
+
+    .briefing p{
+
+    line-height:1.7;
+
+    color:#E2E8F0;
+
+    }
+
+    /*==========================
+    ARENA
+    ==========================*/
+
+    .arena{
+
+    position:relative;
+
+    height:280px;
+
+    border-radius:22px;
+
+    background:
+    linear-gradient(#0F172A,#020617);
+
+    border:2px solid rgba(96,165,250,.25);
+
+    overflow:hidden;
+
+    margin-bottom:22px;
+
+    box-shadow:
+    inset 0 0 35px rgba(96,165,250,.15);
+
+    }
+
+    .city{
+
+    position:absolute;
+
+    bottom:18px;
+    left:20px;
+
+    font-size:70px;
+
+    }
+
+    .reactor{
+
+    position:absolute;
+
+    left:50%;
+
+    bottom:90px;
+
+    transform:translateX(-50%);
+
+    font-size:55px;
+
+    filter:drop-shadow(0 0 18px cyan);
+
+    animation:reactor 2s infinite;
+
+    }
+
+    @keyframes reactor{
+
+    50%{
+
+    transform:translateX(-50%) scale(1.1);
+
+    }
+
+    }
+
+    .meteor{
+
+    position:absolute;
+
+    top:15px;
+
+    right:20px;
+
+    font-size:45px;
+
+    animation:meteorGlow 1.5s infinite;
+
+    }
+
+    @keyframes meteorGlow{
+
+    50%{
+
+    filter:drop-shadow(0 0 15px orange);
+
+    }
+
+    }
+
+    /*==========================
+    TIMELINE
+    ==========================*/
+
+    .timeline{
+
+    position:absolute;
+
+    left:20px;
+
+    right:20px;
+
+    bottom:8px;
+
+    height:10px;
+
+    background:#1E293B;
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+    }
+
+    #timelineFill{
+
+    width:0%;
+
+    height:100%;
+
+    background:
+
+    linear-gradient(90deg,
+    #22D3EE,
+    #2563EB);
+
+    }
+
+    .countdown{
+
+    position:absolute;
+
+    top:15px;
+
+    left:15px;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    color:#FBBF24;
+
+    }
+
+    /*==========================
+    STATUS
+    ==========================*/
+
+    .status{
+
+    background:rgba(255,255,255,.05);
+
+    padding:16px;
+
+    border-radius:18px;
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+    }
+
+    .status h3{
+
+    color:#60A5FA;
+
+    margin-bottom:8px;
+
+    }
+
+    .status p{
+
+    font-weight:bold;
+
+    color:#E2E8F0;
+
+    }
+
+    /*==========================
+    BUTTONS
+    ==========================*/
+
+    .controls{
+
+    display:flex;
+
+    gap:12px;
+
+    }
+
+    .controls button{
+
+    flex:1;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:16px;
+
+    font-size:17px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.35s;
+
+    color:white;
+
+    }
+
+    #startBtn{
+
+    background:
+    linear-gradient(90deg,#2563EB,#60A5FA);
+
+    }
+
+    #rewindBtn{
+
+    background:
+    linear-gradient(90deg,#7C3AED,#A855F7);
+
+    }
+
+    .controls button:hover{
+
+    transform:scale(1.05);
+
+    box-shadow:0 0 25px cyan;
+
+    }
+}
