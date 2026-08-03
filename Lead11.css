@@ -1,0 +1,564 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+    }
+
+    body{
+
+    overflow:hidden;
+    background:#020617;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    color:white;
+
+    }
+
+    /* ================= BACKGROUND ================= */
+
+    .background{
+
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:
+    radial-gradient(circle at center,#0F172A,#020617 80%);
+    overflow:hidden;
+
+    }
+
+    /* Stars */
+
+    .stars{
+
+    position:absolute;
+    width:100%;
+    height:100%;
+    background-image:
+    radial-gradient(white 1px,transparent 1px);
+
+    background-size:45px 45px;
+    opacity:.15;
+
+    animation:moveStars 70s linear infinite;
+
+    }
+
+    @keyframes moveStars{
+
+    100%{
+
+    transform:translateY(-1200px);
+
+    }
+
+    }
+
+    /* Fog */
+
+    .fog{
+
+    position:absolute;
+
+    width:220%;
+    height:220%;
+
+    background:
+    radial-gradient(circle,
+    rgba(0,255,255,.08),
+    transparent 70%);
+
+    filter:blur(55px);
+
+    animation:fog 30s linear infinite;
+
+    }
+
+    @keyframes fog{
+
+    100%{
+
+    transform:rotate(360deg);
+
+    }
+
+    }
+
+    /* ================= LASERS ================= */
+
+    .laser{
+
+    position:absolute;
+
+    width:2px;
+    height:100%;
+
+    background:cyan;
+
+    box-shadow:
+    0 0 15px cyan,
+    0 0 35px cyan;
+
+    animation:laserBlink 2s infinite;
+
+    }
+
+    .laser1{
+
+    left:18%;
+
+    }
+
+    .laser2{
+
+    left:50%;
+
+    animation-delay:.7s;
+
+    }
+
+    .laser3{
+
+    left:82%;
+
+    animation-delay:1.4s;
+
+    }
+
+    @keyframes laserBlink{
+
+    50%{
+
+    opacity:.2;
+
+    }
+
+    }
+
+    /* ================= CONTAINER ================= */
+
+    .gameContainer{
+
+    position:relative;
+
+    z-index:10;
+
+    width:410px;
+
+    background:rgba(15,23,42,.94);
+
+    padding:25px;
+
+    border-radius:30px;
+
+    border:2px solid rgba(0,255,255,.2);
+
+    backdrop-filter:blur(15px);
+
+    box-shadow:
+
+    0 0 30px rgba(0,255,255,.25);
+
+    }
+
+    /* ================= HEADER ================= */
+
+    .missionTitle{
+
+    text-align:center;
+    margin-bottom:25px;
+
+    }
+
+    .missionTitle h1{
+
+    font-size:30px;
+
+    color:#22D3EE;
+
+    text-shadow:
+    0 0 20px cyan;
+
+    }
+
+    .missionTitle p{
+
+    margin-top:5px;
+
+    color:#CBD5E1;
+
+    }
+
+    /* ================= TERMINAL ================= */
+
+    .terminal{
+
+    background:#000814;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    margin-bottom:25px;
+
+    border:1px solid #0EA5E9;
+
+    }
+
+    .terminalHeader{
+
+    display:flex;
+    align-items:center;
+
+    padding:10px;
+
+    background:#082F49;
+
+    }
+
+    .dot{
+
+    width:12px;
+    height:12px;
+
+    border-radius:50%;
+
+    margin-right:8px;
+
+    }
+
+    .red{
+
+    background:#EF4444;
+
+    }
+
+    .yellow{
+
+    background:#FACC15;
+
+    }
+
+    .green{
+
+    background:#22C55E;
+
+    }
+
+    .terminalHeader span{
+
+    margin-left:10px;
+
+    font-size:13px;
+
+    color:white;
+
+    }
+
+    .terminalBody{
+
+    padding:18px;
+
+    font-family:monospace;
+
+    font-size:15px;
+
+    color:#67E8F9;
+
+    min-height:80px;
+
+    }
+
+    /* ================= MACHINE ================= */
+
+    .machineRoom{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+    }
+
+    .machineCore{
+
+    position:relative;
+
+    width:180px;
+    height:180px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    }
+
+    /* Outer Ring */
+
+    .outerRing{
+
+    position:absolute;
+
+    width:180px;
+    height:180px;
+
+    border:5px solid cyan;
+
+    border-radius:50%;
+
+    animation:rotateLeft 12s linear infinite;
+
+    }
+
+    /* Middle Ring */
+
+    .middleRing{
+
+    position:absolute;
+
+    width:130px;
+    height:130px;
+
+    border:4px dashed #38BDF8;
+
+    border-radius:50%;
+
+    animation:rotateRight 8s linear infinite;
+
+    }
+
+    /* Core */
+
+    .innerCore{
+
+    width:80px;
+    height:80px;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(circle,
+    #67E8F9,
+    #0891B2,
+    #082F49);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:38px;
+
+    box-shadow:
+    0 0 25px cyan,
+    0 0 50px cyan;
+
+    animation:pulse 2s infinite;
+
+    }
+
+    .machineStatus{
+
+    margin-top:20px;
+
+    padding:10px 25px;
+
+    border-radius:20px;
+
+    background:#7F1D1D;
+
+    font-weight:bold;
+
+    animation:warning 1s infinite;
+
+    }
+
+    @keyframes warning{
+
+    50%{
+
+    background:#DC2626;
+
+    }
+
+    }
+
+    @keyframes rotateLeft{
+
+    100%{
+
+    transform:rotate(360deg);
+
+    }
+
+    }
+
+    @keyframes rotateRight{
+
+    100%{
+
+    transform:rotate(-360deg);
+
+    }
+
+    }
+
+    @keyframes pulse{
+
+    50%{
+
+    transform:scale(1.1);
+
+    }
+
+    }
+
+    /* ================= MISSION ================= */
+
+    .missionBox{
+
+    background:rgba(0,255,255,.08);
+
+    padding:18px;
+
+    border-left:5px solid cyan;
+
+    border-radius:18px;
+
+    margin-bottom:25px;
+
+    }
+
+    .missionBox h2{
+
+    color:#67E8F9;
+
+    margin-bottom:10px;
+
+    }
+
+    .missionBox p{
+
+    line-height:1.7;
+
+    color:#E2E8F0;
+
+    }
+
+    /* ================= BUTTON ================= */
+
+    #startMission{
+
+    width:100%;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:linear-gradient(90deg,#06B6D4,#2563EB);
+
+    color:white;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.4s;
+
+    box-shadow:
+    0 0 20px rgba(34,211,238,.4);
+
+    }
+
+    #startMission:hover{
+
+    transform:scale(1.04);
+
+    box-shadow:
+    0 0 35px cyan;
+
+    }.gearPuzzle{
+
+        display:flex;
+
+        justify-content:center;
+
+        gap:25px;
+
+        margin-top:25px;
+
+        margin-bottom:25px;
+
+        }
+
+        .gear{
+
+        font-size:70px;
+
+        cursor:pointer;
+
+        transition:.4s;
+
+        user-select:none;
+
+        }
+
+        .gear:hover{
+
+        transform:scale(1.15);
+
+        color:cyan;
+
+        }
+
+        #unlock{
+
+        width:100%;
+
+        padding:15px;
+
+        margin-top:20px;
+
+        background:#06B6D4;
+
+        border:none;
+
+        border-radius:15px;
+
+        font-size:18px;
+
+        font-weight:bold;
+
+        cursor:pointer;
+
+        color:white;
+
+        }
+
+        .shake{
+
+        animation:shake .4s;
+
+        }
+
+        @keyframes shake{
+
+        0%{transform:translateX(0);}
+        20%{transform:translateX(-10px);}
+        40%{transform:translateX(10px);}
+        60%{transform:translateX(-10px);}
+        80%{transform:translateX(10px);}
+        100%{transform:translateX(0);}
+
+        }
+    }
+}
