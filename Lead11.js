@@ -1,116 +1,87 @@
 const startBtn = document.getElementById("startMission");
 const terminal = document.getElementById("typingText");
 
-const machineStatus =
-document.querySelector(".machineStatus");
+const machineStatus = document.querySelector(".machineStatus");
+const outerRing = document.querySelector(".outerRing");
+const middleRing = document.querySelector(".middleRing");
+const core = document.querySelector(".innerCore");
+const missionBox = document.querySelector(".missionBox");
 
-const outerRing =
-document.querySelector(".outerRing");
+startBtn.addEventListener("click", () => {
 
-const middleRing =
-document.querySelector(".middleRing");
+startBtn.disabled = true;
+startBtn.innerHTML = "INITIALIZING...";
 
-const core =
-document.querySelector(".innerCore");
+terminal.innerHTML = "Connecting to AI Core...";
 
-const missionBox =
-document.querySelector(".missionBox");
+setTimeout(() => {
 
-startBtn.addEventListener("click",()=>{
-
-startBtn.disabled=true;
-
-startBtn.innerHTML="INITIALIZING...";
-
-terminal.innerHTML="Connecting to AI Core...";
-
-setTimeout(()=>{
-
-terminal.innerHTML="Power Restored...";
-
-machineStatus.innerHTML="POWER RESTORING";
-
-machineStatus.style.background="#2563EB";
+terminal.innerHTML = "Power Restored...";
+machineStatus.innerHTML = "POWER RESTORING";
+machineStatus.style.background = "#2563EB";
 
 },1000);
 
-setTimeout(()=>{
+setTimeout(() => {
 
-terminal.innerHTML="Starting Quantum Reactor...";
+terminal.innerHTML = "Starting Quantum Reactor...";
 
-outerRing.style.animationDuration="2s";
+outerRing.style.animationDuration = "2s";
+middleRing.style.animationDuration = "1s";
 
-middleRing.style.animationDuration="1s";
-
-core.style.transform="scale(1.3)";
-
-core.style.boxShadow=
-
+core.style.transform = "scale(1.3)";
+core.style.boxShadow =
 "0 0 30px cyan,0 0 80px cyan";
 
 },2200);
 
-setTimeout(()=>{
+setTimeout(() => {
 
-terminal.innerHTML="Scanning Leadership DNA...";
+terminal.innerHTML = "Scanning Leadership DNA...";
 
 },3500);
 
-setTimeout(()=>{
+setTimeout(() => {
 
-terminal.innerHTML="ACCESS GRANTED";
+terminal.innerHTML = "ACCESS GRANTED";
 
-machineStatus.innerHTML="SYSTEM ONLINE";
+machineStatus.innerHTML = "SYSTEM ONLINE";
+machineStatus.style.background = "#22C55E";
 
-machineStatus.style.background="#22C55E";
+core.innerHTML = "🧠";
 
-core.innerHTML="🧠";
-
-core.style.background=
-
+core.style.background =
 "radial-gradient(circle,#22C55E,#15803D,#052E16)";
 
 },4700);
 
-setTimeout(()=>{
+setTimeout(() => {
 
-missionBox.innerHTML=`
+missionBox.innerHTML = `
 
-<h2>
-
-⚙ LEVEL 1
-
-</h2>
+<h2>⚙ LEVEL 1</h2>
 
 <p>
 
-Rotate the three gears until every tooth aligns.
+Rotate the gears.
 
-Once all gears are synchronized,
+Goal:
 
-the Machine Brain will unlock.
+Gear 1 → 180°
+
+Gear 2 → 90°
+
+Gear 3 → 270°
 
 </p>
 
 <div class="gearPuzzle">
 
-<div class="gear" id="gear1">
+<div class="gear" id="gear1">⚙</div>
 
-⚙
+<div class="gear" id="gear2">⚙</div>
 
-</div>
-
-<div class="gear" id="gear2">
-
-⚙
-
-</div>
-
-<div class="gear" id="gear3">
-
-⚙
-
-</div>
+<div class="gear" id="gear3">⚙</div>
 
 </div>
 
@@ -122,46 +93,45 @@ Unlock Machine
 
 `;
 
-const gears=document.querySelectorAll(".gear");
+const gears = document.querySelectorAll(".gear");
 
-let rotation=[0,0,0];
+let rotation = [0,0,0];
 
 gears.forEach((gear,index)=>{
 
-gear.addEventListener("click",()=>{
+gear.onclick = function(){
 
 rotation[index]+=90;
 
-gear.style.transform=
+if(rotation[index]>=360){
 
+rotation[index]=0;
+
+}
+
+gear.style.transform =
 `rotate(${rotation[index]}deg)`;
 
-});
+}
 
 });
 
-document
-
-.getElementById("unlock")
-
-.addEventListener("click",()=>{
+document.getElementById("unlock").onclick=function(){
 
 if(
 
-rotation[0]%360===180 &&
+rotation[0]==180 &&
 
-rotation[1]%360===90 &&
+rotation[1]==90 &&
 
-rotation[2]%360===270
+rotation[2]==270
 
 ){
 
-terminal.innerHTML=
-
+terminal.innerHTML =
 "⚡ Gear Alignment Successful";
 
-machineStatus.innerHTML=
-
+machineStatus.innerHTML =
 "LEVEL COMPLETE";
 
 machineStatus.style.background="#22C55E";
@@ -170,14 +140,13 @@ setTimeout(()=>{
 
 window.location.href="Lead12.html";
 
-},3000);
+},2500);
 
 }
 
 else{
 
-terminal.innerHTML=
-
+terminal.innerHTML =
 "❌ Gear Alignment Failed";
 
 navigator.vibrate?.(200);
@@ -192,7 +161,7 @@ document.body.classList.remove("shake");
 
 }
 
-});
+}
 
 },6500);
 
