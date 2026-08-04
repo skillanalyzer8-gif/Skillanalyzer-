@@ -1,0 +1,482 @@
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+
+    }
+
+
+    body{
+
+    height:100vh;
+
+    overflow:hidden;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#020617;
+
+    color:white;
+
+    }
+
+
+    /*=========================
+    BACKGROUND
+    =========================*/
+
+
+    .background{
+
+    position:fixed;
+
+    width:100%;
+
+    height:100%;
+
+    background:
+
+    linear-gradient(
+
+    180deg,
+
+    #020617,
+
+    #0f172a,
+
+    #020617
+
+    );
+
+    overflow:hidden;
+
+    }
+
+
+    .cityGlow{
+
+    position:absolute;
+
+    width:500px;
+
+    height:500px;
+
+    left:50%;
+
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    background:
+
+    radial-gradient(
+
+    circle,
+
+    rgba(34,211,238,.25),
+
+    transparent 70%
+
+    );
+
+    filter:blur(60px);
+
+    }
+
+
+    .scanGrid{
+
+    position:absolute;
+
+    width:100%;
+
+    height:100%;
+
+    background-image:
+
+    linear-gradient(
+
+    rgba(34,211,238,.08) 1px,
+
+    transparent 1px
+
+    ),
+
+    linear-gradient(
+
+    90deg,
+
+    rgba(34,211,238,.08) 1px,
+
+    transparent 1px
+
+    );
+
+    background-size:
+
+    40px 40px;
+
+    animation:gridMove 20s linear infinite;
+
+    }
+
+
+    @keyframes gridMove{
+
+    100%{
+
+    transform:translateY(40px);
+
+    }
+
+    }
+
+
+    .particles{
+
+    position:absolute;
+
+    width:100%;
+
+    height:100%;
+
+    background-image:
+
+    radial-gradient(
+
+    cyan 1px,
+
+    transparent 1px
+
+    );
+
+    background-size:80px 80px;
+
+    opacity:.3;
+
+    animation:floatParticles 25s linear infinite;
+
+    }
+
+
+    @keyframes floatParticles{
+
+    100%{
+
+    transform:translateY(-500px);
+
+    }
+
+    }
+
+
+    /*=========================
+    CONTAINER
+    =========================*/
+
+
+    .container{
+
+    width:430px;
+
+    padding:25px;
+
+    border-radius:30px;
+
+    background:
+
+    rgba(15,23,42,.92);
+
+    border:
+
+    2px solid rgba(34,211,238,.3);
+
+    backdrop-filter:blur(15px);
+
+    box-shadow:
+
+    0 0 40px rgba(34,211,238,.25);
+
+    }
+
+
+    /*=========================
+    HEADER
+    =========================*/
+
+
+    .header{
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+    }
+
+
+    .header h1{
+
+    font-size:28px;
+
+    color:#22d3ee;
+
+    text-shadow:
+
+    0 0 20px cyan;
+
+    }
+
+
+    .header p{
+
+    color:#94a3b8;
+
+    margin-top:5px;
+
+    }
+
+
+    /*=========================
+    BRIEFING
+    =========================*/
+
+
+    .briefing{
+
+    padding:18px;
+
+    background:
+
+    rgba(34,211,238,.08);
+
+    border-left:
+
+    5px solid #22d3ee;
+
+    border-radius:18px;
+
+    margin-bottom:20px;
+
+    }
+
+
+    .briefing h2{
+
+    color:#67e8f9;
+
+    margin-bottom:10px;
+
+    }
+
+
+    .briefing p{
+
+    line-height:1.7;
+
+    color:#e2e8f0;
+
+    }
+
+
+    /*=========================
+    SCANNER
+    =========================*/
+
+
+    .scannerArea{
+
+    height:190px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:
+
+    rgba(255,255,255,.05);
+
+    border-radius:25px;
+
+    margin-bottom:20px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    }
+
+
+    #scannerCircle{
+
+    position:absolute;
+
+    width:150px;
+
+    height:150px;
+
+    border-radius:50%;
+
+    border:
+
+    3px solid cyan;
+
+    opacity:0;
+
+    }
+
+
+    .scanActive{
+
+    animation:
+
+    scannerPulse 2s infinite;
+
+    }
+
+
+    @keyframes scannerPulse{
+
+
+    0%{
+
+    transform:scale(.5);
+
+    opacity:1;
+
+    }
+
+
+    100%{
+
+    transform:scale(2);
+
+    opacity:0;
+
+    }
+
+
+    }
+
+
+    #cityView{
+
+    font-size:70px;
+
+    filter:
+
+    drop-shadow(0 0 20px cyan);
+
+    }
+
+
+    #scanText{
+
+    margin-top:15px;
+
+    color:#67e8f9;
+
+    }
+
+
+    /*=========================
+    STATUS
+    =========================*/
+
+
+    .statusBox{
+
+    padding:15px;
+
+    text-align:center;
+
+    background:
+
+    rgba(255,255,255,.05);
+
+    border-radius:18px;
+
+    margin-bottom:20px;
+
+    }
+
+
+    .statusBox h3{
+
+    color:#22d3ee;
+
+    }
+
+
+    .statusBox p{
+
+    margin-top:8px;
+
+    color:#cbd5e1;
+
+    }
+
+
+    /*=========================
+    BUTTON
+    =========================*/
+
+
+    .controls button{
+
+    width:100%;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:18px;
+
+    cursor:pointer;
+
+    font-size:17px;
+
+    font-weight:bold;
+
+    background:
+
+    linear-gradient(
+
+    90deg,
+
+    #06b6d4,
+
+    #2563eb
+
+    );
+
+    color:white;
+
+    box-shadow:
+
+    0 0 25px rgba(6,182,212,.5);
+
+    transition:.35s;
+
+    }
+
+
+    .controls button:hover{
+
+    transform:scale(1.05);
+
+    box-shadow:
+
+    0 0 45px cyan;
+
+    }
+}
