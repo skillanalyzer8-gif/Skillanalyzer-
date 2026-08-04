@@ -149,7 +149,7 @@ AI DECISION
 
 function checkTiming(){
 
-if(timeLeft>=7 && timeLeft<=10){
+if(timeLeft<=0 && !rewound){
 
 status.innerHTML=
 
