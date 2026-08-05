@@ -1,23 +1,23 @@
 <script type="module">
-  // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-analytics.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-          // https://firebase.google.com/docs/web/setup#available-libraries
+      // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+          import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-analytics.js";
+            // TODO: Add SDKs for Firebase products that you want to use
+              // https://firebase.google.com/docs/web/setup#available-libraries
 
-            // Your web app's Firebase configuration
-              // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-                const firebaseConfig = {
-                    apiKey: "AIzaSyAZVt5Y4OVUPMZel0oARdtkXlZt8L-ai34",
-                        authDomain: "skillanalyzer-373ae.firebaseapp.com",
-                            projectId: "skillanalyzer-373ae",
-                                storageBucket: "skillanalyzer-373ae.firebasestorage.app",
-                                    messagingSenderId: "952710822091",
-                                        appId: "1:952710822091:web:0f94738430db44219f834e",
-                                            measurementId: "G-JLGF2DVJJ0"
-                                              };
+                // Your web app's Firebase configuration
+                  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+                    const firebaseConfig = {
+                        apiKey: "AIzaSyAZVt5Y4OVUPMZel0oARdtkXlZt8L-ai34",
+                            authDomain: "skillanalyzer-373ae.firebaseapp.com",
+                                projectId: "skillanalyzer-373ae",
+                                    storageBucket: "skillanalyzer-373ae.firebasestorage.app",
+                                        messagingSenderId: "952710822091",
+                                            appId: "1:952710822091:web:0f94738430db44219f834e",
+                                                measurementId: "G-JLGF2DVJJ0"
+                                                  };
 
-                                                // Initialize Firebase
-                                                  const app = initializeApp(firebaseConfig);
-                                                    const analytics = getAnalytics(app);
-                                                    </script>
+                                                    // Initialize Firebase
+                                                      const app = initializeApp(firebaseConfig);
+                                                        const analytics = getAnalytics(app);
+                                                        </script>
