@@ -1,0 +1,392 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+    }
+
+    body{
+
+    height:100vh;
+    overflow:hidden;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:#050816;
+    color:white;
+
+    }
+
+    /*=========================
+    BACKGROUND
+    =========================*/
+
+    .background{
+
+    position:fixed;
+    width:100%;
+    height:100%;
+
+    background:
+    linear-gradient(
+    180deg,
+    #050816,
+    #111827,
+    #050816);
+
+    overflow:hidden;
+
+    }
+
+    .finalGrid{
+
+    position:absolute;
+    width:100%;
+    height:100%;
+
+    background-image:
+    linear-gradient(rgba(250,204,21,.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(250,204,21,.08) 1px,transparent 1px);
+
+    background-size:45px 45px;
+
+    animation:gridMove 18s linear infinite;
+
+    }
+
+    @keyframes gridMove{
+
+    100%{
+
+    transform:translateY(45px);
+
+    }
+
+    }
+
+    .finalGlow{
+
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    width:760px;
+    height:760px;
+
+    background:
+    radial-gradient(circle,
+    rgba(250,204,21,.20),
+    transparent 70%);
+
+    filter:blur(100px);
+
+    }
+
+    .floatingStars{
+
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    background-image:
+    radial-gradient(#FDE68A 1px,transparent 1px);
+
+    background-size:90px 90px;
+
+    opacity:.25;
+
+    animation:floatStars 28s linear infinite;
+
+    }
+
+    @keyframes floatStars{
+
+    100%{
+
+    transform:translateY(-500px);
+
+    }
+
+    }
+
+    .confetti{
+
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    background-image:
+    radial-gradient(#FACC15 2px,transparent 2px);
+
+    background-size:60px 60px;
+
+    opacity:.18;
+
+    animation:confettiFall 22s linear infinite;
+
+    }
+
+    @keyframes confettiFall{
+
+    100%{
+
+    transform:translateY(600px);
+
+    }
+
+    }
+
+    /*=========================
+    CONTAINER
+    =========================*/
+
+    .container{
+
+    width:440px;
+
+    padding:25px;
+
+    border-radius:30px;
+
+    background:rgba(15,23,42,.95);
+
+    border:2px solid rgba(250,204,21,.35);
+
+    backdrop-filter:blur(18px);
+
+    box-shadow:0 0 45px rgba(250,204,21,.40);
+
+    }
+
+    /*=========================
+    HEADER
+    =========================*/
+
+    .header{
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+    }
+
+    .header h1{
+
+    font-size:28px;
+
+    color:#FEF3C7;
+
+    text-shadow:0 0 25px #FACC15;
+
+    }
+
+    .header p{
+
+    margin-top:6px;
+
+    color:#CBD5E1;
+
+    }
+
+    /*=========================
+    BRIEFING
+    =========================*/
+
+    .briefing{
+
+    padding:18px;
+
+    background:rgba(250,204,21,.08);
+
+    border-left:5px solid #FACC15;
+
+    border-radius:18px;
+
+    margin-bottom:20px;
+
+    }
+
+    .briefing h2{
+
+    margin-bottom:10px;
+
+    color:#FEF9C3;
+
+    }
+
+    .briefing p{
+
+    line-height:1.8;
+
+    color:#E2E8F0;
+
+    }
+
+    /*=========================
+    DESIGN AREA
+    =========================*/
+
+    .designArea{
+
+    height:250px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+    align-items:center;
+
+    background:rgba(255,255,255,.05);
+
+    border-radius:20px;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+    text-align:center;
+
+    }
+
+    .designArea h2{
+
+    color:#FEF3C7;
+
+    margin-bottom:15px;
+
+    }
+
+    #challengeText{
+
+    line-height:1.8;
+
+    color:#CBD5E1;
+
+    }
+
+    /*=========================
+    STATUS
+    =========================*/
+
+    .statusBox{
+
+    padding:15px;
+
+    text-align:center;
+
+    background:rgba(255,255,255,.05);
+
+    border-radius:18px;
+
+    margin-bottom:20px;
+
+    }
+
+    .statusBox h3{
+
+    color:#FEF3C7;
+
+    margin-bottom:8px;
+
+    }
+
+    /*=========================
+    BUTTON
+    =========================*/
+
+    .controls button{
+
+    width:100%;
+
+    padding:17px;
+
+    border:none;
+
+    border-radius:18px;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    background:
+    linear-gradient(
+    90deg,
+    #D97706,
+    #FACC15);
+
+    color:#111827;
+
+    transition:.35s;
+
+    box-shadow:0 0 28px rgba(250,204,21,.55);
+
+    }
+
+    .controls button:hover{
+
+    transform:scale(1.05);
+
+    box-shadow:0 0 45px #FACC15;
+
+    }
+
+    /*=========================
+    FINAL CARD
+    =========================*/
+
+    .finalCard{
+
+    margin-top:12px;
+
+    padding:16px;
+
+    background:#0F172A;
+
+    border:2px solid #FACC15;
+
+    border-radius:16px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    text-align:left;
+
+    }
+
+    .finalCard:hover{
+
+    transform:scale(1.03);
+
+    box-shadow:0 0 22px #FACC15;
+
+    }
+
+    .finalCard h3{
+
+    margin-bottom:8px;
+
+    color:#FEF9C3;
+
+    }
+
+    .finalCard p{
+
+    font-size:14px;
+
+    line-height:1.6;
+
+    color:#CBD5E1;
+
+    }
+}
