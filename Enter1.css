@@ -1,12 +1,9 @@
 *{
-
     margin:0;
     padding:0;
     box-sizing:border-box;
     font-family:'Poppins',sans-serif;
-
     }
-
 
     body{
 
@@ -26,160 +23,116 @@
 
     }
 
-
     /*=========================
     BACKGROUND
     =========================*/
-
 
     .background{
 
     position:fixed;
 
     width:100%;
-
     height:100%;
 
     background:
-
     linear-gradient(
-
     180deg,
-
     #020617,
-
-    #0f172a,
-
-    #020617
-
-    );
+    #0F172A,
+    #020617);
 
     overflow:hidden;
 
     }
 
-
-    .cityGlow{
+    .grid{
 
     position:absolute;
 
-    width:500px;
+    width:100%;
+    height:100%;
 
-    height:500px;
+    background-image:
+
+    linear-gradient(
+    rgba(34,211,238,.08) 1px,
+    transparent 1px),
+
+    linear-gradient(
+    90deg,
+    rgba(34,211,238,.08) 1px,
+    transparent 1px);
+
+    background-size:45px 45px;
+
+    animation:gridMove 18s linear infinite;
+
+    }
+
+    @keyframes gridMove{
+
+    100%{
+
+    transform:translateY(45px);
+
+    }
+
+    }
+
+    .glow{
+
+    position:absolute;
+
+    width:550px;
+    height:550px;
 
     left:50%;
-
     top:50%;
 
     transform:translate(-50%,-50%);
 
     background:
 
-    radial-gradient(
-
-    circle,
-
+    radial-gradient(circle,
     rgba(34,211,238,.25),
+    transparent 70%);
 
-    transparent 70%
-
-    );
-
-    filter:blur(60px);
+    filter:blur(70px);
 
     }
-
-
-    .scanGrid{
-
-    position:absolute;
-
-    width:100%;
-
-    height:100%;
-
-    background-image:
-
-    linear-gradient(
-
-    rgba(34,211,238,.08) 1px,
-
-    transparent 1px
-
-    ),
-
-    linear-gradient(
-
-    90deg,
-
-    rgba(34,211,238,.08) 1px,
-
-    transparent 1px
-
-    );
-
-    background-size:
-
-    40px 40px;
-
-    animation:gridMove 20s linear infinite;
-
-    }
-
-
-    @keyframes gridMove{
-
-    100%{
-
-    transform:translateY(40px);
-
-    }
-
-    }
-
 
     .particles{
 
     position:absolute;
 
     width:100%;
-
     height:100%;
 
     background-image:
 
-    radial-gradient(
+    radial-gradient(cyan 1px,transparent 1px);
 
-    cyan 1px,
+    background-size:90px 90px;
 
-    transparent 1px
+    opacity:.25;
 
-    );
-
-    background-size:80px 80px;
-
-    opacity:.3;
-
-    animation:floatParticles 25s linear infinite;
+    animation:particles 30s linear infinite;
 
     }
 
-
-    @keyframes floatParticles{
+    @keyframes particles{
 
     100%{
 
-    transform:translateY(-500px);
+    transform:translateY(-600px);
 
     }
 
     }
-
 
     /*=========================
     CONTAINER
     =========================*/
-
 
     .container{
 
@@ -193,23 +146,19 @@
 
     rgba(15,23,42,.92);
 
-    border:
+    border:2px solid rgba(34,211,238,.25);
 
-    2px solid rgba(34,211,238,.3);
-
-    backdrop-filter:blur(15px);
+    backdrop-filter:blur(14px);
 
     box-shadow:
 
-    0 0 40px rgba(34,211,238,.25);
+    0 0 40px rgba(34,211,238,.20);
 
     }
-
 
     /*=========================
     HEADER
     =========================*/
-
 
     .header{
 
@@ -219,12 +168,11 @@
 
     }
 
-
     .header h1{
 
     font-size:28px;
 
-    color:#22d3ee;
+    color:#22D3EE;
 
     text-shadow:
 
@@ -232,66 +180,57 @@
 
     }
 
-
     .header p{
-
-    color:#94a3b8;
 
     margin-top:5px;
 
-    }
+    color:#94A3B8;
 
+    }
 
     /*=========================
     BRIEFING
     =========================*/
 
-
     .briefing{
 
     padding:18px;
+
+    border-left:5px solid cyan;
 
     background:
 
     rgba(34,211,238,.08);
 
-    border-left:
-
-    5px solid #22d3ee;
-
     border-radius:18px;
 
-    margin-bottom:20px;
+    margin-bottom:22px;
 
     }
 
-
     .briefing h2{
 
-    color:#67e8f9;
+    color:#67E8F9;
 
     margin-bottom:10px;
 
     }
 
-
     .briefing p{
 
-    line-height:1.7;
+    line-height:1.8;
 
-    color:#e2e8f0;
+    color:#E2E8F0;
 
     }
 
-
     /*=========================
-    SCANNER
+    SCANNER LAB
     =========================*/
 
+    .scannerLab{
 
-    .scannerArea{
-
-    height:190px;
+    height:220px;
 
     display:flex;
 
@@ -305,97 +244,92 @@
 
     rgba(255,255,255,.05);
 
-    border-radius:25px;
-
-    margin-bottom:20px;
+    border-radius:22px;
 
     position:relative;
 
     overflow:hidden;
 
-    }
+    margin-bottom:22px;
 
+    }
 
     #scannerCircle{
 
     position:absolute;
 
     width:150px;
-
     height:150px;
 
     border-radius:50%;
 
-    border:
-
-    3px solid cyan;
+    border:3px solid cyan;
 
     opacity:0;
 
     }
 
+    .scanAnimation{
 
-    .scanActive{
-
-    animation:
-
-    scannerPulse 2s infinite;
+    animation:scanPulse 2s infinite;
 
     }
 
-
-    @keyframes scannerPulse{
-
+    @keyframes scanPulse{
 
     0%{
 
-    transform:scale(.5);
+    transform:scale(.4);
 
     opacity:1;
 
     }
 
-
     100%{
 
-    transform:scale(2);
+    transform:scale(2.2);
 
     opacity:0;
 
     }
 
-
     }
 
-
-    #cityView{
+    #scannerIcon{
 
     font-size:70px;
 
-    filter:
+    filter:drop-shadow(0 0 20px cyan);
 
-    drop-shadow(0 0 20px cyan);
-
-    }
-
-
-    #scanText{
-
-    margin-top:15px;
-
-    color:#67e8f9;
+    margin-bottom:10px;
 
     }
 
+    .scannerLab h2{
+
+    color:#22D3EE;
+
+    }
+
+    #scannerText{
+
+    margin-top:12px;
+
+    text-align:center;
+
+    color:#CBD5E1;
+
+    padding:0 18px;
+
+    }
 
     /*=========================
     STATUS
     =========================*/
 
-
     .statusBox{
 
-    padding:15px;
+    padding:16px;
 
     text-align:center;
 
@@ -405,31 +339,27 @@
 
     border-radius:18px;
 
-    margin-bottom:20px;
+    margin-bottom:22px;
 
     }
-
 
     .statusBox h3{
 
-    color:#22d3ee;
+    color:#22D3EE;
+
+    margin-bottom:8px;
 
     }
 
+    #statusText{
 
-    .statusBox p{
-
-    margin-top:8px;
-
-    color:#cbd5e1;
+    color:#E2E8F0;
 
     }
-
 
     /*=========================
     BUTTON
     =========================*/
-
 
     .controls button{
 
@@ -450,25 +380,19 @@
     background:
 
     linear-gradient(
-
     90deg,
-
-    #06b6d4,
-
-    #2563eb
-
-    );
+    #06B6D4,
+    #2563EB);
 
     color:white;
+
+    transition:.35s;
 
     box-shadow:
 
     0 0 25px rgba(6,182,212,.5);
 
-    transition:.35s;
-
     }
-
 
     .controls button:hover{
 
@@ -476,7 +400,7 @@
 
     box-shadow:
 
-    0 0 45px cyan;
+    0 0 40px cyan;
 
     }
 }
