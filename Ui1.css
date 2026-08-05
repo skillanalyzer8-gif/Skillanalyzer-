@@ -1,0 +1,369 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+    }
+
+    body{
+
+    height:100vh;
+    overflow:hidden;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:#050816;
+    color:white;
+
+    }
+
+    /*=========================
+    BACKGROUND
+    =========================*/
+
+    .background{
+
+    position:fixed;
+    width:100%;
+    height:100%;
+
+    background:
+    linear-gradient(
+    180deg,
+    #050816,
+    #111827,
+    #050816);
+
+    overflow:hidden;
+
+    }
+
+    .designGrid{
+
+    position:absolute;
+    width:100%;
+    height:100%;
+
+    background-image:
+    linear-gradient(rgba(99,102,241,.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(99,102,241,.08) 1px,transparent 1px);
+
+    background-size:45px 45px;
+
+    animation:gridMove 18s linear infinite;
+
+    }
+
+    @keyframes gridMove{
+
+    100%{
+
+    transform:translateY(45px);
+
+    }
+
+    }
+
+    .gradientGlow{
+
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    width:700px;
+    height:700px;
+
+    background:
+    radial-gradient(circle,
+    rgba(139,92,246,.18),
+    transparent 70%);
+
+    filter:blur(90px);
+
+    }
+
+    .floatingShapes{
+
+    position:absolute;
+    width:100%;
+    height:100%;
+
+    background-image:
+    radial-gradient(#A855F7 1px,transparent 1px);
+
+    background-size:100px 100px;
+
+    opacity:.22;
+
+    animation:floatShapes 30s linear infinite;
+
+    }
+
+    @keyframes floatShapes{
+
+    100%{
+
+    transform:translateY(-500px);
+
+    }
+
+    }
+
+    /*=========================
+    CONTAINER
+    =========================*/
+
+    .container{
+
+    width:430px;
+
+    padding:25px;
+
+    border-radius:28px;
+
+    background:
+    rgba(15,23,42,.92);
+
+    border:2px solid rgba(168,85,247,.30);
+
+    backdrop-filter:blur(14px);
+
+    box-shadow:
+    0 0 40px rgba(168,85,247,.30);
+
+    }
+
+    /*=========================
+    HEADER
+    =========================*/
+
+    .header{
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+    }
+
+    .header h1{
+
+    font-size:27px;
+
+    color:#C084FC;
+
+    text-shadow:0 0 20px #A855F7;
+
+    }
+
+    .header p{
+
+    margin-top:5px;
+
+    color:#94A3B8;
+
+    }
+
+    /*=========================
+    BRIEFING
+    =========================*/
+
+    .briefing{
+
+    padding:18px;
+
+    background:
+    rgba(168,85,247,.08);
+
+    border-left:5px solid #A855F7;
+
+    border-radius:18px;
+
+    margin-bottom:20px;
+
+    }
+
+    .briefing h2{
+
+    margin-bottom:10px;
+
+    color:#DDD6FE;
+
+    }
+
+    .briefing p{
+
+    line-height:1.8;
+
+    color:#E2E8F0;
+
+    }
+
+    /*=========================
+    DESIGN AREA
+    =========================*/
+
+    .designArea{
+
+    height:250px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+    align-items:center;
+
+    background:
+    rgba(255,255,255,.05);
+
+    border-radius:20px;
+
+    margin-bottom:20px;
+
+    padding:20px;
+
+    text-align:center;
+
+    }
+
+    .designArea h2{
+
+    color:#C084FC;
+
+    margin-bottom:15px;
+
+    }
+
+    #challengeText{
+
+    line-height:1.8;
+
+    color:#CBD5E1;
+
+    }
+
+    /*=========================
+    STATUS
+    =========================*/
+
+    .statusBox{
+
+    padding:15px;
+
+    text-align:center;
+
+    background:
+    rgba(255,255,255,.05);
+
+    border-radius:18px;
+
+    margin-bottom:20px;
+
+    }
+
+    .statusBox h3{
+
+    color:#C084FC;
+
+    margin-bottom:8px;
+
+    }
+
+    /*=========================
+    BUTTON
+    =========================*/
+
+    .controls button{
+
+    width:100%;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:18px;
+
+    cursor:pointer;
+
+    font-size:17px;
+
+    font-weight:bold;
+
+    background:
+    linear-gradient(
+    90deg,
+    #8B5CF6,
+    #6366F1);
+
+    color:white;
+
+    transition:.35s;
+
+    box-shadow:
+    0 0 25px rgba(139,92,246,.5);
+
+    }
+
+    .controls button:hover{
+
+    transform:scale(1.05);
+
+    box-shadow:0 0 40px #A855F7;
+
+    }
+
+    /*=========================
+    DESIGN OPTION CARD
+    =========================*/
+
+    .designCard{
+
+    margin-top:12px;
+
+    padding:15px;
+
+    background:#0F172A;
+
+    border:2px solid #8B5CF6;
+
+    border-radius:15px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    text-align:left;
+
+    }
+
+    .designCard:hover{
+
+    transform:scale(1.03);
+
+    box-shadow:0 0 20px #A855F7;
+
+    }
+
+    .designCard h3{
+
+    margin-bottom:8px;
+
+    color:#DDD6FE;
+
+    }
+
+    .designCard p{
+
+    font-size:14px;
+
+    line-height:1.6;
+
+    color:#CBD5E1;
+
+    }
+}
