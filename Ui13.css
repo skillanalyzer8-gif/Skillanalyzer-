@@ -1,0 +1,364 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+    }
+
+    body{
+
+    height:100vh;
+    overflow:hidden;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:#050816;
+    color:white;
+
+    }
+
+    /*=========================
+    BACKGROUND
+    =========================*/
+
+    .background{
+
+    position:fixed;
+    width:100%;
+    height:100%;
+
+    background:
+    linear-gradient(
+    180deg,
+    #050816,
+    #111827,
+    #050816);
+
+    overflow:hidden;
+
+    }
+
+    .textGrid{
+
+    position:absolute;
+    width:100%;
+    height:100%;
+
+    background-image:
+    linear-gradient(rgba(16,185,129,.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(16,185,129,.08) 1px,transparent 1px);
+
+    background-size:45px 45px;
+
+    animation:gridMove 18s linear infinite;
+
+    }
+
+    @keyframes gridMove{
+
+    100%{
+
+    transform:translateY(45px);
+
+    }
+
+    }
+
+    .textGlow{
+
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    width:700px;
+    height:700px;
+
+    background:
+    radial-gradient(circle,
+    rgba(16,185,129,.18),
+    transparent 70%);
+
+    filter:blur(90px);
+
+    }
+
+    .floatingLetters{
+
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    background-image:
+    radial-gradient(#6EE7B7 1px,transparent 1px);
+
+    background-size:100px 100px;
+
+    opacity:.22;
+
+    animation:floatLetters 30s linear infinite;
+
+    }
+
+    @keyframes floatLetters{
+
+    100%{
+
+    transform:translateY(-500px);
+
+    }
+
+    }
+
+    /*=========================
+    CONTAINER
+    =========================*/
+
+    .container{
+
+    width:430px;
+
+    padding:25px;
+
+    border-radius:28px;
+
+    background:rgba(15,23,42,.94);
+
+    border:2px solid rgba(16,185,129,.30);
+
+    backdrop-filter:blur(15px);
+
+    box-shadow:0 0 40px rgba(16,185,129,.35);
+
+    }
+
+    /*=========================
+    HEADER
+    =========================*/
+
+    .header{
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+    }
+
+    .header h1{
+
+    font-size:27px;
+
+    color:#A7F3D0;
+
+    text-shadow:0 0 20px #10B981;
+
+    }
+
+    .header p{
+
+    margin-top:5px;
+
+    color:#94A3B8;
+
+    }
+
+    /*=========================
+    BRIEFING
+    =========================*/
+
+    .briefing{
+
+    padding:18px;
+
+    background:rgba(16,185,129,.08);
+
+    border-left:5px solid #10B981;
+
+    border-radius:18px;
+
+    margin-bottom:20px;
+
+    }
+
+    .briefing h2{
+
+    margin-bottom:10px;
+
+    color:#D1FAE5;
+
+    }
+
+    .briefing p{
+
+    line-height:1.8;
+
+    color:#E2E8F0;
+
+    }
+
+    /*=========================
+    DESIGN AREA
+    =========================*/
+
+    .designArea{
+
+    height:250px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+    align-items:center;
+
+    background:rgba(255,255,255,.05);
+
+    border-radius:20px;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+    text-align:center;
+
+    }
+
+    .designArea h2{
+
+    color:#A7F3D0;
+
+    margin-bottom:15px;
+
+    }
+
+    #challengeText{
+
+    line-height:1.8;
+
+    color:#CBD5E1;
+
+    }
+
+    /*=========================
+    STATUS
+    =========================*/
+
+    .statusBox{
+
+    padding:15px;
+
+    text-align:center;
+
+    background:rgba(255,255,255,.05);
+
+    border-radius:18px;
+
+    margin-bottom:20px;
+
+    }
+
+    .statusBox h3{
+
+    color:#A7F3D0;
+
+    margin-bottom:8px;
+
+    }
+
+    /*=========================
+    BUTTON
+    =========================*/
+
+    .controls button{
+
+    width:100%;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:18px;
+
+    cursor:pointer;
+
+    font-size:17px;
+
+    font-weight:bold;
+
+    background:
+    linear-gradient(
+    90deg,
+    #059669,
+    #34D399);
+
+    color:white;
+
+    transition:.35s;
+
+    box-shadow:0 0 25px rgba(16,185,129,.5);
+
+    }
+
+    .controls button:hover{
+
+    transform:scale(1.05);
+
+    box-shadow:0 0 40px #10B981;
+
+    }
+
+    /*=========================
+    TYPOGRAPHY CARD
+    =========================*/
+
+    .textCard{
+
+    margin-top:12px;
+
+    padding:15px;
+
+    background:#0F172A;
+
+    border:2px solid #10B981;
+
+    border-radius:15px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    text-align:left;
+
+    }
+
+    .textCard:hover{
+
+    transform:scale(1.03);
+
+    box-shadow:0 0 20px #10B981;
+
+    }
+
+    .textCard h3{
+
+    margin-bottom:8px;
+
+    color:#D1FAE5;
+
+    }
+
+    .textCard p{
+
+    font-size:14px;
+
+    line-height:1.6;
+
+    color:#CBD5E1;
+
+    }
+}
