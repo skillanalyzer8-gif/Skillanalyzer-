@@ -172,7 +172,7 @@ navigator.vibrate?.([120,80,120]);
 
 setTimeout(()=>{
 
-window.location.href="UI2.html";
+window.location.href="Ui2.html";
 
 },4500);
 
