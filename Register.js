@@ -1,3 +1,4 @@
+import { auth, db } from "./firebase.js";
 document.querySelector("form").addEventListener("submit", function (e) {
         e.preventDefault();
 
