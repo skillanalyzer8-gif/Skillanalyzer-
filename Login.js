@@ -1,8 +1,6 @@
-alert("Login.js Loaded!");
 import { auth } from "./firebase.js";
 import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// Show / Hide Password
 function togglePassword() {
     let password = document.getElementById("password");
 
@@ -15,11 +13,10 @@ function togglePassword() {
 
 window.togglePassword = togglePassword;
 
-// Login
-async function login() {
+document.getElementById("loginBtn").addEventListener("click", async function () {
 
-    let email = document.getElementById("email").value.trim();
-    let password = document.getElementById("password").value;
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
 
     if (email === "" || password === "") {
         alert("Please enter Email and Password.");
@@ -40,17 +37,9 @@ async function login() {
 
     }
 
-}
+});
 
-window.login = login;
-
-// Forgot Password
 document.querySelector(".forgot").addEventListener("click", function(e){
     e.preventDefault();
     alert("Forgot Password page will be added soon.");
-});
-
-// Sign Up
-document.querySelector(".signup a").addEventListener("click", function(){
-    window.location.href = "Register.html";
 });
