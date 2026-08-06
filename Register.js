@@ -1,3 +1,4 @@
+import { auth, db } from "./firebase.js";
 document.querySelector("form").addEventListener("submit",function(e){
 
         e.preventDefault();
@@ -7,4 +8,3 @@ document.querySelector("form").addEventListener("submit",function(e){
                 window.location.href="Login.html";
 
                 });
-})
