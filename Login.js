@@ -14,6 +14,7 @@ function togglePassword() {
 window.togglePassword = togglePassword;
 
 document.getElementById("loginBtn").addEventListener("click", async function () {
+    alert("Login button clicked")
 
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
