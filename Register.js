@@ -1,22 +1,21 @@
-import { auth, db } from "./firebase.js";
+document.querySelector("form").addEventListener("submit", function (e) {
+        e.preventDefault();
 
-import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+            const fullName = document.getElementById("fullName").value.trim();
+                const email = document.getElementById("email").value.trim();
+                    const password = document.getElementById("password").value;
+                        const confirmPassword = document.getElementById("confirmPassword").value;
 
-import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+                            if (fullName === "" || email === "" || password === "" || confirmPassword === "") {
+                                    alert("Please fill all fields!");
+                                            return;
+                                                }
 
-// 👇 Replace the old event listener with this
-document.querySelector("form").addEventListener("submit", async (e) => {
-    e.preventDefault();
+                                                    if (password !== confirmPassword) {
+                                                            alert("Passwords do not match!");
+                                                                    return;
+                                                                        }
 
-        const fullName = document.getElementById("fullName").value.trim();
-            const email = document.getElementById("email").value.trim();
-                const password = document.getElementById("password").value;
-                    const confirmPassword = document.getElementById("confirmPassword").value;
-
-                        if (password !== confirmPassword) {
-                                alert("Passwords do not match!");
-                                        return;
-                                            }
-
-                                                alert("Form data received successfully!");
-                                                });
+                                                                            alert("Button is working!");
+                                                                            });
+})
