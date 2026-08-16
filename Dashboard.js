@@ -13,33 +13,36 @@ import {
             const welcomeMessage = document.getElementById("welcomeMessage");
 
 
-            // Check who is currently logged in
             onAuthStateChanged(auth, async (user) => {
 
                 if (!user) {
 
-                        // No logged-in user
+                        // User is not logged in
                                 window.location.href = "Login.html";
                                         return;
 
                                             }
 
+
                                                 try {
 
-                                                        // Get user's data from Firestore
+                                                        // Get current user's document
                                                                 const userRef = doc(db, "users", user.uid);
+
                                                                         const userSnap = await getDoc(userRef);
+
 
                                                                                 if (userSnap.exists()) {
 
                                                                                             const userData = userSnap.data();
 
-                                                                                                        const name = userData.fullName || userData.name;
+                                                                                                        const fullName = userData.fullName;
 
-                                                                                                                    if (name) {
+
+                                                                                                                    if (fullName) {
 
                                                                                                                                     welcomeMessage.textContent =
-                                                                                                                                                        `Welcome Back, ${name} 👋`;
+                                                                                                                                                        `Welcome Back, ${fullName} 👋`;
 
                                                                                                                                                                     } else {
 
@@ -50,15 +53,15 @@ import {
 
                                                                                                                                                                                                                             } else {
 
-                                                                                                                                                                                                                                        // Fallback if user document doesn't exist
+                                                                                                                                                                                                                                        // Fallback
                                                                                                                                                                                                                                                     welcomeMessage.textContent =
-                                                                                                                                                                                                                                                                    `Welcome Back, ${user.email.split("@")[0]} 👋`;
+                                                                                                                                                                                                                                                                    "Welcome Back 👋";
 
                                                                                                                                                                                                                                                                             }
 
                                                                                                                                                                                                                                                                                 } catch (error) {
 
-                                                                                                                                                                                                                                                                                        console.error("Could not load user data:", error);
+                                                                                                                                                                                                                                                                                        console.error("Error loading user:", error);
 
                                                                                                                                                                                                                                                                                                 welcomeMessage.textContent =
                                                                                                                                                                                                                                                                                                             "Welcome Back 👋";
@@ -66,38 +69,3 @@ import {
                                                                                                                                                                                                                                                                                                                 }
 
                                                                                                                                                                                                                                                                                                                 });
-
-
-                                                                                                                                                                                                                                                                                                                // Start Journey
-                                                                                                                                                                                                                                                                                                                document.getElementById("startJourneyBtn").addEventListener("click", function () {
-
-                                                                                                                                                                                                                                                                                                                    window.location.href = "DeveloperMindset.html";
-
-                                                                                                                                                                                                                                                                                                                    });
-
-
-                                                                                                                                                                                                                                                                                                                    // Mission Categories
-
-                                                                                                                                                                                                                                                                                                                    document.getElementById("softwareCard").addEventListener("click", function () {
-
-                                                                                                                                                                                                                                                                                                                        window.location.href = "DeveloperMindset.html";
-
-                                                                                                                                                                                                                                                                                                                        });
-
-                                                                                                                                                                                                                                                                                                                        document.getElementById("uiCard").addEventListener("click", function () {
-
-                                                                                                                                                                                                                                                                                                                            window.location.href = "Ui1.html";
-
-                                                                                                                                                                                                                                                                                                                            });
-
-                                                                                                                                                                                                                                                                                                                            document.getElementById("entrepreneurCard").addEventListener("click", function () {
-
-                                                                                                                                                                                                                                                                                                                                window.location.href = "Enter1.html";
-
-                                                                                                                                                                                                                                                                                                                                });
-
-                                                                                                                                                                                                                                                                                                                                document.getElementById("leadershipCard").addEventListener("click", function () {
-
-                                                                                                                                                                                                                                                                                                                                    window.location.href = "Lead1.html";
-
-                                                                                                                                                                                                                                                                                                                                    });
