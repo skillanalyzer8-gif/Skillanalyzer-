@@ -2,202 +2,142 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Skill Analyzer Dashboard</title>
 
-<title>Skill Analyzer Dashboard</title>
+                <link rel="stylesheet" href="Dashboard.css">
 
-<link rel="stylesheet" href="Dashboard.css">
+                    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+                            rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+                                <link rel="stylesheet"
+                                        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+                                        </head>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+                                        <body>
 
-</head>
+                                        <div class="container">
 
-<body>
+                                            <header>
+                                                    <div>
+                                                                <h2>Welcome Back, Thanu 👋</h2>
+                                                                            <p>Choose your mission and unlock your true potential.</p>
+                                                                                    </div>
 
-<div class="container">
+                                                                                            <img src="Logo.jpg" class="profile">
+                                                                                                </header>
 
-<header>
+                                                                                                    <!-- Hero Banner -->
+                                                                                                        <div class="banner">
 
-<div>
+                                                                                                                <h1>SKILL ANALYZER</h1>
 
-<h2>Welcome Back, Thanu 👋</h2>
+                                                                                                                        <p>
+                                                                                                                                    A futuristic AI platform that analyzes your skills through
+                                                                                                                                                immersive games.
+                                                                                                                                                        </p>
 
-<p>Choose your mission and unlock your true potential.</p>
+                                                                                                                                                                <button id="startJourneyBtn">
+                                                                                                                                                                            🚀 Start Journey
+                                                                                                                                                                                    </button>
 
-</div>
+                                                                                                                                                                                        </div>
 
-<img src="Logo.jpg" class="profile">
+                                                                                                                                                                                            <!-- Categories -->
+                                                                                                                                                                                                <h3 class="title">Mission Categories</h3>
 
-</header>
+                                                                                                                                                                                                    <div class="grid">
 
-<!-- Hero Banner -->
+                                                                                                                                                                                                            <div class="card software" id="softwareCard">
+                                                                                                                                                                                                                        <i class="fa-solid fa-code"></i>
+                                                                                                                                                                                                                                    <h4>Software Development</h4>
+                                                                                                                                                                                                                                                <p>20 AI Missions</p>
+                                                                                                                                                                                                                                                        </div>
 
-<div class="banner">
+                                                                                                                                                                                                                                                                <div class="card ui" id="uiCard">
+                                                                                                                                                                                                                                                                            <i class="fa-solid fa-palette"></i>
+                                                                                                                                                                                                                                                                                        <h4>UI / UX Design</h4>
+                                                                                                                                                                                                                                                                                                    <p>20 Creative Missions</p>
+                                                                                                                                                                                                                                                                                                            </div>
 
-<h1>SKILL ANALYZER</h1>
+                                                                                                                                                                                                                                                                                                                    <div class="card entrepreneur" id="entrepreneurCard">
+                                                                                                                                                                                                                                                                                                                                <i class="fa-solid fa-lightbulb"></i>
+                                                                                                                                                                                                                                                                                                                                            <h4>Entrepreneurship</h4>
+                                                                                                                                                                                                                                                                                                                                                        <p>20 Startup Missions</p>
+                                                                                                                                                                                                                                                                                                                                                                </div>
 
-<p>
+                                                                                                                                                                                                                                                                                                                                                                        <div class="card leadership" id="leadershipCard">
+                                                                                                                                                                                                                                                                                                                                                                                    <i class="fa-solid fa-users"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                <h4>Leadership</h4>
+                                                                                                                                                                                                                                                                                                                                                                                                            <p>20 Story Missions</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
 
-A futuristic AI platform that secretly analyzes your skills through immersive games.
+                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
 
-</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                            <!-- Progress -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                <h3 class="title">Overall Progress</h3>
 
-<button onclick="window.location.href='DeveloperMindset.html'">
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="progress-box">
 
-🚀 Start Journey
+                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="progress">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="fill"></div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
 
-</button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <p>Mission Completion: 0%</p>
 
-</div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
 
-<!-- Categories -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <!-- AI Stats -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <h3 class="title">AI Analysis</h3>
 
-<h3 class="title">Mission Categories</h3>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="stats">
 
-<div class="grid">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="stat">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="fa-solid fa-brain"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <h4>Observation</h4>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p>--</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
 
-<div class="card software"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="stat">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="fa-solid fa-bolt"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <h4>Decision</h4>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <p>--</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
 
-onclick="window.location.href='DeveloperMindset.html'">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="stat">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="fa-solid fa-chess-king"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <h4>Leadership</h4>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <p>--</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
 
-<i class="fa-solid fa-code"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
 
-<h4>Software Development</h4>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <!-- Bottom Navigation -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <nav>
 
-<p>20 AI Missions</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <a href="Dashboard.html" class="active">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="fa-solid fa-house"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </a>
 
-</div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <a href="#">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="fa-solid fa-chart-line"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </a>
 
-<div class="card ui"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <a href="#">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="fa-solid fa-trophy"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </a>
 
-onclick="window.location.href='Ui1.html'">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <a href="#">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="fa-solid fa-user"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </a>
 
-<i class="fa-solid fa-palette"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </nav>
 
-<h4>UI / UX Design</h4>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
 
-<p>20 Creative Missions</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <script src="Dashboard.js"></script>
 
-</div>
-
-<div class="card entrepreneur"
-
-onclick="window.location.href='Enter1.html'">
-
-<i class="fa-solid fa-lightbulb"></i>
-
-<h4>Entrepreneurship</h4>
-
-<p>20 Startup Missions</p>
-
-</div>
-
-<div class="card leadership"
-
-onclick="window.location.href='Lead1.html'">
-
-<i class="fa-solid fa-users"></i>
-
-<h4>Leadership</h4>
-
-<p>20 Story Missions</p>
-
-</div>
-
-</div>
-
-<!-- Progress -->
-
-<h3 class="title">Overall Progress</h3>
-
-<div class="progressBox">
-
-<div class="progressBar">
-
-<div class="progressFill"></div>
-
-</div>
-
-<p>Mission Completion : 0%</p>
-
-</div>
-
-<!-- AI Stats -->
-
-<h3 class="title">AI Analysis</h3>
-
-<div class="stats">
-
-<div class="stat">
-
-<i class="fa-solid fa-brain"></i>
-
-<h4>Observation</h4>
-
-<p>--</p>
-
-</div>
-
-<div class="stat">
-
-<i class="fa-solid fa-bolt"></i>
-
-<h4>Decision</h4>
-
-<p>--</p>
-
-</div>
-
-<div class="stat">
-
-<i class="fa-solid fa-chess-king"></i>
-
-<h4>Leadership</h4>
-
-<p>--</p>
-
-</div>
-
-</div>
-
-<!-- Bottom Navigation -->
-
-<nav>
-
-<a href="Dashboard.html" class="active">
-
-<i class="fa-solid fa-house"></i>
-
-</a>
-
-<a href="#">
-
-<i class="fa-solid fa-chart-line"></i>
-
-</a>
-
-<a href="#">
-
-<i class="fa-solid fa-trophy"></i>
-
-</a>
-
-<a href="#">
-
-<i class="fa-solid fa-user"></i>
-
-</a>
-
-</nav>
-
-</div>
-
-<script src="Dashboard.js"></script>
-
-</body>
-
-</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </body>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </html>
