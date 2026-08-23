@@ -59,21 +59,23 @@ options.forEach(function (option) {
         fill.style.width = "0%";
 
         text.textContent =
-            "🤖 AI is analysing your security decision...";
+            "🤖 AI is analysing your decision...";
 
         nextBtn.disabled = true;
         nextBtn.style.opacity = "0.5";
 
 
         setTimeout(function () {
+
             fill.style.width = "100%";
+
         }, 100);
 
 
         setTimeout(async function () {
 
             text.textContent =
-                "✅ Security Decision Recorded Successfully";
+                "✅ Decision Recorded Successfully";
 
 
             if (currentUser) {
@@ -86,10 +88,10 @@ options.forEach(function (option) {
                             "users",
                             currentUser.uid,
                             "missions",
-                            "mission5"
+                            "mission6"
                         ),
                         {
-                            missionNumber: 5,
+                            missionNumber: 6,
                             answer: selectedAnswer,
                             completed: true,
                             completedAt: new Date().toISOString()
@@ -102,18 +104,18 @@ options.forEach(function (option) {
                     nextBtn.style.opacity = "1";
 
                     console.log(
-                        "Mission 5 saved successfully!"
+                        "Mission 6 saved successfully!"
                     );
 
                 } catch (error) {
 
                     console.error(
-                        "Error saving Mission 5:",
+                        "Error saving Mission 6:",
                         error
                     );
 
                     alert(
-                        "Could not save Mission 5. Please try again."
+                        "Could not save Mission 6. Please try again."
                     );
 
                 }
@@ -127,7 +129,7 @@ options.forEach(function (option) {
 });
 
 
-// Continue to Mission 6
+// Continue to Mission 7
 nextBtn.addEventListener("click", function () {
 
     if (selectedAnswer === "") {
@@ -141,7 +143,7 @@ nextBtn.addEventListener("click", function () {
     if (!missionCompleted) {
 
         alert(
-            "Please wait until your security decision is saved."
+            "Please wait until your decision is saved."
         );
 
         return;
@@ -149,59 +151,6 @@ nextBtn.addEventListener("click", function () {
     }
 
 
-    window.location.href = "Mission6.html";
+    window.location.href = "Mission7.html";
 
 });
-                                                                                                                                                                    if(answer === "Check Server Logs"){
-
-                                                                                                                                                                                    message =
-                                                                                                                                                                                                    "✅ Excellent Decision!<br><br>" +
-                                                                                                                                                                                                                    "Backend Debugging +20<br>" +
-                                                                                                                                                                                                                                    "API Analysis +18<br>" +
-                                                                                                                                                                                                                                                    "Developer DNA Updated";
-
-                                                                                                                                                                                                                                                                }
-
-                                                                                                                                                                                                                                                                            else if(answer === "Restart API Service"){
-
-                                                                                                                                                                                                                                                                                            message =
-                                                                                                                                                                                                                                                                                                            "👍 Good Decision!<br><br>" +
-                                                                                                                                                                                                                                                                                                                            "Service Recovery +10";
-
-                                                                                                                                                                                                                                                                                                                                        }
-
-                                                                                                                                                                                                                                                                                                                                                    else if(answer === "Restart Database"){
-
-                                                                                                                                                                                                                                                                                                                                                                    message =
-                                                                                                                                                                                                                                                                                                                                                                                    "⚠ Database is healthy.<br><br>" +
-                                                                                                                                                                                                                                                                                                                                                                                                    "Wrong component selected.";
-
-                                                                                                                                                                                                                                                                                                                                                                                                                }
-
-                                                                                                                                                                                                                                                                                                                                                                                                                            else{
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                            message =
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            "❌ Poor Decision!<br><br>" +
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "Problem Solving -20<br>" +
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "Customer Trust -15";
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    text.innerHTML = message;
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                nextBtn.disabled = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            nextBtn.style.opacity = "1";
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    },1800);
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        });
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        });
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        // Continue to Mission 7
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        nextBtn.addEventListener("click", function(){
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            window.location.href = "Mission7.html";
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            });
