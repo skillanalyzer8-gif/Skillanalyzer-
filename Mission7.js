@@ -1,40 +1,153 @@
+import { auth, db } from "./firebase.js";
+
+import {
+    doc,
+    setDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
 const options = document.querySelectorAll(".option");
 const fill = document.querySelector(".fill");
 const text = document.querySelector(".analysis p");
 const nextBtn = document.getElementById("nextBtn");
 
-// Disable Next button initially
+let selectedAnswer = "";
+let currentUser = null;
+let missionCompleted = false;
+
+
+// Check logged-in user
+onAuthStateChanged(auth, function (user) {
+
+    if (user) {
+        currentUser = user;
+    } else {
+        alert("Please login first.");
+        window.location.href = "Login.html";
+    }
+
+});
+
+
+// Disable Continue initially
 nextBtn.disabled = true;
 nextBtn.style.opacity = "0.5";
 
-options.forEach(option => {
+
+// Option selection
+options.forEach(function (option) {
 
     option.addEventListener("click", function () {
 
-            // Remove previous selection
-                    options.forEach(opt => opt.classList.remove("active"));
+        options.forEach(function (item) {
+            item.classList.remove("active");
+        });
 
-                            // Highlight selected option
-                                    this.classList.add("active");
+        this.classList.add("active");
 
-                                            // Reset analysis
-                                                    fill.style.width = "0%";
-                                                            text.innerHTML = "🤖 AI is analysing your cloud strategy...";
+        selectedAnswer =
+            this.querySelector("h4").textContent.trim();
 
-                                                                    nextBtn.disabled = true;
-                                                                            nextBtn.style.opacity = "0.5";
 
-                                                                                    // Animate progress
-                                                                                            setTimeout(() => {
-                                                                                                        fill.style.width = "100%";
-                                                                                                                }, 100);
+        // AI analysis
+        fill.style.width = "0%";
 
-                                                                                                                        // AI Result
-                                                                                                                                setTimeout(() => {
+        text.textContent =
+            "🤖 AI is analysing your cloud decision...";
 
-                                                                                                                                            let answer = this.querySelector("h4").innerText;
-                                                                                                                                                        let message = "";
+        nextBtn.disabled = true;
+        nextBtn.style.opacity = "0.5";
 
+
+        setTimeout(function () {
+            fill.style.width = "100%";
+        }, 100);
+
+
+        setTimeout(async function () {
+
+            text.textContent =
+                "✅ Cloud Decision Recorded Successfully";
+
+
+            if (currentUser) {
+
+                try {
+
+                    await setDoc(
+                        doc(
+                            db,
+                            "users",
+                            currentUser.uid,
+                            "missions",
+                            "mission7"
+                        ),
+                        {
+                            missionNumber: 7,
+                            answer: selectedAnswer,
+                            completed: true,
+                            completedAt: new Date().toISOString()
+                        }
+                    );
+
+                    missionCompleted = true;
+
+                    nextBtn.disabled = false;
+                    nextBtn.style.opacity = "1";
+
+                    console.log(
+                        "Mission 7 saved successfully!"
+                    );
+
+                } catch (error) {
+
+                    console.error(
+                        "Error saving Mission 7:",
+                        error
+                    );
+
+                    alert(
+                        "Could not save Mission 7. Please try again."
+                    );
+
+                }
+
+            }
+
+        }, 1500);
+
+    });
+
+});
+
+
+// Continue to Mission 8
+nextBtn.addEventListener("click", function () {
+
+    if (selectedAnswer === "") {
+
+        alert("Please select an option first.");
+        return;
+
+    }
+
+    if (!missionCompleted) {
+
+        alert(
+            "Please wait until your cloud decision is saved."
+        );
+
+        return;
+
+    }
+
+    window.location.href = "Mission8.html";
+
+});
                                                                                                                                                                     if(answer === "Scale Servers"){
 
                                                                                                                                                                                     message =
