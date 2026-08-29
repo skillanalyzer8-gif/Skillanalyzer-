@@ -1,46 +1,174 @@
+import { auth, db } from "./firebase.js";
+
+import {
+    doc,
+    setDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
 const options = document.querySelectorAll(".option");
 const fill = document.querySelector(".fill");
 const text = document.querySelector(".analysis p");
 const nextBtn = document.getElementById("nextBtn");
 
+let selectedAnswer = "";
+let currentUser = null;
+let missionCompleted = false;
+
+
+// Check logged-in user
+onAuthStateChanged(auth, function (user) {
+
+    if (user) {
+
+        currentUser = user;
+
+    } else {
+
+        alert("Please login first.");
+        window.location.href = "Login.html";
+
+    }
+
+});
+
+
+// Disable button initially
 nextBtn.disabled = true;
 nextBtn.style.opacity = "0.5";
 
-options.forEach(option => {
+
+// Option selection
+options.forEach(function (option) {
 
     option.addEventListener("click", function () {
 
-            options.forEach(opt => opt.classList.remove("active"));
+        // Remove previous selection
+        options.forEach(function (item) {
+            item.classList.remove("active");
+        });
 
-                    this.classList.add("active");
+        // Highlight selected option
+        this.classList.add("active");
 
-                            fill.style.width = "0%";
-                                    text.innerHTML = "🤖 AI is analysing your final mission...";
+        selectedAnswer =
+            this.querySelector("h4").textContent.trim();
 
-                                            nextBtn.disabled = true;
-                                                    nextBtn.style.opacity = "0.5";
 
-                                                            setTimeout(() => {
-                                                                        fill.style.width = "100%";
-                                                                                }, 100);
+        // Start AI analysis
+        fill.style.width = "0%";
 
-                                                                                        setTimeout(() => {
+        text.textContent =
+            "🤖 AI is analysing your final deployment decision...";
 
-                                                                                                    text.innerHTML =
-                                                                                                                "🎉 Software Development Level 1 Completed!<br><br>" +
-                                                                                                                            "Advanced Challenges Unlocked.";
+        nextBtn.disabled = true;
+        nextBtn.style.opacity = "0.5";
 
-                                                                                                                                        nextBtn.disabled = false;
-                                                                                                                                                    nextBtn.style.opacity = "1";
 
-                                                                                                                                                            }, 1800);
+        setTimeout(function () {
 
-                                                                                                                                                                });
+            fill.style.width = "100%";
 
-                                                                                                                                                                });
+        }, 100);
 
-                                                                                                                                                                nextBtn.addEventListener("click", function () {
 
-                                                                                                                                                                    window.location.href = "Mission11.html";
+        // Save Mission 10
+        setTimeout(async function () {
 
-                                                                                                                                                                    })
+            if (!currentUser) {
+
+                text.textContent =
+                    "❌ Please login again.";
+
+                return;
+
+            }
+
+
+            try {
+
+                await setDoc(
+                    doc(
+                        db,
+                        "users",
+                        currentUser.uid,
+                        "missions",
+                        "mission10"
+                    ),
+                    {
+                        missionNumber: 10,
+                        answer: selectedAnswer,
+                        completed: true,
+                        completedAt: new Date().toISOString()
+                    }
+                );
+
+
+                missionCompleted = true;
+
+                text.textContent =
+                    "🎉 Mission 10 Completed Successfully!";
+
+                nextBtn.disabled = false;
+                nextBtn.style.opacity = "1";
+
+
+                console.log(
+                    "Mission 10 saved successfully!"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error saving Mission 10:",
+                    error
+                );
+
+                missionCompleted = false;
+
+                text.textContent =
+                    "❌ Could not save your final decision.";
+
+                alert(
+                    "Could not save Mission 10. Please try again."
+                );
+
+            }
+
+        }, 1500);
+
+    });
+
+});
+
+
+// View Developer DNA Report
+nextBtn.addEventListener("click", function () {
+
+    if (selectedAnswer === "") {
+
+        alert("Please select an option first.");
+        return;
+
+    }
+
+
+    if (!missionCompleted) {
+
+        alert(
+            "Please wait until your final decision is saved."
+        );
+
+        return;
+
+    }
+
+
+    window.location.href = "Mission11.html";
+
+});
