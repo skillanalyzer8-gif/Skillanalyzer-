@@ -2,201 +2,172 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
-    setDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        setDoc
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import {
-    onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import {
+            onAuthStateChanged
+            } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-const options = document.querySelectorAll(".option");
-const fill = document.querySelector(".fill");
-const text = document.querySelector(".analysis p");
-const nextBtn = document.getElementById("nextBtn");
+            const options = document.querySelectorAll(".option");
+            const fill = document.querySelector(".fill");
+            const text = document.querySelector(".analysis p");
+            const nextBtn = document.getElementById("nextBtn");
 
-let selectedAnswer = "";
-let currentUser = null;
-let missionCompleted = false;
+            let selectedAnswer = "";
+            let currentUser = null;
+            let missionCompleted = false;
 
 
-// Check logged-in user
-onAuthStateChanged(auth, function (user) {
+            // Check logged-in user
+            onAuthStateChanged(auth, function (user) {
 
-    if (user) {
+                if (user) {
 
-        currentUser = user;
+                        currentUser = user;
 
-    } else {
+                            } else {
 
-        alert("Please login first.");
-        window.location.href = "Login.html";
+                                    alert("Please login first.");
+                                            window.location.href = "Login.html";
 
-    }
+                                                }
 
-});
+                                                });
 
 
-// Disable Continue initially
-nextBtn.disabled = true;
-nextBtn.style.opacity = "0.5";
+                                                // Disable Continue initially
+                                                nextBtn.disabled = true;
+                                                nextBtn.style.opacity = "0.5";
 
 
-// Option selection
-options.forEach(function (option) {
+                                                // Option selection
+                                                options.forEach(function (option) {
 
-    option.addEventListener("click", function () {
+                                                    option.addEventListener("click", function () {
 
-        // Remove previous selection
-        options.forEach(function (item) {
-            item.classList.remove("active");
-        });
+                                                            // Remove previous selection
+                                                                    options.forEach(function (item) {
+                                                                                item.classList.remove("active");
+                                                                                        });
 
-        // Select current option
-        this.classList.add("active");
+                                                                                                // Highlight selected option
+                                                                                                        this.classList.add("active");
 
-        selectedAnswer =
-            this.querySelector("h4").textContent.trim();
+                                                                                                                selectedAnswer =
+                                                                                                                            this.querySelector("h4").textContent.trim();
 
 
-        // Start AI analysis UI
-        fill.style.width = "0%";
+                                                                                                                                    // Start AI analysis
+                                                                                                                                            fill.style.width = "0%";
 
-        text.textContent =
-            "🤖 AI is analysing your decision...";
+                                                                                                                                                    text.textContent =
+                                                                                                                                                                "🤖 AI is analysing your decision...";
 
+                                                                                                                                                                        nextBtn.disabled = true;
+                                                                                                                                                                                nextBtn.style.opacity = "0.5";
 
-        nextBtn.disabled = true;
-        nextBtn.style.opacity = "0.5";
 
+                                                                                                                                                                                        setTimeout(function () {
 
-        setTimeout(function () {
+                                                                                                                                                                                                    fill.style.width = "100%";
 
-            fill.style.width = "100%";
+                                                                                                                                                                                                            }, 100);
 
-        }, 100);
 
+                                                                                                                                                                                                                    setTimeout(async function () {
 
-        setTimeout(async function () {
+                                                                                                                                                                                                                                if (!currentUser) {
 
-            text.textContent =
-                "✅ Decision Recorded Successfully";
+                                                                                                                                                                                                                                                text.textContent =
+                                                                                                                                                                                                                                                                    "❌ Please login again.";
 
+                                                                                                                                                                                                                                                                                    return;
 
-            // Enable button
-            nextBtn.disabled = false;
-            nextBtn.style.opacity = "1";
+                                                                                                                                                                                                                                                                                                }
 
 
-            // Save answer to Firebase
-            if (currentUser) {
+                                                                                                                                                                                                                                                                                                            try {
 
-                try {
+                                                                                                                                                                                                                                                                                                                            await setDoc(
+                                                                                                                                                                                                                                                                                                                                                doc(
+                                                                                                                                                                                                                                                                                                                                                                        db,
+                                                                                                                                                                                                                                                                                                                                                                                                "users",
+                                                                                                                                                                                                                                                                                                                                                                                                                        currentUser.uid,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                "missions",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        "mission2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ),
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        missionNumber: 2,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                answer: selectedAnswer,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        completed: true,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                completedAt: new Date().toISOString()
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    );
 
-                    await setDoc(
-                        doc(
-                            db,
-                            "users",
-                            currentUser.uid,
-                            "missions",
-                            "mission2"
-                        ),
-                        {
-                            missionNumber: 2,
-                            answer: selectedAnswer,
-                            completed: true,
-                            completedAt: new Date().toISOString()
-                        }
-                    );
 
-                    missionCompleted = true;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    missionCompleted = true;
 
-                    console.log(
-                        "Mission 2 saved successfully!"
-                    );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    text.textContent =
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        "✅ Decision Recorded Successfully";
 
-                } catch (error) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        nextBtn.disabled = false;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        nextBtn.style.opacity = "1";
 
-                    console.error(
-                        "Error saving Mission 2:",
-                        error
-                    );
 
-                    alert(
-                        "Could not save Mission 2. Please try again."
-                    );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        console.log(
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "Mission 2 saved successfully!"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            );
 
-                    missionCompleted = false;
 
-                }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        } catch (error) {
 
-            }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        console.error(
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "Error saving Mission 2:",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                error
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                );
 
-        }, 1500);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                missionCompleted = false;
 
-    });
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                text.textContent =
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    "❌ Could not save your decision.";
 
-});
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    alert(
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        "Could not save Mission 2. Please try again."
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        );
 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
 
-// Continue to Mission 3
-nextBtn.addEventListener("click", function () {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }, 1500);
 
-    if (selectedAnswer === "") {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                });
 
-        alert("Please select an option first.");
-        return;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                });
 
-    }
 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // Continue to Mission 3
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                nextBtn.addEventListener("click", function () {
 
-    if (!missionCompleted) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    if (selectedAnswer === "") {
 
-        alert(
-            "Please wait until your decision is saved."
-        );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            alert("Please select an option first.");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    return;
 
-        return;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
 
-    }
 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            if (!missionCompleted) {
 
-    // Open Mission 3
-    window.location.href = "Mission3.html";
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    alert(
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "Please wait until your decision is saved."
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        );
 
-});
-                                                                                                                                                        if (this.querySelector("h4").innerText === "Notify Customers") {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                return;
 
-                                                                                                                                                                        message = "✅ Excellent! Customer Trust +20";
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
 
-                                                                                                                                                                                    } else if (this.querySelector("h4").innerText === "Investigate Gateway Logs") {
 
-                                                                                                                                                                                                    message = "✅ Great! Critical Thinking +18";
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        window.location.href = "Mission3.html";
 
-                                                                                                                                                                                                                } else if (this.querySelector("h4").innerText === "Rollback Deployment") {
-
-                                                                                                                                                                                                                                message = "✅ Good! Decision Making +15";
-
-                                                                                                                                                                                                                                            } else {
-
-                                                                                                                                                                                                                                                            message = "⚠ Risky Choice! AI suggests reviewing customer impact.";
-
-                                                                                                                                                                                                                                                                        }
-
-                                                                                                                                                                                                                                                                                    text.innerHTML = message;
-
-                                                                                                                                                                                                                                                                                                nextBtn.disabled = false;
-                                                                                                                                                                                                                                                                                                            nextBtn.style.opacity = "1";
-
-                                                                                                                                                                                                                                                                                                                    }, 1800);
-
-                                                                                                                                                                                                                                                                                                                        });
-
-                                                                                                                                                                                                                                                                                                                        });
-
-                                                                                                                                                                                                                                                                                                                        // Go to Mission 3
-                                                                                                                                                                                                                                                                                                                        nextBtn.addEventListener("click", function () {
-
-                                                                                                                                                                                                                                                                                                                            window.location.href = "Mission3.html";
-
-                                                                                                                                                                                                                                                                                                                            });
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        });
