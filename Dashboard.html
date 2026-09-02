@@ -2,143 +2,433 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-            <title>Skill Analyzer Dashboard</title>
+    <title>Skill Analyzer Dashboard</title>
 
-                <link rel="stylesheet" href="Dashboard.css">
+    <!-- Dashboard CSS -->
+    <link rel="stylesheet" href="Dashboard.css">
 
-                    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-                            rel="stylesheet">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-                                <link rel="stylesheet"
-                                        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-                                        </head>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
 
-                                        <body>
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
 
-                                        <div class="container">
+</head>
 
-                                            <header>
-                                                    <div
 
-                                                                    <h2 id="welcomeMessage">Welcome Back 👋</h2>  <h2 id="welcomeMessage">Welcome Back 👋</h2>
-                                                                            <p>Choose your mission and unlock your true potential.</p>
-                                                                                    </div>
+<body>
 
-                                                                                            <img src="Logo.jpg" class="profile">
-                                                                                                </header>
 
-                                                                                                    <!-- Hero Banner -->
-                                                                                                        <div class="banner">
+    <!-- ========================================= -->
+    <!-- NAVBAR -->
+    <!-- ========================================= -->
 
-                                                                                                                <h1>SKILL ANALYZER</h1>
+    <nav class="navbar">
 
-                                                                                                                        <p>
-                                                                                                                                    A futuristic AI platform that analyzes your skills through
-                                                                                                                                                immersive games.
-                                                                                                                                                        </p>
+        <div class="logo">
+            SKILL <span>ANALYZER</span>
+        </div>
 
-                                                                                                                                                                <button id="startJourneyBtn">
-                                                                                                                                                                            🚀 Start Journey
-                                                                                                                                                                                    </button>
+    </nav>
 
-                                                                                                                                                                                        </div>
 
-                                                                                                                                                                                            <!-- Categories -->
-                                                                                                                                                                                                <h3 class="title">Mission Categories</h3>
 
-                                                                                                                                                                                                    <div class="grid">
+    <!-- ========================================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ========================================= -->
 
-                                                                                                                                                                                                            <div class="card software" id="softwareCard">
-                                                                                                                                                                                                                        <i class="fa-solid fa-code"></i>
-                                                                                                                                                                                                                                    <h4>Software Development</h4>
-                                                                                                                                                                                                                                                <p>20 AI Missions</p>
-                                                                                                                                                                                                                                                        </div>
+    <main class="dashboard-container">
 
-                                                                                                                                                                                                                                                                <div class="card ui" id="uiCard">
-                                                                                                                                                                                                                                                                            <i class="fa-solid fa-palette"></i>
-                                                                                                                                                                                                                                                                                        <h4>UI / UX Design</h4>
-                                                                                                                                                                                                                                                                                                    <p>20 Creative Missions</p>
-                                                                                                                                                                                                                                                                                                            </div>
 
-                                                                                                                                                                                                                                                                                                                    <div class="card entrepreneur" id="entrepreneurCard">
-                                                                                                                                                                                                                                                                                                                                <i class="fa-solid fa-lightbulb"></i>
-                                                                                                                                                                                                                                                                                                                                            <h4>Entrepreneurship</h4>
-                                                                                                                                                                                                                                                                                                                                                        <p>20 Startup Missions</p>
-                                                                                                                                                                                                                                                                                                                                                                </div>
+        <!-- ========================================= -->
+        <!-- WELCOME -->
+        <!-- ========================================= -->
 
-                                                                                                                                                                                                                                                                                                                                                                        <div class="card leadership" id="leadershipCard">
-                                                                                                                                                                                                                                                                                                                                                                                    <i class="fa-solid fa-users"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                <h4>Leadership</h4>
-                                                                                                                                                                                                                                                                                                                                                                                                            <p>20 Story Missions</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
+        <section class="welcome-section">
 
-                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+            <div>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                            <!-- Progress -->
-                                                                                                                                                                                                                                                                                                                                                                                                                                <h3 class="title">Overall Progress</h3>
+                <h2 id="welcomeMessage">
+                    Welcome Back 👋
+                </h2>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="progress-box">
+                <p>
+                    Choose your mission and unlock your true potential.
+                </p>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="progress">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="fill"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+            </div>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <p>Mission Completion: 0%</p>
+            <img
+                src="Logo.jpg"
+                class="profile"
+                alt="Profile"
+            >
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+        </section>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <!-- AI Stats -->
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <h3 class="title">AI Analysis</h3>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="stats">
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="stat">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="fa-solid fa-brain"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <h4>Observation</h4>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p>--</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+        <!-- ========================================= -->
+        <!-- HERO BANNER -->
+        <!-- ========================================= -->
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="stat">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="fa-solid fa-bolt"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <h4>Decision</h4>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <p>--</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+        <section class="hero-banner">
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="stat">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="fa-solid fa-chess-king"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <h4>Leadership</h4>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <p>--</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
+            <div class="hero-content">
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+                <h1>
+                    SKILL ANALYZER
+                </h1>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <!-- Bottom Navigation -->
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <nav>
+                <p>
+                    A futuristic AI platform that analyzes your
+                    skills through immersive games.
+                </p>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <a href="Dashboard.html" class="active">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="fa-solid fa-house"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </a>
+                <button
+                    id="startJourneyBtn"
+                    class="start-btn"
+                >
+                    🚀 Start Journey
+                </button>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <a href="#">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="fa-solid fa-chart-line"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </a>
+            </div>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <a href="#">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="fa-solid fa-trophy"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </a>
+        </section>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <a href="feedback.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="fa-solid fa-user"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </a>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </nav>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
+        <!-- ========================================= -->
+        <!-- MISSION CATEGORIES -->
+        <!-- ========================================= -->
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <script type="module" src="Dashboard.js"></script>
+        <section class="missions-section">
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </body>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </html>
+            <h2>
+                Mission Categories
+            </h2>
+
+
+            <div class="mission-grid">
+
+
+                <!-- SOFTWARE DEVELOPMENT -->
+
+                <div
+                    class="mission-card"
+                    id="softwareCard"
+                >
+
+                    <div class="mission-icon">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+
+                    <h3>
+                        Software Development
+                    </h3>
+
+                    <p>
+                        20 AI Missions
+                    </p>
+
+                </div>
+
+
+
+                <!-- UI UX -->
+
+                <div
+                    class="mission-card"
+                    id="uiCard"
+                >
+
+                    <div class="mission-icon">
+                        <i class="fa-solid fa-pen-ruler"></i>
+                    </div>
+
+                    <h3>
+                        UI / UX Design
+                    </h3>
+
+                    <p>
+                        20 Creative Missions
+                    </p>
+
+                </div>
+
+
+
+                <!-- ENTREPRENEURSHIP -->
+
+                <div
+                    class="mission-card"
+                    id="entrepreneurCard"
+                >
+
+                    <div class="mission-icon">
+                        <i class="fa-solid fa-lightbulb"></i>
+                    </div>
+
+                    <h3>
+                        Entrepreneurship
+                    </h3>
+
+                    <p>
+                        20 Startup Missions
+                    </p>
+
+                </div>
+
+
+
+                <!-- LEADERSHIP -->
+
+                <div
+                    class="mission-card"
+                    id="leadershipCard"
+                >
+
+                    <div class="mission-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+
+                    <h3>
+                        Leadership
+                    </h3>
+
+                    <p>
+                        20 Story Missions
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================================= -->
+        <!-- OVERALL PROGRESS -->
+        <!-- ========================================= -->
+
+        <section class="progress-section">
+
+            <div class="section-title">
+
+                <h2>
+                    Overall Progress
+                </h2>
+
+                <span>
+                    Mission Completion: 0%
+                </span>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    style="width: 0%;"
+                ></div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================================= -->
+        <!-- AI ANALYSIS -->
+        <!-- ========================================= -->
+
+        <section class="analysis-section">
+
+            <h2>
+                AI Analysis
+            </h2>
+
+
+            <div class="analysis-grid">
+
+
+                <!-- OBSERVATION -->
+
+                <div class="analysis-card">
+
+                    <div class="analysis-icon">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+
+                    <h3>
+                        Observation
+                    </h3>
+
+                    <p>
+                        --
+                    </p>
+
+                </div>
+
+
+
+                <!-- DECISION -->
+
+                <div class="analysis-card">
+
+                    <div class="analysis-icon">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+
+                    <h3>
+                        Decision
+                    </h3>
+
+                    <p>
+                        --
+                    </p>
+
+                </div>
+
+
+
+                <!-- LEADERSHIP -->
+
+                <div class="analysis-card">
+
+                    <div class="analysis-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+
+                    <h3>
+                        Leadership
+                    </h3>
+
+                    <p>
+                        --
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================================= -->
+        <!-- FEEDBACK BUTTON -->
+        <!-- ========================================= -->
+
+        <section class="feedback-section">
+
+            <a
+                href="Feedback.html"
+                class="feedback-button"
+            >
+
+                <i class="fa-solid fa-comment-dots"></i>
+
+                <span>
+                    Give Feedback
+                </span>
+
+            </a>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- ========================================= -->
+    <!-- BOTTOM NAVIGATION -->
+    <!-- ========================================= -->
+
+    <nav class="bottom-nav">
+
+
+        <!-- HOME -->
+
+        <a
+            href="Dashboard.html"
+            class="active"
+            title="Dashboard"
+        >
+
+            <i class="fa-solid fa-house"></i>
+
+        </a>
+
+
+        <!-- PROGRESS -->
+
+        <a
+            href="#"
+            title="Progress"
+        >
+
+            <i class="fa-solid fa-chart-line"></i>
+
+        </a>
+
+
+        <!-- ACHIEVEMENTS -->
+
+        <a
+            href="#"
+            title="Achievements"
+        >
+
+            <i class="fa-solid fa-trophy"></i>
+
+        </a>
+
+
+        <!-- FEEDBACK -->
+
+        <a
+            href="Feedback.html"
+            title="Feedback"
+        >
+
+            <i class="fa-solid fa-comment-dots"></i>
+
+        </a>
+
+
+    </nav>
+
+
+
+    <!-- ========================================= -->
+    <!-- DASHBOARD JAVASCRIPT -->
+    <!-- ========================================= -->
+
+    <script
+        type="module"
+        src="Dashboard.js"
+    ></script>
+
+
+</body>
+
+</html>
