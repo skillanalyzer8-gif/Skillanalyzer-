@@ -1,17 +1,3 @@
-
-
-Skip to content
-Using Gmail with screen readers
-Enable desktop notifications for Gmail.
-   OK  No, thanks
-21 of 102
-E1
-Inbox
-
-Skillanalyzer <skillanalyzer8@gmail.com>
-Wed 2 Sept, 07:20 (1 day ago)
-to me
-
 import { auth, db } from "./firebase.js";
 
 import {
