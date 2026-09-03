@@ -1,525 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <title>Skill Analyzer Dashboard</title>
 
-    <title>Skill Analyzer - Dashboard</title>
+    <link rel="stylesheet" href="Dashboard.css">
 
-    <link rel="stylesheet"
-          href="Dashboard.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
 </head>
 
 <body>
 
-    <!-- ================= NAVBAR ================= -->
+<div class="app">
 
-    <header class="navbar">
+    <!-- HEADER -->
+    <header class="topbar">
 
-        <div class="logo">
-            <i class="fa-solid fa-brain"></i>
-            <span>SKILL ANALYZER</span>
+        <div class="welcome">
+            <p class="small-title">SKILL ANALYZER</p>
+
+            <h2 id="welcomeMessage">
+                Welcome Back 👋
+            </h2>
+
+            <p class="subtitle">
+                Choose your mission and unlock your true potential.
+            </p>
         </div>
 
-        <nav class="nav-links">
-
-            <a href="Dashboard.html" class="active">
-                <i class="fa-solid fa-house"></i>
-                Home
-            </a>
-
-            <a href="#">
-                <i class="fa-solid fa-chart-line"></i>
-                Progress
-            </a>
-
-            <a href="#">
-                <i class="fa-solid fa-trophy"></i>
-                Achievements
-            </a>
-
-            <a href="#">
-                <i class="fa-solid fa-user"></i>
-                Profile
-            </a>
-
-        </nav>
+        <button class="profile-button" id="profileBtn">
+            <img src="Logo.jpg" alt="Profile" class="profile">
+        </button>
 
     </header>
 
 
-    <!-- ================= MAIN CONTAINER ================= -->
+    <!-- HERO -->
+    <section class="hero">
 
-    <main class="dashboard-container">
+        <div class="hero-content">
 
-
-        <!-- ================= WELCOME SECTION ================= -->
-
-        <section class="welcome-section">
-
-            <div class="welcome-text">
-
-                <p class="small-title">
-                    WELCOME TO YOUR JOURNEY
-                </p>
-
-                <h1 id="welcomeMessage">
-                    Welcome Back 👋
-                </h1>
-
-                <p>
-                    Discover your strengths, improve your skills
-                    and find the right career path for you.
-                </p>
-
+            <div class="badge">
+                <i class="fa-solid fa-sparkles"></i>
+                AI POWERED
             </div>
 
+            <h1>
+                SKILL<br>
+                <span>ANALYZER</span>
+            </h1>
 
-            <div class="welcome-image">
+            <p>
+                Test your practical skills through immersive missions
+                and discover the career path that fits you best.
+            </p>
 
-                <img src="Logo.jpg"
-                     alt="Skill Analyzer Logo">
+            <button id="startJourneyBtn" class="start-btn">
+                <i class="fa-solid fa-rocket"></i>
+                Start Journey
+            </button>
 
+        </div>
+
+        <div class="hero-circle">
+            <i class="fa-solid fa-brain"></i>
+        </div>
+
+    </section>
+
+
+    <!-- MISSION CATEGORIES -->
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <span>EXPLORE</span>
+                <h3>Mission Categories</h3>
             </div>
 
-        </section>
+            <strong>4 Missions</strong>
+
+        </div>
 
 
-        <!-- ================= HERO SECTION ================= -->
+        <div class="mission-grid">
 
-        <section class="hero-section">
+            <!-- SOFTWARE -->
+            <button class="mission-card software" id="softwareCard">
 
-            <div class="hero-content">
+                <div class="icon-box">
+                    <i class="fa-solid fa-code"></i>
+                </div>
 
-                <span class="hero-tag">
-                    AI POWERED CAREER GUIDE
-                </span>
-
-                <h2>
-                    Discover Your
-                    <span>Developer DNA</span>
-                </h2>
+                <h4>
+                    Software Development
+                </h4>
 
                 <p>
-                    Test your real-world skills through
-                    interactive missions and get personalized
-                    career recommendations.
+                    Logic, coding & problem solving
                 </p>
 
-                <button id="startJourneyBtn"
-                        class="start-button">
-
-                    <span>START YOUR JOURNEY</span>
-
+                <small>
+                    20 AI Missions
                     <i class="fa-solid fa-arrow-right"></i>
+                </small>
 
-                </button>
-
-            </div>
-
-        </section>
+            </button>
 
 
-        <!-- ================= SKILL MISSIONS ================= -->
+            <!-- UI UX -->
+            <button class="mission-card ui" id="uiCard">
 
-        <section class="missions-section">
-
-            <div class="section-heading">
-
-                <div>
-                    <p class="section-label">
-                        CHOOSE YOUR PATH
-                    </p>
-
-                    <h2>
-                        Skill Missions
-                    </h2>
+                <div class="icon-box">
+                    <i class="fa-solid fa-palette"></i>
                 </div>
 
-                <p class="section-description">
-                    Select a skill and start your assessment.
+                <h4>
+                    UI / UX Design
+                </h4>
+
+                <p>
+                    Creativity, design & user thinking
                 </p>
 
+                <small>
+                    20 Creative Missions
+                    <i class="fa-solid fa-arrow-right"></i>
+                </small>
+
+            </button>
+
+
+            <!-- ENTREPRENEURSHIP -->
+            <button
+                class="mission-card entrepreneur"
+                id="entrepreneurCard"
+            >
+
+                <div class="icon-box">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+
+                <h4>
+                    Entrepreneurship
+                </h4>
+
+                <p>
+                    Innovation, risk & business thinking
+                </p>
+
+                <small>
+                    20 Startup Missions
+                    <i class="fa-solid fa-arrow-right"></i>
+                </small>
+
+            </button>
+
+
+            <!-- LEADERSHIP -->
+            <button
+                class="mission-card leadership"
+                id="leadershipCard"
+            >
+
+                <div class="icon-box">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+
+                <h4>
+                    Leadership
+                </h4>
+
+                <p>
+                    Decision making & team skills
+                </p>
+
+                <small>
+                    20 Story Missions
+                    <i class="fa-solid fa-arrow-right"></i>
+                </small>
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- PROGRESS -->
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <span>YOUR JOURNEY</span>
+                <h3>Overall Progress</h3>
             </div>
 
+            <strong id="progressPercent">
+                0%
+            </strong>
 
-            <div class="mission-grid">
+        </div>
 
 
-                <!-- SOFTWARE DEVELOPMENT -->
-
-                <div class="mission-card"
-                     id="softwareCard">
-
-                    <div class="mission-icon software-icon">
-
-                        <i class="fa-solid fa-code"></i>
-
-                    </div>
-
-                    <div class="mission-content">
-
-                        <span class="mission-number">
-                            MISSION 01
-                        </span>
-
-                        <h3>
-                            Software Development
-                        </h3>
-
-                        <p>
-                            Test your programming,
-                            problem-solving and logical
-                            thinking skills.
-                        </p>
-
-                        <button class="mission-button">
-
-                            Start Mission
-
-                            <i class="fa-solid fa-arrow-right"></i>
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- UI / UX -->
-
-                <div class="mission-card"
-                     id="uiCard">
-
-                    <div class="mission-icon ui-icon">
-
-                        <i class="fa-solid fa-pen-ruler"></i>
-
-                    </div>
-
-                    <div class="mission-content">
-
-                        <span class="mission-number">
-                            MISSION 02
-                        </span>
-
-                        <h3>
-                            UI / UX Design
-                        </h3>
-
-                        <p>
-                            Explore your creativity,
-                            design thinking and user
-                            experience skills.
-                        </p>
-
-                        <button class="mission-button">
-
-                            Start Mission
-
-                            <i class="fa-solid fa-arrow-right"></i>
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- ENTREPRENEURSHIP -->
-
-                <div class="mission-card"
-                     id="entrepreneurCard">
-
-                    <div class="mission-icon entrepreneur-icon">
-
-                        <i class="fa-solid fa-lightbulb"></i>
-
-                    </div>
-
-                    <div class="mission-content">
-
-                        <span class="mission-number">
-                            MISSION 03
-                        </span>
-
-                        <h3>
-                            Entrepreneurship
-                        </h3>
-
-                        <p>
-                            Test your business thinking,
-                            innovation and decision-making
-                            abilities.
-                        </p>
-
-                        <button class="mission-button">
-
-                            Start Mission
-
-                            <i class="fa-solid fa-arrow-right"></i>
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- LEADERSHIP -->
-
-                <div class="mission-card"
-                     id="leadershipCard">
-
-                    <div class="mission-icon leadership-icon">
-
-                        <i class="fa-solid fa-users"></i>
-
-                    </div>
-
-                    <div class="mission-content">
-
-                        <span class="mission-number">
-                            MISSION 04
-                        </span>
-
-                        <h3>
-                            Leadership
-                        </h3>
-
-                        <p>
-                            Evaluate your communication,
-                            teamwork and leadership skills.
-                        </p>
-
-                        <button class="mission-button">
-
-                            Start Mission
-
-                            <i class="fa-solid fa-arrow-right"></i>
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= PROGRESS ================= -->
-
-        <section class="progress-section">
+        <div class="progress-card">
 
             <div class="progress-header">
 
                 <div>
+                    <h4>Mission Completion</h4>
 
-                    <p class="section-label">
-                        YOUR PROGRESS
+                    <p id="progressText">
+                        Complete your first mission to start your journey.
                     </p>
-
-                    <h2>
-                        Mission Progress
-                    </h2>
-
                 </div>
 
-                <span class="progress-percent">
-                    0%
-                </span>
-
-            </div>
-
-
-            <div class="progress-bar-container">
-
-                <div class="progress-bar"
-                     style="width: 0%;">
-
+                <div class="progress-icon">
+                    <i class="fa-solid fa-chart-line"></i>
                 </div>
 
             </div>
 
 
-            <p class="progress-text">
-                Complete your first mission to start
-                building your skill profile.
-            </p>
+            <div class="progress-track">
 
-        </section>
+                <div
+                    class="progress-fill"
+                    id="progressFill"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </section>
 
 
-        <!-- ================= AI ANALYSIS ================= -->
+    <!-- AI ANALYSIS -->
+    <section class="section">
 
-        <section class="analysis-section">
+        <div class="section-heading">
 
-            <div class="section-heading">
+            <div>
+                <span>SMART INSIGHTS</span>
+                <h3>AI Analysis</h3>
+            </div>
 
-                <div>
+        </div>
 
-                    <p class="section-label">
-                        AI POWERED
-                    </p>
 
-                    <h2>
-                        Your AI Analysis
-                    </h2>
+        <div class="stats-grid">
 
+            <div class="stat-card">
+
+                <div class="stat-icon brain">
+                    <i class="fa-solid fa-brain"></i>
                 </div>
 
-                <p class="section-description">
-                    Your assessment results will power
-                    personalized career insights.
-                </p>
+                <span>Observation</span>
+
+                <strong id="observationStat">
+                    --
+                </strong>
 
             </div>
 
 
-            <div class="analysis-grid">
+            <div class="stat-card">
 
-
-                <!-- STRENGTH -->
-
-                <div class="analysis-card">
-
-                    <div class="analysis-icon">
-
-                        <i class="fa-solid fa-bolt"></i>
-
-                    </div>
-
-                    <h3>
-                        Your Strengths
-                    </h3>
-
-                    <p>
-                        Discover the skills where
-                        you perform best.
-                    </p>
-
+                <div class="stat-icon decision">
+                    <i class="fa-solid fa-bolt"></i>
                 </div>
 
+                <span>Decision</span>
 
-                <!-- SKILL GAP -->
-
-                <div class="analysis-card">
-
-                    <div class="analysis-icon">
-
-                        <i class="fa-solid fa-chart-simple"></i>
-
-                    </div>
-
-                    <h3>
-                        Skill Gap
-                    </h3>
-
-                    <p>
-                        Identify areas where you can
-                        improve and grow.
-                    </p>
-
-                </div>
-
-
-                <!-- CAREER -->
-
-                <div class="analysis-card">
-
-                    <div class="analysis-icon">
-
-                        <i class="fa-solid fa-route"></i>
-
-                    </div>
-
-                    <h3>
-                        Career Path
-                    </h3>
-
-                    <p>
-                        Get career recommendations
-                        based on your skills.
-                    </p>
-
-                </div>
-
+                <strong id="decisionStat">
+                    --
+                </strong>
 
             </div>
 
-        </section>
+
+            <div class="stat-card">
+
+                <div class="stat-icon leadership-icon">
+                    <i class="fa-solid fa-chess-king"></i>
+                </div>
+
+                <span>Leadership</span>
+
+                <strong id="leadershipStat">
+                    --
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
 
 
-    </main>
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="bottom-nav">
 
-
-    <!-- ================= BOTTOM NAVIGATION ================= -->
-
-    <div class="bottom-nav">
-
-        <a href="Dashboard.html"
-           class="bottom-nav-item active">
-
+        <a href="Dashboard.html" class="nav-item active">
             <i class="fa-solid fa-house"></i>
-
             <span>Home</span>
-
         </a>
 
-
-        <a href="#"
-           class="bottom-nav-item">
-
+        <a href="Results.html" class="nav-item">
             <i class="fa-solid fa-chart-line"></i>
-
-            <span>Progress</span>
-
+            <span>Results</span>
         </a>
 
-
-        <a href="#"
-           class="bottom-nav-item">
-
+        <a href="Achievements.html" class="nav-item">
             <i class="fa-solid fa-trophy"></i>
-
-            <span>Achievements</span>
-
+            <span>Goals</span>
         </a>
 
-
-        <a href="#"
-           class="bottom-nav-item">
-
+        <a href="Profile.html" class="nav-item">
             <i class="fa-solid fa-user"></i>
-
             <span>Profile</span>
-
         </a>
 
-    </div>
+    </nav>
+
+</div>
 
 
-    <!-- ================= JAVASCRIPT ================= -->
-
-    <script type="module"
-            src="Dashboard.js"></script>
+<script type="module" src="Dashboard.js"></script>
 
 </body>
-
 </html>
