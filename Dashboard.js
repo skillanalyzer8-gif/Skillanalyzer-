@@ -1,114 +1,157 @@
+// ================= FIREBASE IMPORTS =================
+
 import { auth, db } from "./firebase.js";
 
 import {
     onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    import {
-        doc,
-            getDoc
-            } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
-            // ===============================
-            // DYNAMIC WELCOME NAME
-            // ===============================
-
-            const welcomeMessage = document.getElementById("welcomeMessage");
-
-            onAuthStateChanged(auth, async (user) => {
-
-                if (!user) {
-                        window.location.href = "Login.html";
-                                return;
-                                    }
-
-                                        try {
-
-                                                const userRef = doc(db, "users", user.uid);
-                                                        const userSnap = await getDoc(userRef);
-
-                                                                if (userSnap.exists()) {
-
-                                                                            const userData = userSnap.data();
-
-                                                                                        if (userData.fullName) {
-                                                                                                        welcomeMessage.textContent =
-                                                                                                                            `Welcome Back, ${userData.fullName} 👋`;
-                                                                                                                                        } else {
-                                                                                                                                                        welcomeMessage.textContent =
-                                                                                                                                                                            "Welcome Back 👋";
-                                                                                                                                                                                        }
-
-                                                                                                                                                                                                } else {
-
-                                                                                                                                                                                                            welcomeMessage.textContent =
-                                                                                                                                                                                                                            "Welcome Back 👋";
-
-                                                                                                                                                                                                                                    }
-
-                                                                                                                                                                                                                                        } catch (error) {
-
-                                                                                                                                                                                                                                                console.error("Error loading user:", error);
-
-                                                                                                                                                                                                                                                        welcomeMessage.textContent =
-                                                                                                                                                                                                                                                                    "Welcome Back 👋";
-
-                                                                                                                                                                                                                                                                        }
-
-                                                                                                                                                                                                                                                                        });
+import {
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-                                                                                                                                                                                                                                                                        // ===============================
-                                                                                                                                                                                                                                                                        // START JOURNEY
-                                                                                                                                                                                                                                                                        // ===============================
+// ================= HTML ELEMENTS =================
 
-                                                                                                                                                                                                                                                                        document.getElementById("startJourneyBtn").addEventListener("click", function () {
+const welcomeMessage =
+    document.getElementById("welcomeMessage");
 
-                                                                                                                                                                                                                                                                            window.location.href = "DeveloperMindset.html";
+const startJourneyBtn =
+    document.getElementById("startJourneyBtn");
 
-                                                                                                                                                                                                                                                                            });
+const softwareCard =
+    document.getElementById("softwareCard");
 
+const uiCard =
+    document.getElementById("uiCard");
 
-                                                                                                                                                                                                                                                                            // ===============================
-                                                                                                                                                                                                                                                                            // SOFTWARE DEVELOPMENT
-                                                                                                                                                                                                                                                                            // ===============================
+const entrepreneurCard =
+    document.getElementById("entrepreneurCard");
 
-                                                                                                                                                                                                                                                                            document.getElementById("softwareCard").addEventListener("click", function () {
-
-                                                                                                                                                                                                                                                                                window.location.href = "DeveloperMindset.html";
-
-                                                                                                                                                                                                                                                                                });
-
-
-                                                                                                                                                                                                                                                                                // ===============================
-                                                                                                                                                                                                                                                                                // UI / UX DESIGN
-                                                                                                                                                                                                                                                                                // ===============================
-
-                                                                                                                                                                                                                                                                                document.getElementById("uiCard").addEventListener("click", function () {
-
-                                                                                                                                                                                                                                                                                    window.location.href = "Ui1.html";
-
-                                                                                                                                                                                                                                                                                    });
+const leadershipCard =
+    document.getElementById("leadershipCard");
 
 
-                                                                                                                                                                                                                                                                                    // ===============================
-                                                                                                                                                                                                                                                                                    // ENTREPRENEURSHIP
-                                                                                                                                                                                                                                                                                    // ===============================
+// ================= CHECK LOGIN =================
 
-                                                                                                                                                                                                                                                                                    document.getElementById("entrepreneurCard").addEventListener("click", function () {
+onAuthStateChanged(auth, async (user) => {
 
-                                                                                                                                                                                                                                                                                        window.location.href = "Enter1.html";
+    if (!user) {
 
-                                                                                                                                                                                                                                                                                        });
+        // User is not logged in
+        window.location.href = "Login.html";
+
+        return;
+    }
 
 
-                                                                                                                                                                                                                                                                                        // ===============================
-                                                                                                                                                                                                                                                                                        // LEADERSHIP
-                                                                                                                                                                                                                                                                                        // ===============================
+    // ================= GET USER DATA =================
 
-                                                                                                                                                                                                                                                                                        document.getElementById("leadershipCard").addEventListener("click", function () {
+    try {
 
-                                                                                                                                                                                                                                                                                            window.location.href = "Lead1.html";
+        const userRef = doc(db, "users", user.uid);
 
-                                                                                                                                                                                                                                                                                            });
+        const userSnapshot = await getDoc(userRef);
+
+
+        if (userSnapshot.exists()) {
+
+            const userData = userSnapshot.data();
+
+            const fullName =
+                userData.fullName || "User";
+
+            welcomeMessage.textContent =
+                `Welcome Back, ${fullName} 👋`;
+
+        } else {
+
+            // If user document doesn't exist
+            welcomeMessage.textContent =
+                "Welcome Back 👋";
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Error getting user data:",
+            error
+        );
+
+        welcomeMessage.textContent =
+            "Welcome Back 👋";
+    }
+
+});
+
+
+// ================= START JOURNEY =================
+
+if (startJourneyBtn) {
+
+    startJourneyBtn.addEventListener("click", () => {
+
+        window.location.href =
+            "DeveloperMindset.html";
+
+    });
+
+}
+
+
+// ================= SOFTWARE DEVELOPMENT =================
+
+if (softwareCard) {
+
+    softwareCard.addEventListener("click", () => {
+
+        window.location.href =
+            "DeveloperMindset.html";
+
+    });
+
+}
+
+
+// ================= UI / UX =================
+
+if (uiCard) {
+
+    uiCard.addEventListener("click", () => {
+
+        window.location.href =
+            "Ui1.html";
+
+    });
+
+}
+
+
+// ================= ENTREPRENEURSHIP =================
+
+if (entrepreneurCard) {
+
+    entrepreneurCard.addEventListener("click", () => {
+
+        window.location.href =
+            "Enter1.html";
+
+    });
+
+}
+
+
+// ================= LEADERSHIP =================
+
+if (leadershipCard) {
+
+    leadershipCard.addEventListener("click", () => {
+
+        window.location.href =
+            "Lead1.html";
+
+    });
+
+}
