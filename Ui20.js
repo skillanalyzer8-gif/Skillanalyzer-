@@ -87,12 +87,132 @@ startBtn.addEventListener("click", async () => {
 async function completeFinalMission() {
 
     const finalScore = 100;
-    const finalCategory = "UX Mastery";
-    const finalAnswer = "Completed all 20 UI/UX Missions";
 
+    const finalCategory = "UX Mastery";
+
+    const finalAnswer =
+        "Completed all 20 UI/UX Missions";
+
+
+    // ===============================
+    // DISPLAY FINAL RESULT
+    // ===============================
 
     designArea.innerHTML = `
 
         <h2>🏆 UX MASTERY ACHIEVED!</h2>
 
-        <
+        <br>
+
+        <p>
+            Congratulations! You have successfully completed
+            all 20 UI/UX learning missions.
+        </p>
+
+        <br>
+
+        <h3>
+            🎨 Missions Completed : 20 / 20
+        </h3>
+
+        <h3>
+            🧠 UX Mastery Score : ${finalScore}%
+        </h3>
+
+        <h3>
+            ⭐ Final Rating : ★★★★★
+        </h3>
+
+        <h3>
+            🏅 Achievement : UX Design Master
+        </h3>
+
+        <br>
+
+        <p>
+            You have completed your journey through
+            UI/UX fundamentals, accessibility, typography,
+            navigation, research, personalization,
+            microinteractions and more.
+        </p>
+
+    `;
+
+
+    status.innerHTML =
+        "Saving your final UX mastery result...";
+
+
+    // ===============================
+    // SAVE MISSION 20
+    // ===============================
+
+    try {
+
+        await setDoc(
+
+            doc(
+                db,
+                "users",
+                currentUser.uid,
+                "missions",
+                "mission20"
+            ),
+
+            {
+
+                missionNumber: 20,
+
+                answer: finalAnswer,
+
+                score: finalScore,
+
+                category: finalCategory,
+
+                finalRating: "★★★★★",
+
+                missionsCompleted: 20,
+
+                completed: true,
+
+                completedAt:
+                    new Date().toISOString()
+
+            }
+
+        );
+
+
+        // ===============================
+        // UPDATE USER PROFILE
+        // ===============================
+
+        await setDoc(
+
+            doc(
+                db,
+                "users",
+                currentUser.uid
+            ),
+
+            {
+
+                assessmentCompleted: true,
+
+                finalCategory: finalCategory,
+
+                finalMission: 20,
+
+                finalAnswer: finalAnswer,
+
+                finalScore: finalScore,
+
+                completedAt:
+                    new Date().toISOString()
+
+            },
+
+            {
+                merge: true
+
+           
