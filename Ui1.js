@@ -1,101 +1,174 @@
-// ================================
-// UI/UX MISSION 1 - JAVASCRIPT
-// ================================
+import { auth, db } from "./firebase.js";
 
-// Create body content
-document.body.innerHTML = `
-   
-    <!-- Animated Background -->
-    <div class="background">
-        <div class="designGrid"></div>
-        <div class="gradientGlow"></div>
-        <div class="floatingShapes"></div>
-    </div>
+import {
+    doc,
+    setDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    <div class="container">
-
-        <!-- Header -->
-        <div class="header">
-            <h1>🎨 DESIGN MASTER STUDIO</h1>
-            <p>UI/UX Mission 1 / 20</p>
-        </div>
-
-        <!-- AI Mentor -->
-        <div class="briefing">
-            <h2>🤖 AI Design Mentor</h2>
-
-            <p>
-                Welcome, Designer.<br><br>
-
-                Today is your first day in our Design Studio.<br><br>
-
-                Millions of users will use the app you create.<br><br>
-
-                Your first task is simple...<br><br>
-
-                Create a login screen that people love.<br><br>
-
-                Remember:<br><br>
-
-                Great design is not beautiful because of colors.<br><br>
-
-                Great design is beautiful because it is easy to use.
-            </p>
-        </div>
-
-        <!-- Challenge -->
-        <div class="designArea">
-            <h2>📱 Design Challenge</h2>
-
-            <p id="challengeText">
-                The client is waiting for your first design...
-            </p>
-        </div>
-
-        <!-- Status -->
-        <div class="statusBox">
-            <h3>Design Review</h3>
-
-            <p id="statusText">
-                Ready to begin...
-            </p>
-        </div>
-
-        <!-- Button -->
-        <div class="controls">
-            <button id="startDesign">
-                ✨ START DESIGN
-            </button>
-        </div>
-
-    </div>
-`;
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-// ======================================
-// GET HTML ELEMENTS USING JAVASCRIPT
-// ======================================
+// ========================================
+// DOM ELEMENTS
+// ========================================
 
-const startButton = document.getElementById("startDesign");
-const challengeText = document.getElementById("challengeText");
-const statusText = document.getElementById("statusText");
+const challengeText =
+    document.getElementById("challengeText");
+
+const statusText =
+    document.getElementById("statusText");
+
+const startDesign =
+    document.getElementById("startDesign");
 
 
-// ======================================
-// BUTTON FUNCTIONALITY
-// ======================================
+let currentUser = null;
+let missionCompleted = false;
 
-startButton.addEventListener("click", function () {
+
+// ========================================
+// AUTHENTICATION
+// ========================================
+
+onAuthStateChanged(auth, (user) => {
+
+    if (user) {
+
+        currentUser = user;
+
+    } else {
+
+        alert("Please login first.");
+
+        window.location.href = "Login.html";
+
+    }
+
+});
+
+
+// ========================================
+// START DESIGN MISSION
+// ========================================
+
+startDesign.addEventListener("click", async () => {
+
+    // Check login
+    if (!currentUser) {
+
+        alert("Please login first.");
+
+        window.location.href = "Login.html";
+
+        return;
+
+    }
+
+
+    // Prevent completing twice
+    if (missionCompleted) {
+
+        return;
+
+    }
+
+
+    // Disable button
+    startDesign.disabled = true;
+
+    startDesign.style.opacity = "0.6";
+
+
+    // ========================================
+    // STARTING MESSAGE
+    // ========================================
 
     challengeText.textContent =
-        "Your mission: Design a clean and user-friendly login screen.";
+        "Your mission: Create a login screen that is simple, beautiful, and easy to use.";
 
     statusText.textContent =
-        "🚀 Mission started! Time to create your login screen.";
+        "🎨 AI Design Mentor is reviewing your first UI/UX challenge...";
 
-    startButton.textContent =
-        "🎨 DESIGNING...";
 
-    startButton.disabled = true;
+    try {
+
+        // ========================================
+        // SAVE MISSION 1
+        // ========================================
+
+        await setDoc(
+            doc(
+                db,
+                "users",
+                currentUser.uid,
+                "missions",
+                "mission1"
+            ),
+            {
+
+                missionNumber: 1,
+
+                answer:
+                    "Create a simple, beautiful and easy-to-use login screen.",
+
+                score: 100,
+
+                category: "UI/UX Design",
+
+                completed: true,
+
+                completedAt:
+                    new Date().toISOString()
+
+            }
+        );
+
+
+        // ========================================
+        // FINAL MISSION STATUS
+        // ========================================
+
+        challengeText.textContent =
+            "Mission 1 completed! Your first design challenge is complete.";
+
+        statusText.textContent =
+            "✅ Excellent! You completed your first UI/UX mission.";
+
+
+        missionCompleted = true;
+
+
+        // Update button
+        startDesign.textContent =
+            "MISSION COMPLETED ✓";
+
+        startDesign.disabled = true;
+
+        startDesign.style.opacity = "0.7";
+
+
+    } catch (error) {
+
+        // ========================================
+        // FIREBASE ERROR
+        // ========================================
+
+        console.error(
+            "UI1 Firebase Error:",
+            error
+        );
+
+
+        startDesign.disabled = false;
+
+        startDesign.style.opacity = "1";
+
+
+        statusText.textContent =
+            "❌ Could not save your mission. Please try again.";
+
+    }
 
 });

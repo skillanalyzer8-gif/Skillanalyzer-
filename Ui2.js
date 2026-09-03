@@ -1,110 +1,18 @@
-// ========================================
-// UI/UX MISSION 2 - COLOR PSYCHOLOGY
-// ========================================
+import { auth, db } from "./firebase.js";
 
-// Create the complete page using JavaScript
+import {
+    doc,
+    setDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-document.body.innerHTML = `
-
-    <!-- Background -->
-    <div class="background">
-
-        <div class="colorGrid"></div>
-
-        <div class="gradientGlow"></div>
-
-        <div class="floatingColors"></div>
-
-    </div>
-
-
-    <div class="container">
-
-        <!-- Header -->
-        <div class="header">
-
-            <h1>
-                🌈 COLOR PSYCHOLOGY
-            </h1>
-
-            <p>
-                UI/UX Mission 2 / 20
-            </p>
-
-        </div>
-
-
-        <!-- AI Mentor -->
-        <div class="briefing">
-
-            <h2>
-                🤖 AI Design Mentor
-            </h2>
-
-            <p>
-                Amazing work on your first design!<br><br>
-
-                Now every designer faces a bigger challenge...<br><br>
-
-                Choosing the right colors.<br><br>
-
-                Colors create emotions before users even read a single word.<br><br>
-
-                Today's client is launching a new banking application.<br><br>
-
-                Which color creates the strongest feeling of trust?
-            </p>
-
-        </div>
-
-
-        <!-- Challenge -->
-        <div class="designArea">
-
-            <h2>
-                🏦 Client Project
-            </h2>
-
-            <p id="challengeText">
-                The client is waiting for your color selection...
-            </p>
-
-        </div>
-
-
-        <!-- Status -->
-        <div class="statusBox">
-
-            <h3>
-                Color Review
-            </h3>
-
-            <p id="statusText">
-                Ready to analyze colors...
-            </p>
-
-        </div>
-
-
-        <!-- Controls -->
-        <div class="controls">
-
-            <button id="startChallenge">
-                🎨 CHOOSE COLORS
-            </button>
-
-        </div>
-
-    </div>
-`;
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 // ========================================
-// SELECT ELEMENTS
+// DOM ELEMENTS
 // ========================================
-
-const startButton =
-    document.getElementById("startChallenge");
 
 const challengeText =
     document.getElementById("challengeText");
@@ -112,22 +20,158 @@ const challengeText =
 const statusText =
     document.getElementById("statusText");
 
+const startChallenge =
+    document.getElementById("startChallenge");
+
+
+let currentUser = null;
+let missionCompleted = false;
+
 
 // ========================================
-// BUTTON EVENT
+// AUTHENTICATION
 // ========================================
 
-startButton.addEventListener("click", function () {
+onAuthStateChanged(auth, (user) => {
+
+    if (user) {
+
+        currentUser = user;
+
+    } else {
+
+        alert("Please login first.");
+
+        window.location.href = "Login.html";
+
+    }
+
+});
+
+
+// ========================================
+// START COLOR CHALLENGE
+// ========================================
+
+startChallenge.addEventListener("click", async () => {
+
+    // Check whether user is logged in
+    if (!currentUser) {
+
+        alert("Please login first.");
+
+        window.location.href = "Login.html";
+
+        return;
+
+    }
+
+
+    // Prevent duplicate completion
+    if (missionCompleted) {
+
+        return;
+
+    }
+
+
+    // Disable button while processing
+    startChallenge.disabled = true;
+
+    startChallenge.style.opacity = "0.6";
+
+
+    // ========================================
+    // START CHALLENGE
+    // ========================================
 
     challengeText.textContent =
-        "Choose a color that communicates trust for the banking application.";
+        "For the banking application, choose a color that communicates trust, security, and reliability.";
 
     statusText.textContent =
-        "🔍 Color analysis started! Think about what emotions each color creates.";
+        "🌈 AI Design Mentor is analyzing your color psychology...";
 
-    startButton.textContent =
-        "🎨 COLORS SELECTED";
 
-    startButton.disabled = true;
+    try {
+
+        // ========================================
+        // SAVE MISSION 2
+        // ========================================
+
+        await setDoc(
+            doc(
+                db,
+                "users",
+                currentUser.uid,
+                "missions",
+                "mission2"
+            ),
+            {
+
+                missionNumber: 2,
+
+                answer:
+                    "Blue communicates trust, security, and reliability.",
+
+                selectedColor: "Blue",
+
+                score: 100,
+
+                category: "Color Psychology",
+
+                completed: true,
+
+                completedAt:
+                    new Date().toISOString()
+
+            }
+        );
+
+
+        // ========================================
+        // FINAL RESULT
+        // ========================================
+
+        challengeText.textContent =
+            "Excellent choice! Blue is commonly associated with trust, security, and reliability.";
+
+        statusText.textContent =
+            "✅ Mission 2 completed! Your color psychology decision was successful.";
+
+
+        missionCompleted = true;
+
+
+        // Update button
+        startChallenge.textContent =
+            "MISSION COMPLETED ✓";
+
+        startChallenge.disabled = true;
+
+        startChallenge.style.opacity = "0.7";
+
+
+    } catch (error) {
+
+        // ========================================
+        // FIREBASE ERROR
+        // ========================================
+
+        console.error(
+            "UI2 Firebase Error:",
+            error
+        );
+
+
+        // Allow retry
+        startChallenge.disabled = false;
+
+        startChallenge.style.opacity = "1";
+
+
+        statusText.textContent =
+            "❌ Could not save your mission. Please try again.";
+
+    }
 
 });
