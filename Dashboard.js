@@ -1,5 +1,3 @@
-// ================= FIREBASE IMPORTS =================
-
 import { auth, db } from "./firebase.js";
 
 import {
@@ -12,146 +10,285 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-// ================= HTML ELEMENTS =================
+// ======================================
+// HELPER
+// ======================================
 
-const welcomeMessage =
-    document.getElementById("welcomeMessage");
-
-const startJourneyBtn =
-    document.getElementById("startJourneyBtn");
-
-const softwareCard =
-    document.getElementById("softwareCard");
-
-const uiCard =
-    document.getElementById("uiCard");
-
-const entrepreneurCard =
-    document.getElementById("entrepreneurCard");
-
-const leadershipCard =
-    document.getElementById("leadershipCard");
+function goTo(page) {
+    window.location.href = page;
+}
 
 
-// ================= CHECK LOGIN =================
+// ======================================
+// PROGRESS
+// ======================================
+
+function updateProgress(value) {
+
+    let progress = Number(value);
+
+    if (isNaN(progress)) {
+        progress = 0;
+    }
+
+    progress = Math.max(
+        0,
+        Math.min(100, progress)
+    );
+
+    document.getElementById(
+        "progressFill"
+    ).style.width = progress + "%";
+
+    document.getElementById(
+        "progressPercent"
+    ).textContent = progress + "%";
+
+
+    const progressText =
+        document.getElementById("progressText");
+
+
+    if (progress === 0) {
+
+        progressText.textContent =
+            "Complete your first mission to start your journey.";
+
+    } else if (progress === 100) {
+
+        progressText.textContent =
+            "Amazing! You completed your Skill Analyzer journey.";
+
+    } else {
+
+        progressText.textContent =
+            `${progress}% completed. Keep going and discover your strengths!`;
+
+    }
+}
+
+
+// ======================================
+// FIREBASE AUTHENTICATION
+// ======================================
 
 onAuthStateChanged(auth, async (user) => {
 
+    // USER NOT LOGGED IN
     if (!user) {
 
-        // User is not logged in
-        window.location.href = "Login.html";
+        goTo("Login.html");
 
         return;
     }
 
 
-    // ================= GET USER DATA =================
-
     try {
 
-        const userRef = doc(db, "users", user.uid);
+        // GET USER DOCUMENT
+        const userRef = doc(
+            db,
+            "users",
+            user.uid
+        );
 
-        const userSnapshot = await getDoc(userRef);
+        const userSnap =
+            await getDoc(userRef);
 
 
-        if (userSnapshot.exists()) {
+        if (userSnap.exists()) {
 
-            const userData = userSnapshot.data();
+            const userData =
+                userSnap.data();
 
-            const fullName =
-                userData.fullName || "User";
 
-            welcomeMessage.textContent =
-                `Welcome Back, ${fullName} 👋`;
+            // ==========================
+            // WELCOME NAME
+            // ==========================
+
+            const welcomeMessage =
+                document.getElementById(
+                    "welcomeMessage"
+                );
+
+
+            if (userData.fullName) {
+
+                welcomeMessage.textContent =
+                    `Welcome Back, ${userData.fullName} 👋`;
+
+            } else {
+
+                welcomeMessage.textContent =
+                    "Welcome Back 👋";
+            }
+
+
+            // ==========================
+            // PROGRESS
+            // ==========================
+
+            updateProgress(
+                userData.progress ??
+                userData.missionCompletion ??
+                0
+            );
+
+
+            // ==========================
+            // AI ANALYSIS
+            // ==========================
+
+            document.getElementById(
+                "observationStat"
+            ).textContent =
+                userData.observation ?? "--";
+
+
+            document.getElementById(
+                "decisionStat"
+            ).textContent =
+                userData.decision ?? "--";
+
+
+            document.getElementById(
+                "leadershipStat"
+            ).textContent =
+                userData.leadership ?? "--";
+
 
         } else {
 
-            // If user document doesn't exist
-            welcomeMessage.textContent =
+            document.getElementById(
+                "welcomeMessage"
+            ).textContent =
                 "Welcome Back 👋";
+
+            updateProgress(0);
         }
 
 
     } catch (error) {
 
         console.error(
-            "Error getting user data:",
+            "Error loading user data:",
             error
         );
 
-        welcomeMessage.textContent =
+        document.getElementById(
+            "welcomeMessage"
+        ).textContent =
             "Welcome Back 👋";
+
+        updateProgress(0);
     }
 
 });
 
 
-// ================= START JOURNEY =================
+// ======================================
+// START JOURNEY
+// ======================================
 
-if (startJourneyBtn) {
+document
+    .getElementById("startJourneyBtn")
+    .addEventListener(
+        "click",
+        () => {
 
-    startJourneyBtn.addEventListener("click", () => {
+            goTo(
+                "DeveloperMindset.html"
+            );
 
-        window.location.href =
-            "DeveloperMindset.html";
-
-    });
-
-}
-
-
-// ================= SOFTWARE DEVELOPMENT =================
-
-if (softwareCard) {
-
-    softwareCard.addEventListener("click", () => {
-
-        window.location.href =
-            "DeveloperMindset.html";
-
-    });
-
-}
+        }
+    );
 
 
-// ================= UI / UX =================
+// ======================================
+// SOFTWARE DEVELOPMENT
+// ======================================
 
-if (uiCard) {
+document
+    .getElementById("softwareCard")
+    .addEventListener(
+        "click",
+        () => {
 
-    uiCard.addEventListener("click", () => {
+            goTo(
+                "DeveloperMindset.html"
+            );
 
-        window.location.href =
-            "Ui1.html";
-
-    });
-
-}
-
-
-// ================= ENTREPRENEURSHIP =================
-
-if (entrepreneurCard) {
-
-    entrepreneurCard.addEventListener("click", () => {
-
-        window.location.href =
-            "Enter1.html";
-
-    });
-
-}
+        }
+    );
 
 
-// ================= LEADERSHIP =================
+// ======================================
+// UI / UX
+// ======================================
 
-if (leadershipCard) {
+document
+    .getElementById("uiCard")
+    .addEventListener(
+        "click",
+        () => {
 
-    leadershipCard.addEventListener("click", () => {
+            goTo(
+                "Ui1.html"
+            );
 
-        window.location.href =
-            "Lead1.html";
+        }
+    );
 
-    });
 
-}
+// ======================================
+// ENTREPRENEURSHIP
+// ======================================
+
+document
+    .getElementById("entrepreneurCard")
+    .addEventListener(
+        "click",
+        () => {
+
+            goTo(
+                "Enter1.html"
+            );
+
+        }
+    );
+
+
+// ======================================
+// LEADERSHIP
+// ======================================
+
+document
+    .getElementById("leadershipCard")
+    .addEventListener(
+        "click",
+        () => {
+
+            goTo(
+                "Lead1.html"
+            );
+
+        }
+    );
+
+
+// ======================================
+// PROFILE
+// ======================================
+
+document
+    .getElementById("profileBtn")
+    .addEventListener(
+        "click",
+        () => {
+
+            goTo(
+                "Profile.html"
+            );
+
+        }
+    );
