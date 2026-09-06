@@ -1,65 +1,111 @@
-* {
-        margin: 0;
-            padding: 0;
-                box-sizing: border-box;
-                }
-
-                html {
-                    scroll-behavior: smooth;
+.cards {
+        display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 28px !important;
+                    margin-top: 30px !important;
                     }
 
-                    body {
-                        min-height: 100vh;
-                            font-family: "Poppins", sans-serif;
-                                color: #ffffff;
-                                    background:
-                                            radial-gradient(circle at 10% 10%, rgba(139, 92, 246, 0.30), transparent 32%),
-                                                    radial-gradient(circle at 90% 15%, rgba(217, 70, 239, 0.22), transparent 30%),
-                                                            radial-gradient(circle at 50% 100%, rgba(124, 58, 237, 0.30), transparent 38%),
-                                                                    #07000f;
-                                                                        overflow-x: hidden;
-                                                                        }
+                    .skillCard {
+                        position: relative !important;
+                            display: block !important;
+                                min-height: 310px !important;
+                                    padding: 32px !important;
+                                        border: 1px solid rgba(192, 132, 252, 0.38) !important;
+                                            border-radius: 26px !important;
+                                                background: linear-gradient(145deg, rgba(35, 8, 62, 0.96), rgba(12, 2, 28, 0.96)) !important;
+                                                    box-shadow:
+                                                            0 18px 50px rgba(0, 0, 0, 0.45),
+                                                                    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                                                                            0 0 25px rgba(139, 92, 246, 0.08) !important;
+                                                                                backdrop-filter: blur(18px) !important;
+                                                                                    -webkit-backdrop-filter: blur(18px) !important;
+                                                                                        overflow: hidden !important;
+                                                                                            cursor: pointer !important;
+                                                                                                transition: all 0.3s ease !important;
+                                                                                                }
 
-                                                                        .background {
-                                                                            position: fixed;
-                                                                                inset: 0;
-                                                                                    z-index: -1;
-                                                                                        overflow: hidden;
-                                                                                            pointer-events: none;
-                                                                                            }
+                                                                                                .skillCard::before {
+                                                                                                    content: "" !important;
+                                                                                                        position: absolute !important;
+                                                                                                            inset: 0 !important;
+                                                                                                                border-radius: 26px !important;
+                                                                                                                    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), transparent 50%, rgba(217, 70, 239, 0.10)) !important;
+                                                                                                                        pointer-events: none !important;
+                                                                                                                        }
 
-                                                                                            .grid {
-                                                                                                position: absolute;
-                                                                                                    inset: 0;
-                                                                                                        background-image:
-                                                                                                                linear-gradient(rgba(168, 85, 247, 0.075) 1px, transparent 1px),
-                                                                                                                        linear-gradient(90deg, rgba(168, 85, 247, 0.075) 1px, transparent 1px);
-                                                                                                                            background-size: 55px 55px;
-                                                                                                                            }
+                                                                                                                        .skillCard:hover {
+                                                                                                                            transform: translateY(-10px) !important;
+                                                                                                                                border-color: rgba(216, 180, 254, 0.85) !important;
+                                                                                                                                    box-shadow:
+                                                                                                                                            0 25px 65px rgba(0, 0, 0, 0.55),
+                                                                                                                                                    0 0 35px rgba(168, 85, 247, 0.28),
+                                                                                                                                                            inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+                                                                                                                                                            }
 
-                                                                                                                            .glow {
-                                                                                                                                position: absolute;
-                                                                                                                                    width: 430px;
-                                                                                                                                        height: 430px;
-                                                                                                                                            border-radius: 50%;
-                                                                                                                                                filter: blur(110px);
-                                                                                                                                                    opacity: 0.32;
-                                                                                                                                                    }
+                                                                                                                                                            .cardIcon {
+                                                                                                                                                                position: relative !important;
+                                                                                                                                                                    z-index: 2 !important;
+                                                                                                                                                                        display: flex !important;
+                                                                                                                                                                            align-items: center !important;
+                                                                                                                                                                                justify-content: center !important;
+                                                                                                                                                                                    width: 72px !important;
+                                                                                                                                                                                        height: 72px !important;
+                                                                                                                                                                                            margin-bottom: 24px !important;
+                                                                                                                                                                                                border: 1px solid rgba(216, 180, 254, 0.40) !important;
+                                                                                                                                                                                                    border-radius: 20px !important;
+                                                                                                                                                                                                        background: linear-gradient(135deg, rgba(124, 58, 237, 0.45), rgba(192, 38, 211, 0.22)) !important;
+                                                                                                                                                                                                            box-shadow:
+                                                                                                                                                                                                                    0 10px 30px rgba(124, 58, 237, 0.25),
+                                                                                                                                                                                                                            inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+                                                                                                                                                                                                                                font-size: 34px !important;
+                                                                                                                                                                                                                                }
 
-                                                                                                                                                    .glowOne {
-                                                                                                                                                        top: -180px;
-                                                                                                                                                            left: -150px;
-                                                                                                                                                                background: #8b5cf6;
-                                                                                                                                                                }
+                                                                                                                                                                                                                                .skillCard h3 {
+                                                                                                                                                                                                                                    position: relative !important;
+                                                                                                                                                                                                                                        z-index: 2 !important;
+                                                                                                                                                                                                                                            margin-bottom: 12px !important;
+                                                                                                                                                                                                                                                color: #ffffff !important;
+                                                                                                                                                                                                                                                    font-size: 22px !important;
+                                                                                                                                                                                                                                                        font-weight: 800 !important;
+                                                                                                                                                                                                                                                        }
 
-                                                                                                                                                                .glowTwo {
-                                                                                                                                                                    right: -150px;
-                                                                                                                                                                        bottom: -180px;
-                                                                                                                                                                            background: #d946ef;
-                                                                                                                                                                            }
+                                                                                                                                                                                                                                                        .skillCard p {
+                                                                                                                                                                                                                                                            position: relative !important;
+                                                                                                                                                                                                                                                                z-index: 2 !important;
+                                                                                                                                                                                                                                                                    margin-bottom: 25px !important;
+                                                                                                                                                                                                                                                                        color: #c4b5fd !important;
+                                                                                                                                                                                                                                                                            font-size: 13px !important;
+                                                                                                                                                                                                                                                                                line-height: 1.8 !important;
+                                                                                                                                                                                                                                                                                }
 
-                                                                                                                                                                            .particles {
-                                                                                                                                                                                position: absolute;
-                                                                                                                                                                                    inset: 0;
-                                                                                                                                                                                        background-image: radial-gradient(circle, rgba(255,255,255,0.45) 1
+                                                                                                                                                                                                                                                                                .cardButton {
+                                                                                                                                                                                                                                                                                    position: relative !important;
+                                                                                                                                                                                                                                                                                        z-index: 2 !important;
+                                                                                                                                                                                                                                                                                            display: inline-flex !important;
+                                                                                                                                                                                                                                                                                                padding: 10px 16px !important;
+                                                                                                                                                                                                                                                                                                    border: 1px solid rgba(192, 132, 252, 0.35) !important;
+                                                                                                                                                                                                                                                                                                        border-radius: 999px !important;
+                                                                                                                                                                                                                                                                                                            color: #f0d9ff !important;
+                                                                                                                                                                                                                                                                                                                background: rgba(168, 85, 247, 0.12) !important;
+                                                                                                                                                                                                                                                                                                                    font-size: 11px !important;
+                                                                                                                                                                                                                                                                                                                        font-weight: 800 !important;
+                                                                                                                                                                                                                                                                                                                            letter-spacing: 1px !important;
+                                                                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                                                            .skillCard:hover .cardButton {
+                                                                                                                                                                                                                                                                                                                                background: rgba(168, 85, 247, 0.25) !important;
+                                                                                                                                                                                                                                                                                                                                    border-color: rgba(216, 180, 254, 0.65) !important;
+                                                                                                                                                                                                                                                                                                                                    }
+
+                                                                                                                                                                                                                                                                                                                                    @media (max-width: 700px) {
+                                                                                                                                                                                                                                                                                                                                        .cards {
+                                                                                                                                                                                                                                                                                                                                                grid-template-columns: 1fr !important;
+                                                                                                                                                                                                                                                                                                                                                        gap: 20px !important;
+                                                                                                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                                                                                                .skillCard {
+                                                                                                                                                                                                                                                                                                                                                                        min-height: 280px !important;
+                                                                                                                                                                                                                                                                                                                                                                                padding: 27px !important;
+                                                                                                                                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                                                                                                                                    }
 }
