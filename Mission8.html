@@ -1,198 +1,183 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Mission 8 - Bug Prioritization</title>
+    <title>Mission 8 - Bug Prioritization</title>
 
-<link rel="stylesheet" href="Mission8.css">
+    <link rel="stylesheet" href="Mission8.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-<div class="header">
+        <!-- HEADER -->
+        <div class="header">
 
-<h1>🐞 AI Developer Mindset</h1>
+            <h1>🐞 AI Developer Mindset</h1>
 
-<p>Mission 08 of 20</p>
+            <p>Mission 08 of 20</p>
 
-<span>Bug Prioritization Challenge</span>
+            <span>Bug Prioritization Challenge</span>
 
-</div>
+        </div>
 
-<!-- Bug Dashboard -->
 
-<div class="board">
+        <!-- BUG BOARD -->
+        <div class="board">
 
-<div class="live">
+            <div class="live">
+                🟢 LIVE BUG BOARD
+            </div>
 
-📋 LIVE BUG BOARD
+            <h2>Sprint Bug Tracker</h2>
 
-</div>
 
-<h2>Sprint Bug Tracker</h2>
+            <div class="metric">
+                <p>🔴 Critical Bugs</p>
+                <span class="red">12</span>
+            </div>
 
-<div class="metric">
 
-<p>🔴 Critical Bugs</p>
+            <div class="metric">
+                <p>🟡 High Priority</p>
+                <span class="yellow">21</span>
+            </div>
 
-<span class="red">12</span>
 
-</div>
+            <div class="metric">
+                <p>🟢 Medium Priority</p>
+                <span class="green">35</span>
+            </div>
 
-<div class="metric">
 
-<p>🟡 High Priority</p>
+            <div class="metric">
+                <p>⚪ Low Priority</p>
+                <span>18</span>
+            </div>
 
-<span class="yellow">21</span>
 
-</div>
+            <div class="metric">
+                <p>👨‍💻 Developers Available</p>
+                <span class="blue">6</span>
+            </div>
 
-<div class="metric">
+        </div>
 
-<p>🟢 Medium Priority</p>
 
-<span class="green">35</span>
+        <!-- AI BRIEF -->
+        <div class="brief">
 
-</div>
+            <h3>🤖 AI Briefing</h3>
 
-<div class="metric">
+            <p>
+                Your development team has received multiple bug reports.
+                Customers are unable to complete payments because of one
+                critical bug. Which task should be handled FIRST?
+            </p>
 
-<p>⚪ Low Priority</p>
+        </div>
 
-<span>18</span>
 
-</div>
+        <!-- QUESTION -->
+        <h3 class="question">
+            Which bug will YOU prioritize?
+        </h3>
 
-<div class="metric">
 
-<p>👨‍💻 Developers Available</p>
+        <!-- OPTIONS -->
+        <div class="options">
 
-<span class="blue">6</span>
 
-</div>
+            <div class="option" data-answer="correct">
 
-</div>
+                <i class="fa-solid fa-triangle-exclamation"></i>
 
-<!-- AI Brief -->
+                <div>
+                    <h4>Critical Payment Bug</h4>
+                    <p>Customers cannot complete payments.</p>
+                </div>
 
-<div class="brief">
+            </div>
 
-<h3>🤖 AI Briefing</h3>
 
-<p>
+            <div class="option" data-answer="wrong">
 
-Your development team has received multiple bug reports.
+                <i class="fa-solid fa-palette"></i>
 
-Customers are unable to complete payments because of one critical bug.
+                <div>
+                    <h4>UI Alignment Issue</h4>
+                    <p>Button alignment is incorrect.</p>
+                </div>
 
-Which task should be handled FIRST?
+            </div>
 
-</p>
 
-</div>
+            <div class="option" data-answer="wrong">
 
-<h3 class="question">
+                <i class="fa-solid fa-language"></i>
 
-Which bug will YOU prioritize?
+                <div>
+                    <h4>Translation Error</h4>
+                    <p>One label has incorrect wording.</p>
+                </div>
 
-</h3>
+            </div>
 
-<div class="options">
 
-<div class="option">
+            <div class="option" data-answer="wrong">
 
-<i class="fa-solid fa-triangle-exclamation"></i>
+                <i class="fa-solid fa-image"></i>
 
-<div>
+                <div>
+                    <h4>Profile Image Bug</h4>
+                    <p>Profile picture loads slowly.</p>
+                </div>
 
-<h4>Critical Payment Bug</h4>
+            </div>
 
-<p>Customers cannot complete payments.</p>
+        </div>
 
-</div>
 
-</div>
+        <!-- AI ANALYSIS -->
+        <div class="analysis">
 
-<div class="option">
+            <div class="progress">
 
-<i class="fa-solid fa-palette"></i>
+                <div class="fill"></div>
 
-<div>
+            </div>
 
-<h4>UI Alignment Issue</h4>
+            <p id="analysisText">
+                🤖 Waiting for your prioritization...
+            </p>
 
-<p>Button alignment is incorrect.</p>
+            <button id="nextBtn" disabled>
+                Continue to Mission 9 →
+            </button>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<div class="option">
 
-<i class="fa-solid fa-language"></i>
-
-<div>
-
-<h4>Translation Error</h4>
-
-<p>One label has incorrect wording.</p>
-
-</div>
-
-</div>
-
-<div class="option">
-
-<i class="fa-solid fa-image"></i>
-
-<div>
-
-<h4>Profile Image Bug</h4>
-
-<p>Profile picture loads slowly.</p>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- AI Analysis -->
-
-<div class="analysis">
-
-<div class="progress">
-
-<div class="fill"></div>
-
-</div>
-
-<p>🤖 Waiting for your prioritization...</p>
-
-<button id="nextBtn">
-
-Continue to Mission 9 →
-
-</button>
-
-</div>
-
-</div>
-
-<script type="module" src="Mission8.js"></script>
+    <script type="module" src="Mission8.js"></script>
 
 </body>
 
 </html>
+```
