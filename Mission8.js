@@ -1,118 +1,71 @@
-```javascript
-// ======================================
-// MISSION 8 - BUG PRIORITIZATION
-// ======================================
-
-
-// Get all option buttons
 const options = document.querySelectorAll(".option");
-
-
-// Get required elements
-const fill = document.querySelector(".fill");
+const progressFill = document.getElementById("progressFill");
 const analysisText = document.getElementById("analysisText");
 const nextBtn = document.getElementById("nextBtn");
 
-
-// Store selected option
 let selectedOption = null;
 
 
-// ======================================
-// OPTION CLICK
-// ======================================
+/* OPTION SELECTION */
 
-options.forEach((option) => {
+options.forEach(option => {
 
     option.addEventListener("click", function () {
 
-        // Remove active class from every option
-        options.forEach((item) => {
+        // Remove previous selection
+        options.forEach(item => {
             item.classList.remove("active");
         });
 
-
-        // Add active class to clicked option
+        // Select current option
         this.classList.add("active");
 
-
-        // Store selected option
         selectedOption = this;
 
-
-        // Enable Continue button
+        // Enable continue button
         nextBtn.disabled = false;
 
+        // Show progress
+        progressFill.style.width = "50%";
 
-        // Update progress
-        fill.style.width = "50%";
-
-
-        // Update message
         analysisText.textContent =
-            "🤖 Bug selected. Click Continue to analyze.";
-
+            "Good choice. Click Continue to check whether this is the best priority.";
     });
 
 });
 
 
-// ======================================
-// CONTINUE BUTTON
-// ======================================
+/* CONTINUE BUTTON */
 
 nextBtn.addEventListener("click", function () {
 
-    // Check selection
     if (!selectedOption) {
-
-        analysisText.textContent =
-            "⚠️ Please select a bug first.";
-
         return;
     }
 
-
-    // Get answer
     const answer = selectedOption.dataset.answer;
-
-
-    // ==================================
-    // CORRECT ANSWER
-    // ==================================
 
     if (answer === "correct") {
 
-        fill.style.width = "100%";
+        progressFill.style.width = "100%";
 
         analysisText.textContent =
-            "✅ Correct! The Critical Payment Bug must be handled FIRST.";
+            "Correct! A critical payment bug directly affects users and business transactions, so it should be handled first.";
 
         nextBtn.textContent =
             "Continue to Mission 9 →";
 
-        // Go to Mission 9
         nextBtn.onclick = function () {
-
             window.location.href = "Mission9.html";
-
         };
 
-    }
+    } else {
 
-
-    // ==================================
-    // WRONG ANSWER
-    // ==================================
-
-    else {
-
-        fill.style.width = "70%";
+        progressFill.style.width = "70%";
 
         analysisText.textContent =
-            "❌ Not quite. Customers cannot complete payments. This is the highest priority bug.";
+            "Not the best priority. Bugs that directly affect critical user functionality should be handled before minor UI or text issues.";
 
     }
 
 });
-```
