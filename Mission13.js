@@ -1,3 +1,4 @@
+```javascript
 import { auth, db } from "./firebase.js";
 
 import {
@@ -55,46 +56,57 @@ options.forEach(function (option) {
 
     option.addEventListener("click", function () {
 
-        // Remove selection from all options
+        // Remove active class from all options
         options.forEach(function (item) {
             item.classList.remove("active");
         });
 
 
-        // Select clicked option
+        // Add active class to clicked option
         this.classList.add("active");
 
 
         // IMPORTANT:
-        // Your HTML uses <h4>, not <span>
-        const answerElement = this.querySelector("h4");
+        // Mission13 HTML uses <span>, NOT <h4>
+        const answerElement = this.querySelector("span");
+
 
         if (!answerElement) {
-            console.error("h4 not found inside option");
+
+            console.error("span not found inside option");
             return;
+
         }
 
 
+        // Store selected answer
         selectedAnswer = answerElement.textContent.trim();
 
 
-        // Reset completion
+        // New selection means mission is not completed yet
         missionCompleted = false;
 
 
-        // Start analysis
+        // Reset progress
         fill.style.width = "0%";
 
+
+        // Show analysis message
         text.textContent =
             "🤖 AI is analysing your debugging skill...";
 
 
-        // Disable Continue while saving
+        // Disable Continue button while saving
         nextBtn.disabled = true;
         nextBtn.style.opacity = "0.5";
 
 
-        // Progress animation
+        // Save the selected answer separately
+        const answerToSave = selectedAnswer;
+
+
+        // ================= PROGRESS ANIMATION =================
+
         setTimeout(function () {
 
             fill.style.width = "100%";
@@ -106,12 +118,14 @@ options.forEach(function (option) {
 
         setTimeout(async function () {
 
+            // Check whether user is logged in
             if (!currentUser) {
 
                 text.textContent =
                     "❌ Please login again.";
 
                 return;
+
             }
 
 
@@ -128,7 +142,7 @@ options.forEach(function (option) {
                     {
                         missionNumber: 13,
 
-                        answer: selectedAnswer,
+                        answer: answerToSave,
 
                         completed: true,
 
@@ -138,7 +152,7 @@ options.forEach(function (option) {
                 );
 
 
-                // Mission completed
+                // Mission successfully completed
                 missionCompleted = true;
 
 
@@ -147,7 +161,7 @@ options.forEach(function (option) {
                     "✅ Debugging Decision Recorded Successfully";
 
 
-                // Enable button
+                // Enable Continue button
                 nextBtn.disabled = false;
                 nextBtn.style.opacity = "1";
 
@@ -192,16 +206,17 @@ options.forEach(function (option) {
 
 nextBtn.addEventListener("click", function () {
 
-    // Check selection
+    // Check whether an option was selected
     if (selectedAnswer === "") {
 
         alert("Please select an option first.");
 
         return;
+
     }
 
 
-    // Check Firebase save
+    // Check whether Firebase save is completed
     if (!missionCompleted) {
 
         alert(
@@ -209,6 +224,7 @@ nextBtn.addEventListener("click", function () {
         );
 
         return;
+
     }
 
 
@@ -216,3 +232,4 @@ nextBtn.addEventListener("click", function () {
     window.location.href = "Mission14.html";
 
 });
+```
