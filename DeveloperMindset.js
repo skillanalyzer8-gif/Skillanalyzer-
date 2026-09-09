@@ -9,7 +9,7 @@ import {
             onAuthStateChanged
             } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
             
-            alert("DeveloperMindset.js is running");
+            alert("DeveloperMindset.js is runningg");
             
             const options = document.querySelectorAll(".option");
             const fill = document.querySelector(".fill");
