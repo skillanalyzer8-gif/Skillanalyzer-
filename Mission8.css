@@ -1,372 +1,535 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* =========================
+   BODY
+========================= */
+
+body {
+    background: linear-gradient(
+        135deg,
+        #12091F,
+        #25113A,
+        #5B2C83
+    );
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* =========================
+   MAIN CONTAINER
+========================= */
+
+.container {
+    width: 390px;
+    max-width: 100%;
+
+    background: #ffffff;
+
+    border-radius: 25px;
+
+    padding: 20px;
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    color: #5B2C83;
+    font-size: 25px;
+    margin-bottom: 5px;
+}
+
+.header p {
+    color: #7B2CBF;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 3px;
+}
+
+.header span {
+    color: #666;
+    font-size: 14px;
+}
+
+/* =========================
+   SYSTEM MONITOR
+========================= */
+
+.monitor {
+    background: #111827;
+
+    color: white;
+
+    padding: 20px;
+
+    border-radius: 20px;
+
+    margin-bottom: 20px;
+
+    box-shadow: 0 0 20px rgba(0, 255, 150, 0.15);
+}
+
+/* =========================
+   LIVE SYSTEM MONITOR
+========================= */
+
+.live {
+    display: inline-block;
+
+    background: #16a34a;
+
+    color: white;
+
+    padding: 6px 14px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    margin-bottom: 15px;
+
+    animation: pulse 1.5s infinite;
+}
+
+/* LIVE ANIMATION */
+
+@keyframes pulse {
+
+    0% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
     }
 
-    body{
-
-    background:linear-gradient(135deg,#12091F,#25113A,#5B2C83);
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    min-height:100vh;
-
-    padding:20px;
-
+    50% {
+        opacity: 0.6;
+        box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
     }
 
-    .container{
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+    }
+}
 
-    width:390px;
-    background:white;
+/* =========================
+   MONITOR HEADING
+========================= */
 
-    border-radius:25px;
+.monitor h2 {
+    margin-bottom: 20px;
 
-    padding:20px;
+    text-align: center;
 
-    box-shadow:0 10px 30px rgba(0,0,0,.35);
+    color: #22c55e;
 
+    font-size: 21px;
+}
+
+/* =========================
+   METRICS
+========================= */
+
+.metric {
+    margin-bottom: 18px;
+
+    position: relative;
+}
+
+.metric p {
+    margin-bottom: 6px;
+
+    font-weight: 600;
+
+    font-size: 14px;
+}
+
+/* Percentage Value */
+
+.metric span {
+    display: block;
+
+    text-align: right;
+
+    font-size: 14px;
+
+    color: #22c55e;
+
+    margin-top: 6px;
+}
+
+/* =========================
+   PROGRESS BAR
+========================= */
+
+.bar {
+    width: 100%;
+
+    height: 12px;
+
+    background: #374151;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+/* Common Fill */
+
+.cpu-fill,
+.ram-fill,
+.disk-fill,
+.network-fill {
+    height: 100%;
+
+    border-radius: 20px;
+
+    transition: width 1.5s ease;
+}
+
+/* CPU */
+
+.cpu-fill {
+    width: 82%;
+
+    background: #22c55e;
+}
+
+/* RAM */
+
+.ram-fill {
+    width: 98%;
+
+    background: #22c55e;
+}
+
+/* DISK */
+
+.disk-fill {
+    width: 32%;
+
+    background: #22c55e;
+}
+
+/* NETWORK */
+
+.network-fill {
+    width: 45%;
+
+    background: #22c55e;
+}
+
+/* =========================
+   AI BRIEF
+========================= */
+
+.brief {
+    margin-top: 20px;
+
+    padding: 18px;
+
+    background: #F5F0FF;
+
+    border-left: 5px solid #7B2CBF;
+
+    border-radius: 15px;
+}
+
+.brief h3 {
+    color: #5B2C83;
+
+    margin-bottom: 10px;
+
+    font-size: 17px;
+}
+
+.brief p {
+    color: #555;
+
+    line-height: 1.6;
+
+    font-size: 14px;
+}
+
+/* =========================
+   QUESTION
+========================= */
+
+.question {
+    margin-top: 25px;
+
+    margin-bottom: 15px;
+
+    color: #5B2C83;
+
+    font-size: 20px;
+
+    font-weight: 600;
+
+    line-height: 1.4;
+}
+
+/* =========================
+   OPTIONS
+========================= */
+
+.options {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+/* OPTION */
+
+.option {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 18px;
+
+    background: #F5F0FF;
+
+    border-radius: 15px;
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+
+    border: 2px solid transparent;
+}
+
+/* OPTION HOVER */
+
+.option:hover {
+    transform: translateY(-4px);
+
+    background: #EEE5FF;
+
+    box-shadow: 0 8px 20px rgba(123, 44, 191, 0.15);
+}
+
+/* SELECTED OPTION */
+
+.option.active {
+    background: #7B2CBF;
+
+    color: white;
+
+    border: 2px solid white;
+
+    box-shadow: 0 0 20px rgba(123, 44, 191, 0.4);
+}
+
+/* ICON */
+
+.option i {
+    font-size: 26px;
+
+    min-width: 35px;
+
+    text-align: center;
+}
+
+/* OPTION HEADING */
+
+.option h4 {
+    margin-bottom: 5px;
+
+    font-size: 16px;
+}
+
+/* OPTION TEXT */
+
+.option p {
+    font-size: 13px;
+
+    line-height: 1.4;
+}
+
+/* =========================
+   ANALYSIS SECTION
+========================= */
+
+.analysis {
+    margin-top: 25px;
+
+    background: #111827;
+
+    color: white;
+
+    padding: 18px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================
+   ANALYSIS PROGRESS
+========================= */
+
+.progress {
+    width: 100%;
+
+    height: 12px;
+
+    background: #374151;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    margin-bottom: 15px;
+}
+
+.fill {
+    width: 0%;
+
+    height: 100%;
+
+    background: #22c55e;
+
+    border-radius: 20px;
+
+    transition: width 1.5s ease;
+}
+
+/* ANALYSIS TEXT */
+
+.analysis p {
+    text-align: center;
+
+    margin-bottom: 15px;
+
+    font-weight: 600;
+
+    color: #22c55e;
+
+    font-size: 14px;
+}
+
+/* =========================
+   NEXT BUTTON
+========================= */
+
+#nextBtn {
+    width: 100%;
+
+    padding: 15px;
+
+    background: #7B2CBF;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 12px;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+}
+
+/* BUTTON HOVER */
+
+#nextBtn:hover {
+    background: #5B2C83;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 20px rgba(91, 44, 131, 0.3);
+}
+
+/* BUTTON DISABLED */
+
+#nextBtn:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+
+@media (max-width: 430px) {
+
+    body {
+        padding: 10px;
     }
 
-    /* HEADER */
-
-    .header{
-
-    text-align:center;
-
-    margin-bottom:20px;
-
+    .container {
+        width: 100%;
+        padding: 16px;
+        border-radius: 22px;
     }
 
-    .header h1{
-
-    color:#5B2C83;
-
+    .header h1 {
+        font-size: 22px;
     }
 
-    .header p{
-
-    color:#7B2CBF;
-
-    font-weight:600;
-
+    .header p {
+        font-size: 15px;
     }
 
-    .header span{
-
-    color:#666;
-
-    font-size:14px;
-
+    .monitor {
+        padding: 17px;
     }
 
-    /* BUG BOARD */
-
-    .board{
-
-    background:#111827;
-
-    color:white;
-
-    padding:20px;
-
-    border-radius:20px;
-
-    margin-bottom:20px;
-
-    box-shadow:0 0 20px rgba(255,170,0,.2);
-
+    .monitor h2 {
+        font-size: 19px;
     }
 
-    .live{
-
-    display:inline-block;
-
-    background:#F59E0B;
-
-    padding:6px 15px;
-
-    border-radius:20px;
-
-    font-size:12px;
-
-    font-weight:bold;
-
-    margin-bottom:15px;
-
-    animation:pulse 1.5s infinite;
-
+    .question {
+        font-size: 18px;
     }
 
-    @keyframes pulse{
-
-    0%{opacity:1;}
-
-    50%{opacity:.5;}
-
-    100%{opacity:1;}
-
+    .option {
+        padding: 15px;
     }
 
-    .board h2{
-
-    text-align:center;
-
-    margin-bottom:20px;
-
-    color:#FACC15;
-
+    .option i {
+        font-size: 23px;
+        min-width: 30px;
     }
 
-    .metric{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    margin:14px 0;
-
-    padding-bottom:10px;
-
-    border-bottom:1px solid rgba(255,255,255,.15);
-
+    .option h4 {
+        font-size: 15px;
     }
 
-    .red{
-
-    color:#EF4444;
-
-    font-weight:bold;
-
-    }
-
-    .yellow{
-
-    color:#FACC15;
-
-    font-weight:bold;
-
-    }
-
-    .green{
-
-    color:#22C55E;
-
-    font-weight:bold;
-
-    }
-
-    .blue{
-
-    color:#60A5FA;
-
-    font-weight:bold;
-
-    }
-
-    /* BRIEF */
-
-    .brief{
-
-    background:#F5F0FF;
-
-    padding:18px;
-
-    border-left:5px solid #7B2CBF;
-
-    border-radius:15px;
-
-    margin-bottom:20px;
-
-    }
-
-    .brief h3{
-
-    color:#5B2C83;
-
-    margin-bottom:10px;
-
-    }
-
-    .brief p{
-
-    color:#555;
-
-    line-height:1.6;
-
-    }
-
-    /* QUESTION */
-
-    .question{
-
-    margin-bottom:15px;
-
-    color:#5B2C83;
-
-    font-size:20px;
-
-    }
-
-    /* OPTIONS */
-
-    .options{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:15px;
-
-    }
-
-    .option{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:15px;
-
-    padding:18px;
-
-    background:#F5F0FF;
-
-    border-radius:15px;
-
-    cursor:pointer;
-
-    transition:.3s;
-
-    border:2px solid transparent;
-
-    }
-
-    .option:hover{
-
-    background:#EEE5FF;
-
-    transform:translateY(-5px);
-
-    }
-
-    .option.active{
-
-    background:#7B2CBF;
-
-    color:white;
-
-    border:2px solid white;
-
-    box-shadow:0 0 15px rgba(123,44,191,.35);
-
-    }
-
-    .option i{
-
-    font-size:24px;
-
-    }
-
-    .option h4{
-
-    margin-bottom:5px;
-
-    }
-
-    .option p{
-
-    font-size:13px;
-
-    }
-
-    /* ANALYSIS */
-
-    .analysis{
-
-    margin-top:25px;
-
-    background:#F8F8F8;
-
-    padding:18px;
-
-    border-radius:15px;
-
-    }
-
-    .progress{
-
-    width:100%;
-
-    height:12px;
-
-    background:#ddd;
-
-    border-radius:20px;
-
-    overflow:hidden;
-
-    margin-bottom:15px;
-
-    }
-
-    .fill{
-
-    width:0%;
-
-    height:100%;
-
-    background:#7B2CBF;
-
-    transition:1.5s;
-
-    }
-
-    .analysis p{
-
-    text-align:center;
-
-    margin-bottom:15px;
-
-    font-weight:600;
-
-    color:#5B2C83;
-
-    }
-
-    /* BUTTON */
-
-    #nextBtn{
-
-    width:100%;
-
-    padding:15px;
-
-    background:#7B2CBF;
-
-    color:white;
-
-    border:none;
-
-    border-radius:12px;
-
-    font-size:16px;
-
-    font-weight:600;
-
-    cursor:pointer;
-
-    transition:.3s;
-
-    }
-
-    #nextBtn:hover{
-
-    background:#5B2C83;
-
+    .option p {
+        font-size: 12px;
     }
 }
