@@ -1,111 +1,340 @@
-alert("JS FILE STARTED");
 import { auth, db } from "./firebase.js";
+
 import {
     doc,
-        setDoc
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        
-        import {
-            onAuthStateChanged
-            } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-            
-            alert("DeveloperMindset.js is runningg");
-            
-            const options = document.querySelectorAll(".option");
-            const fill = document.querySelector(".fill");
-            const text = document.querySelector(".analysis p");
-            const nextBtn = document.getElementById("nextBtn");
-            
-            let selectedAnswer = "";
-            let currentUser = null;
-            let missionCompleted = false;
-            
-            onAuthStateChanged(auth, function (user) {
-                if (user) {
-                        currentUser = user;
-                            } else {
-                                    alert("Please login first.");
-                                        }
-                                        });
-                                        
-                                        nextBtn.disabled = true;
-                                        nextBtn.style.opacity = "0.5";
-                                        
-                                        options.forEach(function (option) {
-                                            option.addEventListener("click", function () {
-                                                    options.forEach(function (item) {
-                                                                item.classList.remove("active");
-                                                                        });
-                                                                        
-                                                                                this.classList.add("active");
-                                                                                
-                                                                                        selectedAnswer = this.querySelector("h4").textContent.trim();
-                                                                                        
-                                                                                                fill.style.width = "0%";
-                                                                                                
-                                                                                                        text.textContent = "🤖 AI is analysing your decision...";
-                                                                                                        
-                                                                                                                nextBtn.disabled = true;
-                                                                                                                        nextBtn.style.opacity = "0.5";
-                                                                                                                        
-                                                                                                                                setTimeout(function () {
-                                                                                                                                            fill.style.width = "100%";
-                                                                                                                                                    }, 100);
-                                                                                                                                                    
-                                                                                                                                                            setTimeout(async function () {
-                                                                                                                                                                        if (!currentUser) {
-                                                                                                                                                                                        text.textContent = "❌ Please login again.";
-                                                                                                                                                                                                        return;
-                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                try {
-                                                                                                                                                                                                                                                await setDoc(
-                                                                                                                                                                                                                                                                    doc(
-                                                                                                                                                                                                                                                                                            db,
-                                                                                                                                                                                                                                                                                                                    "users",
-                                                                                                                                                                                                                                                                                                                                            currentUser.uid,
-                                                                                                                                                                                                                                                                                                                                                                    "missions",
-                                                                                                                                                                                                                                                                                                                                                                                            "mission1"
-                                                                                                                                                                                                                                                                                                                                                                                                                ),
-                                                                                                                                                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            missionNumber: 1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    answer: selectedAnswer,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            completed: true,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    completedAt: new Date().toISOString()
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        missionCompleted = true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        text.textContent = "✅ Decision Recorded Successfully";
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        nextBtn.disabled = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        nextBtn.style.opacity = "1";
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        console.log("Mission 1 saved successfully!");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    } catch (error) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    console.error("Firebase error:", error);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    alert(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        "Firebase error: " +
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            error.code +
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "\n" +
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    error.message
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }, 1500);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            });
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            });
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            nextBtn.addEventListener("click", function () {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                if (selectedAnswer === "") {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        alert("Please select an option first.");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                return;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        if (!missionCompleted) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                alert("Please wait until your decision is saved.");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        return;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                window.location.href = "Mission2.html";
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    });
+    getDoc,
+    setDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+const optionsContainer = document.getElementById("options");
+const options = Array.from(document.querySelectorAll(".option"));
+
+const nextBtn = document.getElementById("nextBtn");
+const statusText = document.getElementById("statusText");
+const fill = document.querySelector(".fill");
+
+
+// QUESTION INFORMATION
+
+const category = "softwareDevelopment";
+const questionNumber = 1;
+
+const missionId = `question${questionNumber}`;
+
+
+// SCORE FOR EACH ANSWER
+
+const scores = {
+
+    logs: 5,
+
+    rollback: 3,
+
+    reproduce: 2,
+
+    ignore: 1
+
+};
+
+
+let currentUser = null;
+let selectedAnswer = null;
+let locked = false;
+
+
+// ------------------------------------
+// RANDOMIZE OPTIONS
+// ------------------------------------
+
+function shuffleOptions() {
+
+    const shuffled = [...options];
+
+    shuffled.sort(() => Math.random() - 0.5);
+
+    shuffled.forEach(option => {
+
+        optionsContainer.appendChild(option);
+
+    });
+
+}
+
+
+// ------------------------------------
+// CHECK USER LOGIN
+// ------------------------------------
+
+onAuthStateChanged(auth, async (user) => {
+
+    if (!user) {
+
+        alert("Please login first.");
+
+        return;
+
+    }
+
+
+    currentUser = user;
+
+    await checkPreviousAnswer();
+
+});
+
+
+// ------------------------------------
+// CHECK FIREBASE FOR PREVIOUS ANSWER
+// ------------------------------------
+
+async function checkPreviousAnswer() {
+
+    try {
+
+        const questionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            missionId
+        );
+
+
+        const questionSnap = await getDoc(questionRef);
+
+
+        if (questionSnap.exists()) {
+
+            const data = questionSnap.data();
+
+            if (data.completed === true) {
+
+                selectedAnswer = data.answer;
+
+                locked = true;
+
+                showLockedAnswer();
+
+                return;
+
+            }
+
+        }
+
+
+        // Only randomize if question has NOT been answered
+
+        shuffleOptions();
+
+        enableOptions();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Error checking previous answer:",
+            error
+        );
+
+    }
+
+}
+
+
+// ------------------------------------
+// ENABLE OPTIONS
+// ------------------------------------
+
+function enableOptions() {
+
+    options.forEach(option => {
+
+        option.style.cursor = "pointer";
+
+        option.addEventListener(
+            "click",
+            handleAnswer
+        );
+
+    });
+
+}
+
+
+// ------------------------------------
+// ANSWER SELECTION
+// ------------------------------------
+
+async function handleAnswer(event) {
+
+    if (locked) {
+
+        return;
+
+    }
+
+
+    const option = event.currentTarget;
+
+    selectedAnswer = option.dataset.answer;
+
+    locked = true;
+
+
+    // REMOVE CLICK POSSIBILITY
+
+    options.forEach(item => {
+
+        item.style.pointerEvents = "none";
+
+    });
+
+
+    // HIGHLIGHT SELECTED ANSWER
+
+    option.classList.add("selected");
+
+
+    // GET SCORE
+
+    const score = scores[selectedAnswer];
+
+
+    // SHOW RESULT
+
+    statusText.innerText =
+        `🤖 Decision recorded — Score: ${score}/5`;
+
+
+    fill.style.width =
+        `${score * 20}%`;
+
+
+    // SAVE TO FIREBASE
+
+    await saveAnswer(score);
+
+
+    // ENABLE NEXT
+
+    nextBtn.disabled = false;
+
+}
+
+
+// ------------------------------------
+// SAVE ANSWER
+// ------------------------------------
+
+async function saveAnswer(score) {
+
+    try {
+
+        await setDoc(
+
+            doc(
+                db,
+                "users",
+                currentUser.uid,
+                "missions",
+                missionId
+            ),
+
+            {
+
+                category: category,
+
+                questionNumber: questionNumber,
+
+                answer: selectedAnswer,
+
+                score: score,
+
+                completed: true,
+
+                completedAt: new Date().toISOString()
+
+            },
+
+            {
+
+                merge: true
+
+            }
+
+        );
+
+
+        console.log(
+            "Question saved successfully."
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Error saving answer:",
+            error
+        );
+
+    }
+
+}
+
+
+// ------------------------------------
+// SHOW LOCKED ANSWER AFTER REFRESH
+// ------------------------------------
+
+function showLockedAnswer() {
+
+    options.forEach(option => {
+
+        option.style.pointerEvents = "none";
+
+        option.style.cursor = "not-allowed";
+
+
+        if (
+            option.dataset.answer === selectedAnswer
+        ) {
+
+            option.classList.add("selected");
+
+        }
+
+    });
+
+
+    const score = scores[selectedAnswer];
+
+
+    statusText.innerText =
+        `🔒 Already answered — Score: ${score}/5`;
+
+
+    fill.style.width =
+        `${score * 20}%`;
+
+
+    nextBtn.disabled = false;
+
+}
+
+
+// ------------------------------------
+// NEXT QUESTION
+// ------------------------------------
+
+nextBtn.addEventListener("click", () => {
+
+    window.location.href = "DeveloperMindset2.html";
+
+});
