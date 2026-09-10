@@ -10,7 +10,8 @@
 
 <link rel="stylesheet" href="DeveloperMindset.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -21,125 +22,136 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 <div class="container">
 
-<div class="header">
+    <div class="header">
 
-<h1>🧠 AI Developer Mindset</h1>
+        <h1>🧠 AI Developer Mindset</h1>
 
-<p>Mission 01 of 20</p>
+        <p>Software Development — Question 01 of 20</p>
 
-<span>Think like an Engineer, not a Student.</span>
+        <span>Think like an Engineer, not a Student.</span>
 
-</div>
+    </div>
 
-<div class="mission">
 
-<div class="status">
+    <div class="mission">
 
-<span class="live">🔴 LIVE INCIDENT</span>
+        <div class="status">
 
-</div>
+            <span class="live">🔴 LIVE INCIDENT</span>
 
-<h2>Production Server Crash</h2>
+        </div>
 
-<div class="details">
+        <h2>Production Server Crash</h2>
 
-<p><b>Application</b> : Skill Analyzer</p>
+        <div class="details">
 
-<p><b>Users Affected</b> : 5,283</p>
+            <p><b>Application</b> : Skill Analyzer</p>
 
-<p><b>Crash Rate</b> : 82%</p>
+            <p><b>Users Affected</b> : 5,283</p>
 
-<p><b>Priority</b> : CRITICAL</p>
+            <p><b>Crash Rate</b> : 82%</p>
 
-<p><b>Time Remaining</b> : 08:00</p>
+            <p><b>Priority</b> : CRITICAL</p>
 
-</div>
+            <p><b>Time Remaining</b> : 08:00</p>
 
-</div>
+        </div>
 
-<h3 class="question">
+    </div>
 
-What will YOU do first?
 
-</h3>
+    <h3 class="question">
+        What will YOU do first?
+    </h3>
 
-<div class="options">
 
-<div class="option">
+    <div class="options" id="options">
 
-<i class="fa-solid fa-file-lines"></i>
+        <div class="option" data-answer="logs">
 
-<div>
+            <i class="fa-solid fa-file-lines"></i>
 
-<h4>Read Crash Logs</h4>
+            <div>
 
-<p>Find The Root Cause Before Acting.</p>
+                <h4>Read Crash Logs</h4>
 
-</div>
+                <p>Find the root cause before acting.</p>
 
-</div>
+            </div>
 
-<div class="option">
+        </div>
 
-<i class="fa-solid fa-rotate-left"></i>
 
-<div>
+        <div class="option" data-answer="rollback">
 
-<h4>Rollback Update</h4>
+            <i class="fa-solid fa-rotate-left"></i>
 
-<p>Restore Previous Stable Release.</p>
+            <div>
 
-</div>
+                <h4>Rollback Update</h4>
 
-</div>
+                <p>Restore the previous stable release.</p>
 
-<div class="option">
+            </div>
 
-<i class="fa-solid fa-bug"></i>
+        </div>
 
-<div>
 
-<h4>Reproduce Bug</h4>
+        <div class="option" data-answer="reproduce">
 
-<p>Verify The  .</p>
+            <i class="fa-solid fa-bug"></i>
 
-</div>
+            <div>
 
-</div>
+                <h4>Reproduce Bug</h4>
 
-<div class="option">
+                <p>Verify the problem in a controlled environment.</p>
 
-<i class="fa-solid fa-eye-slash"></i>
+            </div>
 
-<div>
+        </div>
 
-<h4>Ignore Reports</h4>
 
-<p>Wait and monitor complaints.</p>
+        <div class="option" data-answer="ignore">
 
-</div>
+            <i class="fa-solid fa-eye-slash"></i>
 
-</div>
+            <div>
 
-</div>
+                <h4>Ignore Reports</h4>
 
-<div class="analysis">
+                <p>Wait and monitor complaints.</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="analysis">
 
         <div class="progress">
 
-                <div class="fill"></div>
+            <div class="fill"></div>
 
-                    </div>
+        </div>
 
-                        <p>🤖 Waiting for your decision...</p>
+        <p id="statusText">
+            🤖 Waiting for your decision...
+        </p>
 
-                            <button id="nextBtn">Next Mission →</button>
+        <button id="nextBtn" disabled>
+            Next Question →
+        </button>
 
-                            </div>
+    </div>
 
-                            </div>
-                            <script type="module" src="DeveloperMindset.js"></script>
+</div>
 
-                            </body>
 
-                            </html>
+<script type="module" src="DeveloperMindset.js"></script>
+
+</body>
+
+</html>
