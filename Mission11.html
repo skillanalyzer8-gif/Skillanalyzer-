@@ -10,7 +10,8 @@
 
 <link rel="stylesheet" href="Mission11.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -21,103 +22,142 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 <div class="container">
 
-<div class="header">
+    <div class="header">
 
-<h1>🧩 Logic Detective</h1>
+        <h1>🧩 Logic Detective</h1>
 
-<p>Mission 11 of 20</p>
+        <p>Mission 11 of 20</p>
 
-<span>Analyze • Eliminate • Solve</span>
+        <span>Analyze • Eliminate • Solve</span>
+
+    </div>
+
+
+    <div class="case">
+
+        <h2>🕵 AI Investigation</h2>
+
+        <p>
+
+            Three software engineers worked on three different bugs.
+
+            Only one engineer fixed the <b>Payment Bug</b>.
+
+            Read the clues carefully and solve the mystery.
+
+        </p>
+
+    </div>
+
+
+    <div class="clues">
+
+        <h3>📋 Clues</h3>
+
+
+        <div class="clue">
+
+            ❶ Arjun did <b>NOT</b> fix the Payment Bug.
+
+        </div>
+
+
+        <div class="clue">
+
+            ❷ Priya fixed the Database Bug.
+
+        </div>
+
+
+        <div class="clue">
+
+            ❸ Kiran did <b>NOT</b> fix the API Bug.
+
+        </div>
+
+    </div>
+
+
+    <div class="question">
+
+        <h2>Who fixed the Payment Bug?</h2>
+
+    </div>
+
+
+    <!-- OPTIONS -->
+
+    <div class="options" id="options">
+
+
+        <label class="option" data-answer="arjun">
+
+            <input
+                type="radio"
+                name="answer"
+                value="arjun"
+            >
+
+            <span>👨 Arjun</span>
+
+        </label>
+
+
+        <label class="option" data-answer="priya">
+
+            <input
+                type="radio"
+                name="answer"
+                value="priya"
+            >
+
+            <span>👩 Priya</span>
+
+        </label>
+
+
+        <label class="option" data-answer="kiran">
+
+            <input
+                type="radio"
+                name="answer"
+                value="kiran"
+            >
+
+            <span>👨 Kiran</span>
+
+        </label>
+
+
+    </div>
+
+
+    <div class="analysis">
+
+        <div class="progress">
+
+            <div class="fill"></div>
+
+        </div>
+
+
+        <p id="statusText">
+
+            🤖 Waiting for your deduction...
+
+        </p>
+
+
+        <button id="nextBtn" disabled>
+
+            Continue → 
+
+        </button>
+
+    </div>
 
 </div>
 
-<div class="case">
-
-<h2>🕵 AI Investigation</h2>
-
-<p>
-Three software engineers worked on three different bugs.
-Only one engineer fixed the <b>Payment Bug</b>.
-Read the clues carefully and solve the mystery.
-</p>
-
-</div>
-
-<div class="clues">
-
-<h3>📋 Clues</h3>
-
-<div class="clue">
-❶ Arjun did <b>NOT</b> fix the Payment Bug.
-</div>
-
-<div class="clue">
-❷ Priya fixed the Database Bug.
-</div>
-
-<div class="clue">
-❸ Kiran did <b>NOT</b> fix the API Bug.
-</div>
-
-</div>
-
-<div class="question">
-
-<h2>Who fixed the Payment Bug?</h2>
-
-</div>
-
-<div class="options">
-
-<label class="option">
-
-<input type="radio" name="answer">
-
-<span>👨 Arjun</span>
-
-</label>
-
-<label class="option">
-
-<input type="radio" name="answer">
-
-<span>👩 Priya</span>
-
-</label>
-
-<label class="option">
-
-<input type="radio" name="answer">
-
-<span>👨 Kiran</span>
-
-</label>
-
-</div>
-
-<div class="analysis">
-
-<div class="progress">
-
-<div class="fill"></div>
-
-</div>
-
-<p>
-
-🤖 Waiting for your deduction...
-
-</p>
-
-<button id="nextBtn">
-
-Continue →
-
-</button>
-
-</div>
-
-</div>
 
 <script type="module" src="Mission11.js"></script>
 
