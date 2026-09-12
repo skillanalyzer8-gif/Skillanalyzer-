@@ -21,30 +21,28 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 <div class="container">
 
-<div class="header">
+    <div class="header">
 
-<h1>💻 AI Developer Mindset</h1>
+        <h1>💻 AI Developer Mindset</h1>
 
-<p>Mission 09 of 20</p>
+        <p>Mission 09 of 20</p>
 
-<span>Code Review Challenge</span>
+        <span>Code Review Challenge</span>
 
-</div>
+    </div>
 
-<!-- Code Review -->
 
-<div class="review">
+    <!-- Code Review -->
 
-<div class="live">
+    <div class="review">
 
-🟢 GITHUB PULL REQUEST
+        <div class="live">
+            🟢 GITHUB PULL REQUEST
+        </div>
 
-</div>
+        <h2>Review Submitted Code</h2>
 
-<h2>Review Submitted Code</h2>
-
-<pre>
-
+        <pre>
 function login(){
 
 if(password=="123456"){
@@ -54,118 +52,121 @@ return true;
 }
 
 }
+        </pre>
 
-</pre>
+    </div>
+
+
+    <div class="brief">
+
+        <h3>🤖 AI Briefing</h3>
+
+        <p>
+            A junior developer submitted this code.
+            <br>
+            You are the reviewer.
+            <br>
+            What should you do FIRST?
+        </p>
+
+    </div>
+
+
+    <h3 class="question">
+        What is the biggest issue?
+    </h3>
+
+
+    <!-- Options -->
+
+    <div class="options" id="options">
+
+        <div class="option" data-answer="weakPassword">
+
+            <i class="fa-solid fa-lock"></i>
+
+            <div>
+
+                <h4>Weak Password Security</h4>
+
+                <p>Hardcoded passwords are insecure.</p>
+
+            </div>
+
+        </div>
+
+
+        <div class="option" data-answer="poorFormatting">
+
+            <i class="fa-solid fa-code"></i>
+
+            <div>
+
+                <h4>Poor Formatting</h4>
+
+                <p>The code indentation is bad.</p>
+
+            </div>
+
+        </div>
+
+
+        <div class="option" data-answer="renameVariables">
+
+            <i class="fa-solid fa-pen"></i>
+
+            <div>
+
+                <h4>Rename Variables</h4>
+
+                <p>Variable names should improve.</p>
+
+            </div>
+
+        </div>
+
+
+        <div class="option" data-answer="approve">
+
+            <i class="fa-solid fa-check"></i>
+
+            <div>
+
+                <h4>Approve Pull Request</h4>
+
+                <p>The code is ready for production.</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Analysis -->
+
+    <div class="analysis">
+
+        <div class="progress">
+
+            <div class="fill"></div>
+
+        </div>
+
+        <p id="statusText">
+            🤖 Waiting for your review...
+        </p>
+
+        <button id="nextBtn" disabled>
+            Continue to Mission 10 →
+        </button>
+
+    </div>
 
 </div>
 
-<div class="brief">
 
-<h3>🤖 AI Briefing</h3>
-
-<p>
-
-A junior developer submitted this code.
-
-You are the reviewer.
-
-What should you do FIRST?
-
-</p>
-
-</div>
-
-<h3 class="question">
-
-What is the biggest issue?
-
-</h3>
-
-<div class="options">
-
-<div class="option">
-
-<i class="fa-solid fa-lock"></i>
-
-<div>
-
-<h4>Weak Password Security</h4>
-
-<p>Hardcoded passwords are insecure.</p>
-
-</div>
-
-</div>
-
-<div class="option">
-
-<i class="fa-solid fa-code"></i>
-
-<div>
-
-<h4>Poor Formatting</h4>
-
-<p>The code indentation is bad.</p>
-
-</div>
-
-</div>
-
-<div class="option">
-
-<i class="fa-solid fa-pen"></i>
-
-<div>
-
-<h4>Rename Variables</h4>
-
-<p>Variable names should improve.</p>
-
-</div>
-
-</div>
-
-<div class="option">
-
-<i class="fa-solid fa-check"></i>
-
-<div>
-
-<h4>Approve Pull Request</h4>
-
-<p>The code is ready for production.</p>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="analysis">
-
-<div class="progress">
-
-<div class="fill"></div>
-
-</div>
-
-<p>
-
-🤖 Waiting for your review...
-
-</p>
-
-<button id="nextBtn">
-
-Continue to Mission 10 →
-
-</button>
-
-</div>
-
-</div>
-
-<script  type="module" src="Mission9.js"></script>
+<script type="module" src="Mission9.js"></script>
 
 </body>
 
