@@ -1,8 +1,8 @@
-```javascript
 import { auth, db } from "./firebase.js";
 
 import {
     doc,
+    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -11,225 +11,537 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-// ================= ELEMENTS =================
+// ===============================
+// MISSION CONFIG
+// ===============================
 
-const options = document.querySelectorAll(".option");
-const fill = document.querySelector(".fill");
-const text = document.querySelector(".analysis p");
-const nextBtn = document.getElementById("nextBtn");
+const category = "softwareDevelopment";
+const questionNumber = 13;
+const questionId = "softwareDevelopment_q13";
 
 
-// ================= VARIABLES =================
+// ===============================
+// ELEMENTS
+// ===============================
+
+const optionsContainer =
+    document.getElementById("options");
+
+const options =
+    document.querySelectorAll(".option");
+
+const fill =
+    document.querySelector(".fill");
+
+const statusText =
+    document.getElementById("statusText");
+
+const nextBtn =
+    document.getElementById("nextBtn");
+
+
+// ===============================
+// SCORES
+// ===============================
+
+const scores = {
+
+    variableName: 5,
+
+    loopStart: 3,
+
+    printFunction: 4,
+
+    noBug: 1
+
+};
+
+
+// ===============================
+// VARIABLES
+// ===============================
+
+let currentUser = null;
 
 let selectedAnswer = "";
-let currentUser = null;
-let missionCompleted = false;
+
+let selectedScore = 0;
+
+let answerLocked = false;
+
+let answerSaved = false;
 
 
-// ================= CHECK LOGIN =================
-
-onAuthStateChanged(auth, function (user) {
-
-    if (user) {
-
-        currentUser = user;
-
-    } else {
-
-        alert("Please login first.");
-        window.location.href = "Login.html";
-
-    }
-
-});
-
-
-// ================= INITIAL BUTTON =================
+// ===============================
+// INITIAL BUTTON STATE
+// ===============================
 
 nextBtn.disabled = true;
+
 nextBtn.style.opacity = "0.5";
 
 
-// ================= OPTION CLICK =================
+// ===============================
+// SHUFFLE OPTIONS
+// ===============================
 
-options.forEach(function (option) {
+function shuffleOptions() {
 
-    option.addEventListener("click", function () {
-
-        // Remove active class from all options
-        options.forEach(function (item) {
-            item.classList.remove("active");
-        });
+    const optionArray =
+        Array.from(optionsContainer.children);
 
 
-        // Add active class to clicked option
-        this.classList.add("active");
+    for (
+        let i = optionArray.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const randomIndex =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
 
 
-        // IMPORTANT:
-        // Mission13 HTML uses <span>, NOT <h4>
-        const answerElement = this.querySelector("span");
+        const temp =
+            optionArray[i];
+
+        optionArray[i] =
+            optionArray[randomIndex];
+
+        optionArray[randomIndex] =
+            temp;
+
+    }
 
 
-        if (!answerElement) {
+    optionArray.forEach(function (option) {
 
-            console.error("span not found inside option");
-            return;
+        optionsContainer.appendChild(option);
+
+    });
+
+}
+
+
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
+
+async function checkPreviousAnswer() {
+
+    if (!currentUser) return;
+
+
+    try {
+
+        const answerRef = doc(
+
+            db,
+
+            "users",
+
+            currentUser.uid,
+
+            "missions",
+
+            questionId
+
+        );
+
+
+        const answerSnap =
+            await getDoc(answerRef);
+
+
+        if (answerSnap.exists()) {
+
+            const data =
+                answerSnap.data();
+
+
+            if (data.completed === true) {
+
+                selectedAnswer =
+                    data.answer || "";
+
+
+                selectedScore =
+                    data.score || 0;
+
+
+                answerLocked = true;
+
+                answerSaved = true;
+
+
+                // Restore previous answer
+                options.forEach(function (option) {
+
+                    const isSelected =
+                        option.dataset.answer ===
+                        selectedAnswer;
+
+
+                    if (isSelected) {
+
+                        option.classList.add("active");
+
+                    }
+
+
+                    option.style.pointerEvents =
+                        "none";
+
+
+                    if (!isSelected) {
+
+                        option.style.opacity =
+                            "0.6";
+
+                    }
+
+                });
+
+
+                // Restore score progress
+                fill.style.width =
+                    `${selectedScore * 20}%`;
+
+
+                statusText.textContent =
+                    "✅ You already answered Mission 13.";
+
+
+                // Enable Continue
+                nextBtn.disabled = false;
+
+                nextBtn.style.opacity = "1";
+
+
+                console.log(
+                    "Mission 13 previous answer restored."
+                );
+
+
+                return;
+
+            }
 
         }
 
 
-        // Store selected answer
-        selectedAnswer = answerElement.textContent.trim();
+        // No previous answer
+        shuffleOptions();
 
 
-        // New selection means mission is not completed yet
-        missionCompleted = false;
+    } catch (error) {
+
+        console.error(
+            "Error checking Mission 13:",
+            error
+        );
 
 
-        // Reset progress
-        fill.style.width = "0%";
+        // Still allow the page to work
+        shuffleOptions();
+
+    }
+
+}
 
 
-        // Show analysis message
-        text.textContent =
-            "🤖 AI is analysing your debugging skill...";
+// ===============================
+// SAVE ANSWER
+// ===============================
+
+async function saveAnswer() {
+
+    if (!currentUser) {
+
+        statusText.textContent =
+            "❌ Please login again.";
+
+        return;
+
+    }
 
 
-        // Disable Continue button while saving
+    try {
+
+        const answerRef = doc(
+
+            db,
+
+            "users",
+
+            currentUser.uid,
+
+            "missions",
+
+            questionId
+
+        );
+
+
+        await setDoc(
+
+            answerRef,
+
+            {
+
+                category:
+                    category,
+
+                questionNumber:
+                    questionNumber,
+
+                answer:
+                    selectedAnswer,
+
+                score:
+                    selectedScore,
+
+                completed:
+                    true,
+
+                completedAt:
+                    new Date().toISOString()
+
+            }
+
+        );
+
+
+        answerSaved = true;
+
+
+        statusText.textContent =
+            "✅ Debugging Decision Recorded Successfully";
+
+
+        nextBtn.disabled = false;
+
+        nextBtn.style.opacity = "1";
+
+
+        console.log(
+            "Mission 13 saved successfully!"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Error saving Mission 13:",
+            error
+        );
+
+
+        answerSaved = false;
+
+
+        statusText.textContent =
+            "❌ Could not save your decision.";
+
+
         nextBtn.disabled = true;
+
         nextBtn.style.opacity = "0.5";
 
 
-        // Save the selected answer separately
-        const answerToSave = selectedAnswer;
+        alert(
+            "Could not save Mission 13. Please try again."
+        );
+
+    }
+
+}
 
 
-        // ================= PROGRESS ANIMATION =================
+// ===============================
+// OPTION CLICK
+// ===============================
 
-        setTimeout(function () {
+options.forEach(function (option) {
 
-            fill.style.width = "100%";
+    option.addEventListener(
+        "click",
+        async function () {
 
-        }, 100);
 
-
-        // ================= SAVE TO FIREBASE =================
-
-        setTimeout(async function () {
-
-            // Check whether user is logged in
-            if (!currentUser) {
-
-                text.textContent =
-                    "❌ Please login again.";
+            // VERY IMPORTANT:
+            // First answer permanently locks
+            if (answerLocked) {
 
                 return;
 
             }
 
 
-            try {
-
-                await setDoc(
-                    doc(
-                        db,
-                        "users",
-                        currentUser.uid,
-                        "missions",
-                        "mission13"
-                    ),
-                    {
-                        missionNumber: 13,
-
-                        answer: answerToSave,
-
-                        completed: true,
-
-                        completedAt:
-                            new Date().toISOString()
-                    }
-                );
+            answerLocked = true;
 
 
-                // Mission successfully completed
-                missionCompleted = true;
+            // Get stable answer ID
+            selectedAnswer =
+                this.dataset.answer;
 
 
-                // Success message
-                text.textContent =
-                    "✅ Debugging Decision Recorded Successfully";
+            // Get score from answer ID
+            selectedScore =
+                scores[selectedAnswer];
 
 
-                // Enable Continue button
-                nextBtn.disabled = false;
-                nextBtn.style.opacity = "1";
+            // Disable every option
+            options.forEach(function (item) {
+
+                item.style.pointerEvents =
+                    "none";
+
+            });
 
 
-                console.log(
-                    "Mission 13 saved successfully!"
-                );
+            // Highlight selected option
+            this.classList.add("active");
 
 
-            } catch (error) {
+            // Dim remaining options
+            options.forEach(function (item) {
 
-                console.error(
-                    "Error saving Mission 13:",
-                    error
-                );
+                if (item !== option) {
 
+                    item.style.opacity =
+                        "0.6";
 
-                missionCompleted = false;
+                }
 
-                nextBtn.disabled = true;
-                nextBtn.style.opacity = "0.5";
-
-
-                text.textContent =
-                    "❌ Could not save your decision.";
+            });
 
 
-                alert(
-                    "Could not save Mission 13. Please try again."
-                );
+            // Reset progress
+            fill.style.width =
+                "0%";
 
-            }
 
-        }, 1500);
+            // AI analysis message
+            statusText.textContent =
+                "🤖 AI is analysing your debugging skill...";
 
-    });
+
+            // Keep Continue disabled
+            nextBtn.disabled = true;
+
+            nextBtn.style.opacity = "0.5";
+
+
+            // Animate score progress
+            setTimeout(function () {
+
+                fill.style.width =
+                    `${selectedScore * 20}%`;
+
+            }, 100);
+
+
+            // Save after analysis
+            setTimeout(async function () {
+
+                await saveAnswer();
+
+            }, 1500);
+
+        }
+
+    );
 
 });
 
 
-// ================= NEXT BUTTON =================
+// ===============================
+// AUTHENTICATION
+// ===============================
 
-nextBtn.addEventListener("click", function () {
+onAuthStateChanged(
 
-    // Check whether an option was selected
-    if (selectedAnswer === "") {
+    auth,
 
-        alert("Please select an option first.");
+    async function (user) {
 
-        return;
+
+        if (user) {
+
+            currentUser = user;
+
+
+            console.log(
+                "Logged in:",
+                currentUser.uid
+            );
+
+
+            await checkPreviousAnswer();
+
+
+        } else {
+
+            currentUser = null;
+
+
+            statusText.textContent =
+                "❌ Please login to continue.";
+
+
+            nextBtn.disabled = true;
+
+
+            alert(
+                "Please login first."
+            );
+
+
+            window.location.href =
+                "Login.html";
+
+        }
 
     }
 
+);
 
-    // Check whether Firebase save is completed
-    if (!missionCompleted) {
 
-        alert(
-            "Please wait until your answer is saved."
-        );
+// ===============================
+// CONTINUE TO MISSION 14
+// ===============================
 
-        return;
+nextBtn.addEventListener(
+    "click",
+    function () {
+
+
+        if (!selectedAnswer) {
+
+            alert(
+                "Please select an option first."
+            );
+
+            return;
+
+        }
+
+
+        if (!answerSaved) {
+
+            alert(
+                "Please wait until your answer is saved."
+            );
+
+            return;
+
+        }
+
+
+        window.location.href =
+            "Mission14.html";
 
     }
-
-
-    // Go to Mission 14
-    window.location.href = "Mission14.html";
-
-});
-```
+);
