@@ -10,7 +10,8 @@
 
 <link rel="stylesheet" href="Mission12.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -21,87 +22,120 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 <div class="container">
 
-<div class="header">
+    <div class="header">
 
-<h1>🔢 Pattern Recognition</h1>
+        <h1>🔢 Pattern Recognition</h1>
 
-<p>Mission 12 of 20</p>
+        <p>Mission 12 of 20</p>
 
-<span>Think Like an Algorithm</span>
+        <span>Think Like an Algorithm</span>
+
+    </div>
+
+
+    <div class="challenge">
+
+        <h2>🧠 AI Challenge</h2>
+
+        <p>
+
+            Software developers constantly recognize patterns
+            while writing algorithms.
+
+            Identify the next number in the sequence.
+
+        </p>
+
+    </div>
+
+
+    <div class="pattern">
+
+        <h1>
+            2 → 6 → 12 → 20 → 30 → ?
+        </h1>
+
+    </div>
+
+
+    <div class="hint">
+
+        💡 Hint: Look at the difference between consecutive numbers.
+
+    </div>
+
+
+    <h2 class="question">
+
+        Choose the correct answer
+
+    </h2>
+
+
+    <!-- OPTIONS -->
+
+    <div class="grid" id="options">
+
+
+        <div class="card" data-answer="forty">
+
+            40
+
+        </div>
+
+
+        <div class="card" data-answer="fortyTwo">
+
+            42
+
+        </div>
+
+
+        <div class="card" data-answer="fortyFour">
+
+            44
+
+        </div>
+
+
+        <div class="card" data-answer="fortyEight">
+
+            48
+
+        </div>
+
+
+    </div>
+
+
+    <!-- AI ANALYSIS -->
+
+    <div class="analysis">
+
+        <div class="progress">
+
+            <div class="fill"></div>
+
+        </div>
+
+
+        <p id="statusText">
+
+            🤖 Waiting for your answer...
+
+        </p>
+
+
+        <button id="nextBtn" disabled>
+
+            Continue →
+
+        </button>
+
+    </div>
 
 </div>
 
-<div class="challenge">
-
-<h2>🧠 AI Challenge</h2>
-
-<p>
-
-Software developers constantly recognize patterns while writing algorithms.
-
-Identify the next number in the sequence.
-
-</p>
-
-</div>
-
-<div class="pattern">
-
-<h1>
-
-2 → 6 → 12 → 20 → 30 → ?
-
-</h1>
-
-</div>
-
-<div class="hint">
-
-💡 Hint: Look at the difference between consecutive numbers.
-
-</div>
-
-<h2 class="question">
-
-Choose the correct answer
-
-</h2>
-
-<div class="grid">
-
-<div class="card">40</div>
-
-<div class="card">42</div>
-
-<div class="card">44</div>
-
-<div class="card">48</div>
-
-</div>
-
-<div class="analysis">
-
-<div class="progress">
-
-<div class="fill"></div>
-
-</div>
-
-<p>
-
-🤖 Waiting for your answer...
-
-</p>
-
-<button id="nextBtn">
-
-Continue →
-
-</button>
-
-</div>
-
-</div>
 
 <script type="module" src="Mission12.js"></script>
 
