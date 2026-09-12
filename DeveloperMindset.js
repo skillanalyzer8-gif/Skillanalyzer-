@@ -112,7 +112,6 @@ function shuffleOptions() {
 
     }
 
-
     shuffledOptions.forEach(option => {
 
         optionsContainer.appendChild(option);
@@ -147,7 +146,6 @@ onAuthStateChanged(auth, async (user) => {
 
     }
 
-
     currentUser = user;
 
     console.log(
@@ -155,9 +153,7 @@ onAuthStateChanged(auth, async (user) => {
         currentUser.uid
     );
 
-
     // Check whether Q1 was already answered
-
     await checkPreviousAnswer();
 
 });
@@ -179,20 +175,18 @@ async function checkPreviousAnswer() {
             questionId
         );
 
-
         const questionSnapshot =
             await getDoc(questionRef);
 
 
-        // ----------------------------------------
+        // ========================================
         // QUESTION ALREADY COMPLETED
-        // ----------------------------------------
+        // ========================================
 
         if (questionSnapshot.exists()) {
 
             const data =
                 questionSnapshot.data();
-
 
             if (data.completed === true) {
 
@@ -204,9 +198,7 @@ async function checkPreviousAnswer() {
 
                 answerSaved = true;
 
-
                 showPreviouslyAnswered();
-
 
                 return;
 
@@ -215,14 +207,13 @@ async function checkPreviousAnswer() {
         }
 
 
-        // ----------------------------------------
+        // ========================================
         // NEW QUESTION
-        // ----------------------------------------
+        // ========================================
 
         shuffleOptions();
 
         enableOptions();
-
 
         statusText.textContent =
             "🤖 Waiting for your decision...";
@@ -235,7 +226,6 @@ async function checkPreviousAnswer() {
             "Error checking previous answer:",
             error
         );
-
 
         statusText.textContent =
             "❌ Unable to load this question.";
@@ -257,7 +247,6 @@ function enableOptions() {
 
         option.style.cursor = "pointer";
 
-
         option.addEventListener(
             "click",
             handleAnswer
@@ -274,9 +263,9 @@ function enableOptions() {
 
 async function handleAnswer(event) {
 
-    // ----------------------------------------
+    // ========================================
     // ABSOLUTE LOCK
-    // ----------------------------------------
+    // ========================================
 
     if (answerLocked) {
 
@@ -285,9 +274,9 @@ async function handleAnswer(event) {
     }
 
 
-    // ----------------------------------------
-    // MAKE SURE USER IS LOGGED IN
-    // ----------------------------------------
+    // ========================================
+    // CHECK LOGIN
+    // ========================================
 
     if (!currentUser) {
 
@@ -302,25 +291,25 @@ async function handleAnswer(event) {
         event.currentTarget;
 
 
-    // ----------------------------------------
+    // ========================================
     // GET ANSWER
-    // ----------------------------------------
+    // ========================================
 
     selectedAnswer =
         selectedOption.dataset.answer;
 
 
-    // ----------------------------------------
+    // ========================================
     // GET SCORE
-    // ----------------------------------------
+    // ========================================
 
     selectedScore =
         scores[selectedAnswer];
 
 
-    // ----------------------------------------
+    // ========================================
     // LOCK IMMEDIATELY
-    // ----------------------------------------
+    // ========================================
 
     answerLocked = true;
 
@@ -334,30 +323,30 @@ async function handleAnswer(event) {
     });
 
 
-    // ----------------------------------------
+    // ========================================
     // HIGHLIGHT SELECTED ANSWER
-    // ----------------------------------------
+    // ========================================
 
     selectedOption.classList.add("selected");
 
 
-    // ----------------------------------------
+    // ========================================
     // SHOW ANALYSIS
-    // ----------------------------------------
+    // ========================================
 
     statusText.textContent =
         "🤖 AI is analysing your decision...";
-
 
     nextBtn.disabled = true;
 
     nextBtn.style.opacity = "0.5";
 
-
     fill.style.width = "0%";
 
 
-    // Small progress animation
+    // ========================================
+    // PROGRESS ANIMATION
+    // ========================================
 
     setTimeout(() => {
 
@@ -367,17 +356,17 @@ async function handleAnswer(event) {
     }, 100);
 
 
-    // ----------------------------------------
-    // SAVE ANSWER TO FIREBASE
-    // ----------------------------------------
+    // ========================================
+    // SAVE ANSWER
+    // ========================================
 
     const savedSuccessfully =
         await saveAnswer();
 
 
-    // ----------------------------------------
+    // ========================================
     // SAVE FAILED
-    // ----------------------------------------
+    // ========================================
 
     if (!savedSuccessfully) {
 
@@ -389,16 +378,14 @@ async function handleAnswer(event) {
     }
 
 
-    // ----------------------------------------
+    // ========================================
     // SAVE SUCCESS
-    // ----------------------------------------
+    // ========================================
 
     answerSaved = true;
 
-
     statusText.textContent =
         `✅ Decision recorded — Score: ${selectedScore}/5`;
-
 
     nextBtn.disabled = false;
 
@@ -464,7 +451,6 @@ async function saveAnswer() {
             "Question 1 saved successfully."
         );
 
-
         return true;
 
     }
@@ -476,12 +462,10 @@ async function saveAnswer() {
             error
         );
 
-
         alert(
             "Firebase error: " +
             error.message
         );
-
 
         return false;
 
@@ -496,18 +480,12 @@ async function saveAnswer() {
 
 function showPreviouslyAnswered() {
 
-    // ----------------------------------------
-    // LOCK ALL OPTIONS
-    // ----------------------------------------
-
     options.forEach(option => {
 
         option.style.pointerEvents = "none";
 
         option.style.cursor = "not-allowed";
 
-
-        // Highlight previously selected option
 
         if (
             option.dataset.answer === selectedAnswer
@@ -520,10 +498,6 @@ function showPreviouslyAnswered() {
     });
 
 
-    // ----------------------------------------
-    // SHOW SAVED SCORE
-    // ----------------------------------------
-
     fill.style.width =
         `${selectedScore * 20}%`;
 
@@ -531,10 +505,6 @@ function showPreviouslyAnswered() {
     statusText.textContent =
         `🔒 Already answered — Score: ${selectedScore}/5`;
 
-
-    // ----------------------------------------
-    // ALLOW NEXT
-    // ----------------------------------------
 
     nextBtn.disabled = false;
 
@@ -549,10 +519,6 @@ function showPreviouslyAnswered() {
 
 nextBtn.addEventListener("click", () => {
 
-    // ----------------------------------------
-    // DO NOT CONTINUE WITHOUT SAVED ANSWER
-    // ----------------------------------------
-
     if (!answerSaved) {
 
         alert(
@@ -564,10 +530,6 @@ nextBtn.addEventListener("click", () => {
     }
 
 
-    // ----------------------------------------
-    // ANSWER IS PERMANENTLY LOCKED
-    // ----------------------------------------
-
     if (!answerLocked) {
 
         alert(
@@ -578,10 +540,6 @@ nextBtn.addEventListener("click", () => {
 
     }
 
-
-    // ----------------------------------------
-    // GO TO QUESTION 2
-    // ----------------------------------------
 
     window.location.href =
         "DeveloperMindset2.html";
