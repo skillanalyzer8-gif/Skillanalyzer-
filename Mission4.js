@@ -2,6 +2,7 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
+    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -14,44 +15,47 @@ import {
 // GET HTML ELEMENTS
 // ===============================
 
+const optionsContainer = document.getElementById("options");
 const options = document.querySelectorAll(".option");
 const fill = document.querySelector(".fill");
-const text = document.querySelector(".analysis p");
+const text = document.getElementById("statusText");
 const nextBtn = document.getElementById("nextBtn");
 
 
 // ===============================
-// VARIABLES
+// QUESTION DETAILS
 // ===============================
 
-let selectedAnswer = "";
+const category = "softwareDevelopment";
+const questionNumber = 4;
+const questionId = "softwareDevelopment_q4";
+
+
+// ===============================
+// SCORES
+// ===============================
+
+const scores = {
+    memoryLeak: 5,
+    cpuOverload: 4,
+    networkCongestion: 3,
+    diskFailure: 1
+};
+
+
+// ===============================
+// STATE
+// ===============================
+
 let currentUser = null;
-let missionCompleted = false;
+let selectedAnswer = "";
+let selectedScore = 0;
+let answerLocked = false;
+let answerSaved = false;
 
 
 // ===============================
-// CHECK LOGIN
-// ===============================
-
-onAuthStateChanged(auth, function (user) {
-
-    if (user) {
-
-        currentUser = user;
-
-    } else {
-
-        alert("Please login first.");
-
-        window.location.href = "Login.html";
-
-    }
-
-});
-
-
-// ===============================
-// DISABLE NEXT BUTTON
+// DISABLE NEXT INITIALLY
 // ===============================
 
 nextBtn.disabled = true;
@@ -59,163 +63,399 @@ nextBtn.style.opacity = "0.5";
 
 
 // ===============================
-// OPTION SELECTION
+// SHUFFLE OPTIONS
 // ===============================
 
-options.forEach(function (option) {
+function shuffleOptions() {
 
-    option.addEventListener("click", function () {
+    const optionElements =
+        Array.from(optionsContainer.children);
 
-        // Remove previous selection
-        options.forEach(function (item) {
+    for (
+        let i = optionElements.length - 1;
+        i > 0;
+        i--
+    ) {
 
-            item.classList.remove("active");
+        const randomIndex =
+            Math.floor(Math.random() * (i + 1));
 
-        });
+        optionsContainer.appendChild(
+            optionElements[randomIndex]
+        );
+    }
+}
 
 
-        // Select current option
-        this.classList.add("active");
+// ===============================
+// CHECK LOGIN
+// ===============================
+
+onAuthStateChanged(auth, async function (user) {
+
+    if (!user) {
+
+        alert("Please login first.");
+
+        window.location.href = "Login.html";
+
+        return;
+    }
+
+    currentUser = user;
+
+    await checkPreviousAnswer();
+
+});
 
 
-        // Get selected answer
-        selectedAnswer =
-            this.querySelector("h4").textContent.trim();
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
+
+async function checkPreviousAnswer() {
+
+    try {
+
+        const questionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
+
+        const questionSnap =
+            await getDoc(questionRef);
 
 
         // ===============================
-        // START AI ANALYSIS
+        // ALREADY ANSWERED
         // ===============================
 
-        fill.style.width = "0%";
+        if (questionSnap.exists()) {
+
+            const data =
+                questionSnap.data();
+
+            if (data.completed === true) {
+
+                selectedAnswer =
+                    data.answer || "";
+
+                selectedScore =
+                    data.score || 0;
+
+                answerLocked = true;
+                answerSaved = true;
+
+                showPreviouslyAnswered();
+
+                return;
+            }
+        }
+
+
+        // ===============================
+        // NEW QUESTION
+        // ===============================
+
+        shuffleOptions();
+
+        enableOptions();
+
+    } catch (error) {
+
+        console.error(
+            "Error checking previous answer:",
+            error
+        );
 
         text.textContent =
-            "🤖 AI is analysing your diagnosis...";
+            "❌ Could not load your previous answer.";
+
+    }
+}
 
 
-        nextBtn.disabled = true;
-        nextBtn.style.opacity = "0.5";
+// ===============================
+// ENABLE OPTIONS
+// ===============================
+
+function enableOptions() {
+
+    options.forEach(function (option) {
+
+        option.addEventListener(
+            "click",
+            handleAnswer
+        );
+
+    });
+}
 
 
-        // Start progress animation
-        setTimeout(function () {
+// ===============================
+// HANDLE ANSWER
+// ===============================
 
-            fill.style.width = "100%";
+async function handleAnswer() {
 
-        }, 100);
-
-
-        // ===============================
-        // COMPLETE ANALYSIS
-        // ===============================
-
-        setTimeout(async function () {
-
-            // Show result
-            text.textContent =
-                "✅ Diagnosis Recorded Successfully";
+    // Prevent second selection
+    if (answerLocked) {
+        return;
+    }
 
 
-            // Save Mission 4
-            if (currentUser) {
+    // Check login
+    if (!currentUser) {
 
-                try {
+        alert("Please login first.");
 
-                    await setDoc(
-
-                        doc(
-                            db,
-                            "users",
-                            currentUser.uid,
-                            "missions",
-                            "mission4"
-                        ),
-
-                        {
-                            missionNumber: 4,
-
-                            answer: selectedAnswer,
-
-                            completed: true,
-
-                            completedAt:
-                                new Date().toISOString()
-                        }
-
-                    );
+        return;
+    }
 
 
-                    // Mark completed
-                    missionCompleted = true;
+    // ===============================
+    // GET ANSWER
+    // ===============================
+
+    selectedAnswer =
+        this.dataset.answer;
 
 
-                    // Enable Continue
-                    nextBtn.disabled = false;
+    // ===============================
+    // GET SCORE
+    // ===============================
 
-                    nextBtn.style.opacity = "1";
-
-
-                    console.log(
-                        "Mission 4 saved successfully!"
-                    );
+    selectedScore =
+        scores[selectedAnswer] || 0;
 
 
-                } catch (error) {
+    // ===============================
+    // LOCK IMMEDIATELY
+    // ===============================
 
-                    console.error(
-                        "Error saving Mission 4:",
-                        error
-                    );
-
-
-                    alert(
-                        "Could not save Mission 4. Please try again."
-                    );
+    answerLocked = true;
 
 
-                    missionCompleted = false;
+    // Disable all options
+    options.forEach(function (option) {
 
-                }
-
-            } else {
-
-                alert("Please login first.");
-
-            }
-
-        }, 1500);
+        option.style.pointerEvents = "none";
+        option.style.opacity = "0.65";
 
     });
 
-});
+
+    // Keep selected option highlighted
+    this.classList.add("active");
+    this.style.opacity = "1";
+
+
+    // ===============================
+    // AI ANALYSIS
+    // ===============================
+
+    fill.style.width = "0%";
+
+    text.textContent =
+        "🤖 AI is analysing your diagnosis...";
+
+
+    nextBtn.disabled = true;
+    nextBtn.style.opacity = "0.5";
+
+
+    // ===============================
+    // PROGRESS ANIMATION
+    // ===============================
+
+    setTimeout(function () {
+
+        fill.style.width =
+            `${selectedScore * 20}%`;
+
+    }, 100);
+
+
+    // ===============================
+    // SAVE ANSWER
+    // ===============================
+
+    setTimeout(async function () {
+
+        await saveAnswer();
+
+    }, 1500);
+
+}
+
+
+// ===============================
+// SAVE ANSWER
+// ===============================
+
+async function saveAnswer() {
+
+    if (!currentUser) {
+
+        text.textContent =
+            "❌ Please login again.";
+
+        return;
+    }
+
+
+    try {
+
+        const questionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
+
+
+        await setDoc(
+            questionRef,
+            {
+
+                category: category,
+
+                questionNumber: questionNumber,
+
+                answer: selectedAnswer,
+
+                score: selectedScore,
+
+                completed: true,
+
+                completedAt:
+                    new Date().toISOString()
+
+            },
+            {
+                merge: true
+            }
+        );
+
+
+        answerSaved = true;
+
+
+        text.textContent =
+            "✅ Diagnosis Recorded Successfully";
+
+
+        nextBtn.disabled = false;
+        nextBtn.style.opacity = "1";
+
+
+        console.log(
+            "Mission 4 saved successfully!"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Error saving Mission 4:",
+            error
+        );
+
+
+        answerSaved = false;
+
+
+        text.textContent =
+            "❌ Could not save your diagnosis.";
+
+
+        alert(
+            "Could not save Mission 4. Please try again."
+        );
+
+    }
+
+}
+
+
+// ===============================
+// SHOW PREVIOUSLY ANSWERED
+// ===============================
+
+function showPreviouslyAnswered() {
+
+    options.forEach(function (option) {
+
+        // Lock options
+        option.style.pointerEvents = "none";
+        option.style.opacity = "0.65";
+
+
+        // Highlight previous answer
+        if (
+            option.dataset.answer ===
+            selectedAnswer
+        ) {
+
+            option.classList.add("active");
+
+            option.style.opacity = "1";
+
+        }
+
+    });
+
+
+    // Restore score progress
+    fill.style.width =
+        `${selectedScore * 20}%`;
+
+
+    text.textContent =
+        `✅ Already answered — Score: ${selectedScore}/5`;
+
+
+    // Allow continuation
+    nextBtn.disabled = false;
+    nextBtn.style.opacity = "1";
+
+}
 
 
 // ===============================
 // CONTINUE TO MISSION 5
 // ===============================
 
-nextBtn.addEventListener("click", function () {
+nextBtn.addEventListener(
+    "click",
+    function () {
 
-    if (selectedAnswer === "") {
+        if (!selectedAnswer) {
 
-        alert("Please select an option first.");
+            alert(
+                "Please select an option first."
+            );
 
-        return;
+            return;
+        }
+
+
+        if (!answerSaved) {
+
+            alert(
+                "Please wait until your diagnosis is saved."
+            );
+
+            return;
+        }
+
+
+        window.location.href =
+            "Mission5.html";
 
     }
-
-
-    if (!missionCompleted) {
-
-        alert(
-            "Please wait until your diagnosis is saved."
-        );
-
-        return;
-
-    }
-
-
-    window.location.href = "Mission5.html";
-
-});
+);
