@@ -2,251 +2,428 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
-        setDoc
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    getDoc,
+    setDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        import {
-            onAuthStateChanged
-            } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-            // ===============================
-            // DOM ELEMENTS
-            // ===============================
+const optionsContainer = document.getElementById("options");
+const options = document.querySelectorAll(".option");
+const fill = document.querySelector(".fill");
+const text = document.getElementById("statusText");
+const nextBtn = document.getElementById("nextBtn");
 
-            const options = document.querySelectorAll(".option");
-            const fill = document.querySelector(".fill");
-            const text = document.querySelector(".analysis p");
-            const nextBtn = document.getElementById("nextBtn");
 
+const category = "softwareDevelopment";
+const questionNumber = 7;
+const questionId = "softwareDevelopment_q7";
 
-            // ===============================
-            // VARIABLES
-            // ===============================
 
-            let selectedAnswer = "";
-            let currentUser = null;
-            let missionCompleted = false;
+/*
+    Mission 7 Scoring
 
+    Scale Servers          = 5
+    Optimize Performance   = 4
+    Block New Users        = 3
+    Ignore the Load        = 1
+*/
 
-            // ===============================
-            // CHECK LOGIN
-            // ===============================
+const scores = {
 
-            onAuthStateChanged(auth, function (user) {
+    scaleServers: 5,
+    optimizePerformance: 4,
+    blockUsers: 3,
+    ignoreLoad: 1
 
-                if (user) {
+};
 
-                        currentUser = user;
 
-                                console.log(
-                                            "Mission 7 user:",
-                                                        currentUser.uid
-                                                                );
+let currentUser = null;
 
-                                                                    } else {
+let selectedAnswer = "";
+let selectedScore = 0;
 
-                                                                            alert("Please login first.");
+let answerLocked = false;
+let answerSaved = false;
 
-                                                                                    window.location.href = "Login.html";
 
-                                                                                        }
+// Disable Continue initially
+nextBtn.disabled = true;
+nextBtn.style.opacity = "0.5";
 
-                                                                                        });
 
+// Fisher-Yates shuffle
+function shuffleOptions() {
 
-                                                                                        // ===============================
-                                                                                        // DISABLE CONTINUE INITIALLY
-                                                                                        // ===============================
+    const optionElements =
+        Array.from(optionsContainer.children);
 
-                                                                                        nextBtn.disabled = true;
-                                                                                        nextBtn.style.opacity = "0.5";
+    for (
+        let i = optionElements.length - 1;
+        i > 0;
+        i--
+    ) {
 
+        const randomIndex =
+            Math.floor(Math.random() * (i + 1));
 
-                                                                                        // ===============================
-                                                                                        // OPTION SELECTION
-                                                                                        // ===============================
+        optionsContainer.appendChild(
+            optionElements[randomIndex]
+        );
 
-                                                                                        options.forEach(function (option) {
+    }
 
-                                                                                            option.addEventListener("click", function () {
+}
 
-                                                                                                    // Remove previous selection
-                                                                                                            options.forEach(function (item) {
 
-                                                                                                                        item.classList.remove("active");
+// Check logged-in user
+onAuthStateChanged(auth, async function (user) {
 
-                                                                                                                                });
+    if (!user) {
 
+        alert("Please login first.");
 
-                                                                                                                                        // Select current option
-                                                                                                                                                this.classList.add("active");
+        window.location.href = "Login.html";
 
+        return;
 
-                                                                                                                                                        // Get answer
-                                                                                                                                                                selectedAnswer =
-                                                                                                                                                                            this.querySelector("h4").textContent.trim();
+    }
 
 
-                                                                                                                                                                                    console.log(
-                                                                                                                                                                                                "Mission 7 selected:",
-                                                                                                                                                                                                            selectedAnswer
-                                                                                                                                                                                                                    );
+    currentUser = user;
 
+    console.log(
+        "Mission 7 user:",
+        currentUser.uid
+    );
 
-                                                                                                                                                                                                                            // Start AI analysis
-                                                                                                                                                                                                                                    fill.style.width = "0%";
 
-                                                                                                                                                                                                                                            text.textContent =
-                                                                                                                                                                                                                                                        "🤖 AI is analysing your cloud decision...";
+    await checkPreviousAnswer();
 
+});
 
-                                                                                                                                                                                                                                                                nextBtn.disabled = true;
-                                                                                                                                                                                                                                                                        nextBtn.style.opacity = "0.5";
 
+// Check previous answer
+async function checkPreviousAnswer() {
 
-                                                                                                                                                                                                                                                                                // Progress animation
-                                                                                                                                                                                                                                                                                        setTimeout(function () {
+    try {
 
-                                                                                                                                                                                                                                                                                                    fill.style.width = "100%";
+        const questionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
 
-                                                                                                                                                                                                                                                                                                            }, 100);
 
+        const questionSnap =
+            await getDoc(questionRef);
 
-                                                                                                                                                                                                                                                                                                                    // Finish analysis
-                                                                                                                                                                                                                                                                                                                            setTimeout(async function () {
 
-                                                                                                                                                                                                                                                                                                                                        text.textContent =
-                                                                                                                                                                                                                                                                                                                                                        "🤖 Evaluating your cloud decision...";
+        if (questionSnap.exists()) {
 
+            const data =
+                questionSnap.data();
 
-                                                                                                                                                                                                                                                                                                                                                                    // Check Firebase login
-                                                                                                                                                                                                                                                                                                                                                                                if (!currentUser) {
 
-                                                                                                                                                                                                                                                                                                                                                                                                text.textContent =
-                                                                                                                                                                                                                                                                                                                                                                                                                    "❌ Login session not found.";
+            if (data.completed === true) {
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                    alert(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                        "Please login again."
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        );
+                selectedAnswer =
+                    data.answer || "";
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        return;
+                selectedScore =
+                    data.score || 0;
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
 
+                answerLocked = true;
+                answerSaved = true;
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                try {
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // Save Mission 7
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                await setDoc(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    doc(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            db,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    "users",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            currentUser.uid,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    "missions",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "mission7"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ),
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            missionNumber: 7,
+                showPreviouslyAnswered();
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    answer: selectedAnswer,
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            completed: true,
+                return;
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    completedAt:
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                new Date().toISOString()
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    );
+            }
 
+        }
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // Mark mission completed
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    missionCompleted = true;
 
+        // New question
+        shuffleOptions();
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // Show success
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    text.textContent =
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        "✅ Cloud Decision Recorded Successfully";
+        enableOptions();
 
+    } catch (error) {
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        // Enable Continue
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        nextBtn.disabled = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        nextBtn.style.opacity = "1";
+        console.error(
+            "Error checking Mission 7 answer:",
+            error
+        );
 
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        console.log(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "Mission 7 saved successfully!"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            );
+        text.textContent =
+            "❌ Could not load your previous answer.";
 
+    }
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        } catch (error) {
+}
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        console.error(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "Mission 7 Firebase Error:",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                error
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                );
 
+// Enable options
+function enableOptions() {
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                missionCompleted = false;
+    options.forEach(function (option) {
 
+        option.addEventListener(
+            "click",
+            handleAnswer
+        );
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                text.textContent =
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    "❌ Could not save your decision.";
+    });
 
+}
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    alert(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        "Mission 7 could not be saved. Please try again."
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        );
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
+// Handle answer
+async function handleAnswer() {
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }, 1500);
+    // 🔒 Prevent second selection
+    if (answerLocked) {
+        return;
+    }
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                });
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                });
+    if (!currentUser) {
 
+        alert("Please login first.");
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // ===============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // CONTINUE TO MISSION 8
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // ===============================
+        return;
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                nextBtn.addEventListener("click", function () {
+    }
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    console.log(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "Continue clicked."
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                );
 
+    // Get stable answer ID
+    selectedAnswer =
+        this.dataset.answer;
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // No answer
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        if (selectedAnswer === "") {
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                alert(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "Please select an option first."
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    );
+    // Get score from answer ID
+    selectedScore =
+        scores[selectedAnswer] || 0;
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            return;
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
+    // 🔒 LOCK IMMEDIATELY
+    answerLocked = true;
 
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // Firebase save not completed
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        if (!missionCompleted) {
+    // Disable every option
+    options.forEach(function (option) {
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                alert(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "Please wait until your cloud decision is saved."
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    );
+        option.style.pointerEvents = "none";
+        option.style.opacity = "0.65";
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            return;
+    });
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
 
+    // Highlight selected option
+    this.classList.add("active");
+    this.style.opacity = "1";
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // Go to Mission 8
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        console.log(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "Opening Mission 8..."
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    );
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        window.location.href =
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "Mission8.html";
+    // Start AI analysis
+    fill.style.width = "0%";
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                });
+    text.textContent =
+        "🤖 AI is analysing your cloud decision...";
+
+
+    nextBtn.disabled = true;
+    nextBtn.style.opacity = "0.5";
+
+
+    // Show score progress
+    setTimeout(function () {
+
+        fill.style.width =
+            `${selectedScore * 20}%`;
+
+    }, 100);
+
+
+    // Save after analysis
+    setTimeout(async function () {
+
+        await saveAnswer();
+
+    }, 1500);
+
+}
+
+
+// Save Mission 7
+async function saveAnswer() {
+
+    if (!currentUser) {
+
+        text.textContent =
+            "❌ Please login again.";
+
+        return;
+
+    }
+
+
+    try {
+
+        const questionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
+
+
+        await setDoc(
+            questionRef,
+            {
+
+                category: category,
+
+                questionNumber: questionNumber,
+
+                answer: selectedAnswer,
+
+                score: selectedScore,
+
+                completed: true,
+
+                completedAt:
+                    new Date().toISOString()
+
+            },
+            {
+                merge: true
+            }
+        );
+
+
+        answerSaved = true;
+
+
+        text.textContent =
+            "✅ Cloud Decision Recorded Successfully";
+
+
+        nextBtn.disabled = false;
+        nextBtn.style.opacity = "1";
+
+
+        console.log(
+            "Mission 7 saved successfully!"
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Mission 7 Firebase Error:",
+            error
+        );
+
+
+        answerSaved = false;
+
+
+        text.textContent =
+            "❌ Could not save your decision.";
+
+
+        alert(
+            "Mission 7 could not be saved. Please try again."
+        );
+
+    }
+
+}
+
+
+// Restore previously answered Mission 7
+function showPreviouslyAnswered() {
+
+    options.forEach(function (option) {
+
+        option.style.pointerEvents = "none";
+        option.style.opacity = "0.65";
+
+
+        if (
+            option.dataset.answer ===
+            selectedAnswer
+        ) {
+
+            option.classList.add("active");
+
+            option.style.opacity = "1";
+
+        }
+
+    });
+
+
+    fill.style.width =
+        `${selectedScore * 20}%`;
+
+
+    text.textContent =
+        `✅ Already answered — Score: ${selectedScore}/5`;
+
+
+    nextBtn.disabled = false;
+    nextBtn.style.opacity = "1";
+
+}
+
+
+// Continue to Mission 8
+nextBtn.addEventListener(
+    "click",
+    function () {
+
+        if (!selectedAnswer) {
+
+            alert(
+                "Please select an option first."
+            );
+
+            return;
+
+        }
+
+
+        if (!answerSaved) {
+
+            alert(
+                "Please wait until Mission 7 is saved."
+            );
+
+            return;
+
+        }
+
+
+        console.log(
+            "Opening Mission 8..."
+        );
+
+
+        window.location.href =
+            "Mission8.html";
+
+    }
+);
