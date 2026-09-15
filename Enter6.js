@@ -1,171 +1,416 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc
+    doc,
+    getDoc,
+    setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-const startPitch = document.getElementById("startPitch");
-const arenaText = document.getElementById("arenaText");
+// ===============================
+// MISSION CONFIG
+// ===============================
+
+const category = "entrepreneurship";
+
+const questionNumber = 6;
+
+const questionId = "entrepreneurship_q6";
+
+
+// ===============================
+// ANSWER SCORES
+// ===============================
+
+const scores = {
+
+    customerProblem: 5,
+
+    hugeProfit: 2,
+
+    copyCompetitor: 3,
+
+    hideRisks: 1
+
+};
+
+
+// Correct answer
+
+const correctAnswer = "customerProblem";
+
+
+// ===============================
+// ELEMENTS
+// ===============================
+
+const options = document.querySelectorAll(".option");
+
+const nextBtn = document.getElementById("nextBtn");
+
 const statusText = document.getElementById("statusText");
 
+const arenaText = document.getElementById("arenaText");
+
+const progressFill = document.querySelector(".fill");
+
+
+// ===============================
+// STATE
+// ===============================
+
 let currentUser = null;
-let pitchStarted = false;
-let missionCompleted = false;
+
+let selectedAnswer = null;
+
+let selectedScore = 0;
+
+let answerLocked = false;
+
+let answerSaved = false;
 
 
 // ===============================
-// CHECK LOGIN
+// INITIAL STATE
 // ===============================
 
-onAuthStateChanged(auth, function (user) {
+nextBtn.disabled = true;
 
-  if (user) {
+if (progressFill) {
+    progressFill.style.width = "0%";
+}
 
-    currentUser = user;
 
-  } else {
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
 
-    alert("Please login first.");
+async function checkPreviousAnswer() {
 
-    window.location.href = "Login.html";
+    if (!currentUser) return;
 
-  }
+    try {
+
+        const answerRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
+
+        const answerSnap = await getDoc(answerRef);
+
+
+        if (!answerSnap.exists()) {
+            return;
+        }
+
+
+        const data = answerSnap.data();
+
+
+        if (!data.completed) {
+            return;
+        }
+
+
+        // Restore previous answer
+
+        selectedAnswer = data.answer;
+
+        selectedScore = data.score || 0;
+
+        answerLocked = true;
+
+        answerSaved = true;
+
+
+        // Restore visual state
+
+        options.forEach(option => {
+
+            const answer = option.dataset.answer;
+
+
+            if (answer === selectedAnswer) {
+
+                option.classList.add("selected");
+
+            } else {
+
+                option.style.opacity = "0.45";
+
+            }
+
+        });
+
+
+        if (arenaText) {
+
+            arenaText.textContent =
+                "🎤 Your investor presentation has already been completed.";
+
+        }
+
+
+        if (statusText) {
+
+            if (data.correct) {
+
+                statusText.textContent =
+                    "✅ Investor trust strategy completed successfully.";
+
+            } else {
+
+                statusText.textContent =
+                    "📊 Previous answer restored.";
+
+            }
+
+        }
+
+
+        if (progressFill) {
+            progressFill.style.width = "100%";
+        }
+
+
+        nextBtn.disabled = false;
+
+
+    } catch (error) {
+
+        console.error(
+            "Error checking previous answer:",
+            error
+        );
+
+    }
+
+}
+
+
+// ===============================
+// SAVE ANSWER
+// ===============================
+
+async function saveAnswer() {
+
+    if (!currentUser || !selectedAnswer) {
+        return;
+    }
+
+
+    try {
+
+        const answerRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
+
+
+        await setDoc(answerRef, {
+
+            category: category,
+
+            questionNumber: questionNumber,
+
+            answer: selectedAnswer,
+
+            score: selectedScore,
+
+            correct: selectedAnswer === correctAnswer,
+
+            completed: true,
+
+            completedAt: new Date()
+
+        });
+
+
+        answerSaved = true;
+
+        nextBtn.disabled = false;
+
+
+        if (statusText) {
+
+            if (selectedAnswer === correctAnswer) {
+
+                statusText.textContent =
+                    "✅ Excellent! Investors trust clear customer-focused solutions.";
+
+            } else {
+
+                statusText.textContent =
+                    "📊 Your investor strategy has been recorded.";
+
+            }
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Error saving answer:",
+            error
+        );
+
+
+        if (statusText) {
+
+            statusText.textContent =
+                "⚠️ Could not save your answer. Please try again.";
+
+        }
+
+    }
+
+}
+
+
+// ===============================
+// OPTION CLICK
+// ===============================
+
+options.forEach(option => {
+
+    option.addEventListener("click", async () => {
+
+
+        // Prevent changing answer
+
+        if (answerLocked) {
+            return;
+        }
+
+
+        selectedAnswer =
+            option.dataset.answer;
+
+
+        selectedScore =
+            scores[selectedAnswer] || 0;
+
+
+        answerLocked = true;
+
+
+        // Visual feedback
+
+        options.forEach(otherOption => {
+
+            if (otherOption !== option) {
+
+                otherOption.style.opacity = "0.45";
+
+            }
+
+        });
+
+
+        option.classList.add("selected");
+
+
+        // Update arena text
+
+        if (arenaText) {
+
+            arenaText.textContent =
+                "🎤 AI is evaluating your investor pitch strategy...";
+
+        }
+
+
+        // Update status
+
+        if (statusText) {
+
+            statusText.textContent =
+                "🤖 AI Startup Mentor is analyzing your decision...";
+
+        }
+
+
+        // Progress
+
+        if (progressFill) {
+
+            progressFill.style.width = "100%";
+
+        }
+
+
+        // Small analysis delay
+
+        await new Promise(resolve => {
+
+            setTimeout(resolve, 1200);
+
+        });
+
+
+        // Save answer
+
+        await saveAnswer();
+
+    });
 
 });
 
 
 // ===============================
-// START INVESTOR PITCH
+// CONTINUE BUTTON
 // ===============================
 
-startPitch.addEventListener("click", function () {
+nextBtn.addEventListener("click", () => {
 
-  // ===============================
-  // CONTINUE TO MISSION 7
-  // ===============================
 
-  if (startPitch.textContent.includes("Continue")) {
-
-    if (!missionCompleted) {
-
-      alert("Please wait until Mission 6 is saved.");
-
-      return;
-
+    if (!selectedAnswer) {
+        return;
     }
 
-    window.location.href = "Enter7.html";
 
-    return;
-
-  }
-
-
-  if (pitchStarted) {
-    return;
-  }
-
-  pitchStarted = true;
-
-  startPitch.disabled = true;
-  startPitch.style.opacity = "0.6";
+    if (!answerSaved) {
+        return;
+    }
 
 
-  // ===============================
-  // PITCH STAGE 1
-  // ===============================
+    window.location.href =
+        "Enter7.html";
 
-  statusText.textContent =
-    "🎤 Presenting your startup to investors...";
-
-  arenaText.textContent =
-    "Explaining the problem and your solution...";
+});
 
 
-  // ===============================
-  // PITCH STAGE 2
-  // ===============================
+// ===============================
+// FIREBASE AUTH
+// ===============================
 
-  setTimeout(function () {
-
-    statusText.textContent =
-      "💼 Investors are evaluating your startup...";
-
-    arenaText.textContent =
-      "Demonstrating customer value and growth potential...";
-
-  }, 1500);
+onAuthStateChanged(auth, async user => {
 
 
-  // ===============================
-  // PITCH STAGE 3
-  // ===============================
+    if (!user) {
 
-  setTimeout(function () {
+        window.location.href =
+            "Login.html";
 
-    statusText.textContent =
-      "⭐ Investors are impressed!";
-
-    arenaText.textContent =
-      "Your startup has gained investor confidence.";
-
-  }, 3000);
-
-
-  // ===============================
-  // PITCH COMPLETE
-  // ===============================
-
-  setTimeout(async function () {
-
-    arenaText.textContent =
-      "🚀 Investor pitch completed.";
-
-    statusText.textContent =
-      "🤖 AI has evaluated your investor presentation.";
-
-
-    // ===============================
-    // CHECK USER SESSION
-    // ===============================
-
-    if (!currentUser) {
-
-      statusText.textContent =
-        "❌ Login session not found.";
-
-      alert("Please login again.");
-
-      return;
+        return;
 
     }
 
 
-    // ===============================
-    // SAVE MISSION 6 TO FIREBASE
-    // ===============================
+    currentUser = user;
 
-    try {
 
-      await setDoc(
-        doc(
-          db,
-          "users",
-          currentUser.uid,
-          "missions",
-          "mission6"
-        ),
-        {
-          missionNumber: 6,
-          answer: "Startup Investor Pitch Completed",
-          completed: true,
-          completedAt: new Date().toISOString()
-        }
-     
-    )};
+    await checkPreviousAnswer();
+
+});
