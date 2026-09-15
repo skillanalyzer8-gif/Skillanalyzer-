@@ -24,11 +24,11 @@ rel="stylesheet">
 
 <div class="background">
 
-<div class="researchGrid"></div>
+    <div class="researchGrid"></div>
 
-<div class="researchGlow"></div>
+    <div class="researchGlow"></div>
 
-<div class="floatingData"></div>
+    <div class="floatingData"></div>
 
 </div>
 
@@ -36,99 +36,150 @@ rel="stylesheet">
 <div class="container">
 
 
-<!-- Header -->
+    <!-- Header -->
 
-<div class="header">
+    <div class="header">
 
-<h1>
+        <h1>
+            🔍 USER RESEARCH
+        </h1>
 
-🔍 USER RESEARCH
+        <p>
+            UI/UX Mission 10 / 20
+        </p>
 
-</h1>
-
-<p>
-
-UI/UX Mission 10 / 20
-
-</p>
-
-</div>
+    </div>
 
 
-<!-- AI Mentor -->
+    <!-- AI Mentor -->
 
-<div class="briefing">
+    <div class="briefing">
 
-<h2>
+        <h2>
+            🤖 AI Design Mentor
+        </h2>
 
-🤖 AI Design Mentor
+        <p>
+            Great designers don't guess what users need.
+            They research, understand problems, and create solutions.
+            Today's client is building a healthcare application.
+            Your mission is to identify the most important user need
+            before designing the interface.
+        </p>
 
-</h2>
-
-<p>
-
-Great designers don't guess what users need.
-
-They research, understand problems, and create solutions.
-
-Today's client is building a healthcare application.
-
-Your mission is to identify the most important user need before designing.
-
-</p>
-
-</div>
+    </div>
 
 
-<!-- Challenge Area -->
+    <!-- Challenge Area -->
 
-<div class="designArea">
+    <div class="designArea">
 
-<h2>
+        <h2>
+            🏥 Healthcare App
+        </h2>
 
-🏥 Healthcare App
+        <p id="challengeText">
+            Which approach should you take before designing the healthcare app?
+        </p>
 
-</h2>
-
-<p id="challengeText">
-
-Preparing user research scenarios...
-
-</p>
-
-</div>
+    </div>
 
 
-<!-- Status -->
+    <!-- Options -->
 
-<div class="statusBox">
+    <div id="options">
 
-<h3>
+        <button class="option"
+                data-answer="features"
+                data-score="2">
 
-Research Analysis
+            <span class="optionTitle">A</span>
 
-</h3>
+            <span>
+                Start designing advanced features immediately based on
+                what you personally think users will like.
+            </span>
 
-<p id="statusText">
-
-Waiting to begin...
-
-</p>
-
-</div>
+        </button>
 
 
-<!-- Controls -->
+        <button class="option"
+                data-answer="research"
+                data-score="5">
 
-<div class="controls">
+            <span class="optionTitle">B</span>
 
-<button id="startChallenge">
+            <span>
+                Interview and observe users to understand their goals,
+                difficulties, needs, and healthcare-related tasks.
+            </span>
 
-🔍 START RESEARCH
+        </button>
 
-</button>
 
-</div>
+        <button class="option"
+                data-answer="competitor"
+                data-score="3">
+
+            <span class="optionTitle">C</span>
+
+            <span>
+                Copy the interface of a popular healthcare application
+                without researching your target users.
+            </span>
+
+        </button>
+
+
+        <button class="option"
+                data-answer="visuals"
+                data-score="1">
+
+            <span class="optionTitle">D</span>
+
+            <span>
+                Focus mainly on colors, animations, and visual effects
+                before understanding the users' problems.
+            </span>
+
+        </button>
+
+    </div>
+
+
+    <!-- Status -->
+
+    <div class="statusBox">
+
+        <h3>
+            Research Analysis
+        </h3>
+
+        <p id="statusText">
+            Select the approach you think is best.
+        </p>
+
+    </div>
+
+
+    <!-- Progress -->
+
+    <div class="progress">
+
+        <div class="fill" id="fill"></div>
+
+    </div>
+
+
+    <!-- Controls -->
+
+    <div class="controls">
+
+        <button id="nextBtn" disabled>
+            CONTINUE MISSION 11 →
+        </button>
+
+    </div>
 
 
 </div>
