@@ -1,211 +1,319 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc
+doc,
+getDoc,
+setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+// =====================================
+// MISSION CONFIGURATION
+// =====================================
 
-const startRadar = document.getElementById("startRadar");
-const missionText = document.getElementById("missionText");
-const statusText = document.getElementById("statusText");
+const category = "entrepreneurship";
+
+const questionNumber = 2;
+
+const questionId = "entrepreneurship_q2";
+
+// =====================================
+// HTML ELEMENTS
+// =====================================
+
+const startRadar =
+document.getElementById("startRadar");
+
+const missionText =
+document.getElementById("missionText");
+
+const statusText =
+document.getElementById("statusText");
+
+// =====================================
+// STATE
+// =====================================
 
 let currentUser = null;
-let scanStarted = false;
+
 let missionCompleted = false;
 
+let radarStarted = false;
 
-// ===============================
-// CHECK LOGIN
-// ===============================
+// =====================================
+// CHECK PREVIOUS MISSION
+// =====================================
 
-onAuthStateChanged(auth, function (user) {
+async function checkPreviousMission() {
 
-  if (user) {
+if (!currentUser) return;
+
+
+try {
+
+    const missionRef = doc(
+        db,
+        "users",
+        currentUser.uid,
+        "missions",
+        questionId
+    );
+
+
+    const missionSnap =
+        await getDoc(missionRef);
+
+
+    if (missionSnap.exists()) {
+
+        const data =
+            missionSnap.data();
+
+
+        if (data.completed === true) {
+
+            missionCompleted = true;
+
+            radarStarted = true;
+
+
+            missionText.textContent =
+                "👥 Customer scan already completed.";
+
+
+            statusText.textContent =
+                "✅ Customer Radar completed.";
+
+
+            startRadar.textContent =
+                "➡️ CONTINUE TO MISSION 3";
+
+        }
+
+    }
+
+} catch (error) {
+
+    console.error(
+        "Error checking Entrepreneurship Mission 2:",
+        error
+    );
+
+}
+
+}
+
+// =====================================
+// SAVE MISSION
+// =====================================
+
+async function saveMission() {
+
+if (!currentUser) return false;
+
+
+try {
+
+    const missionRef = doc(
+        db,
+        "users",
+        currentUser.uid,
+        "missions",
+        questionId
+    );
+
+
+    await setDoc(
+        missionRef,
+        {
+
+            category: category,
+
+            questionNumber: questionNumber,
+
+            answer: "customerScan",
+
+            score: 5,
+
+            correct: true,
+
+            completed: true,
+
+            completedAt: new Date()
+
+        },
+        {
+            merge: true
+        }
+    );
+
+
+    missionCompleted = true;
+
+
+    return true;
+
+} catch (error) {
+
+    console.error(
+        "Error saving Entrepreneurship Mission 2:",
+        error
+    );
+
+
+    statusText.textContent =
+        "❌ Unable to save mission. Please try again.";
+
+
+    return false;
+
+}
+
+}
+
+// =====================================
+// START CUSTOMER RADAR
+// =====================================
+
+startRadar.addEventListener(
+"click",
+async () => {
+
+    // Already completed
+
+    if (missionCompleted) {
+
+        window.location.href =
+            "Enter3.html";
+
+        return;
+
+    }
+
+
+    if (radarStarted) return;
+
+
+    radarStarted = true;
+
+    startRadar.disabled = true;
+
+
+    // =================================
+    // RADAR ACTIVATION
+    // =================================
+
+    statusText.textContent =
+        "📡 Customer Radar activating...";
+
+
+    missionText.textContent =
+        "Scanning the market for potential customers...";
+
+
+    // =================================
+    // SCAN
+    // =================================
+
+    await new Promise(resolve =>
+        setTimeout(resolve, 1500)
+    );
+
+
+    statusText.textContent =
+        "🔍 Analyzing customer signals...";
+
+
+    missionText.textContent =
+        "Identifying people who need a solution...";
+
+
+    await new Promise(resolve =>
+        setTimeout(resolve, 1500)
+    );
+
+
+    // =================================
+    // CUSTOMERS FOUND
+    // =================================
+
+    statusText.textContent =
+        "🎯 Customer signals detected!";
+
+
+    missionText.textContent =
+        "Your first potential customers have been identified.";
+
+
+    // =================================
+    // SAVE TO FIREBASE
+    // =================================
+
+    const saved =
+        await saveMission();
+
+
+    if (!saved) {
+
+        radarStarted = false;
+
+        startRadar.disabled = false;
+
+        return;
+
+    }
+
+
+    // =================================
+    // COMPLETION
+    // =================================
+
+    statusText.textContent =
+        "✅ Mission 2 completed successfully!";
+
+
+    startRadar.textContent =
+        "➡️ CONTINUE TO MISSION 3";
+
+
+    startRadar.disabled = false;
+
+}
+
+);
+
+// =====================================
+// AUTHENTICATION
+// =====================================
+
+onAuthStateChanged(
+auth,
+async user => {
+
+    if (!user) {
+
+        window.location.href =
+            "Login.html";
+
+        return;
+
+    }
+
 
     currentUser = user;
 
-  } else {
 
-    alert("Please login first.");
+    console.log(
+        "Entrepreneurship Mission 2 user:",
+        currentUser.uid
+    );
 
-    window.location.href = "Login.html";
 
-  }
+    await checkPreviousMission();
 
-});
+}
 
-
-// ===============================
-// INITIAL BUTTON STATE
-// ===============================
-
-startRadar.disabled = false;
-
-
-// ===============================
-// START CUSTOMER SCAN
-// ===============================
-
-startRadar.addEventListener("click", function () {
-
-  if (scanStarted) {
-    return;
-  }
-
-  scanStarted = true;
-
-  startRadar.disabled = true;
-  startRadar.style.opacity = "0.6";
-
-  statusText.textContent =
-    "📡 Customer radar scanning...";
-
-  missionText.textContent =
-    "Searching for potential customers...";
-
-
-  // ===============================
-  // SCAN STAGE 1
-  // ===============================
-
-  setTimeout(function () {
-
-    statusText.textContent =
-      "🔎 Analysing customer groups...";
-
-    missionText.textContent =
-      "Identifying people who may need the product...";
-
-  }, 1500);
-
-
-  // ===============================
-  // SCAN STAGE 2
-  // ===============================
-
-  setTimeout(function () {
-
-    statusText.textContent =
-      "🎯 High-potential customers detected!";
-
-    missionText.textContent =
-      "Finding the best target customers...";
-
-  }, 3000);
-
-
-  // ===============================
-  // SCAN COMPLETE
-  // ===============================
-
-  setTimeout(async function () {
-
-    statusText.textContent =
-      "🤖 Customer analysis complete.";
-
-    missionText.textContent =
-      "Your first potential customers have been identified.";
-
-
-    // ===============================
-    // CHECK USER SESSION
-    // ===============================
-
-    if (!currentUser) {
-
-      statusText.textContent =
-        "❌ Login session not found.";
-
-      alert("Please login again.");
-
-      return;
-
-    }
-
-
-    // ===============================
-    // SAVE MISSION 2
-    // ===============================
-
-    try {
-
-      await setDoc(
-        doc(
-          db,
-          "users",
-          currentUser.uid,
-          "missions",
-          "mission2"
-        ),
-        {
-          missionNumber: 2,
-          answer: "Customer Radar Scan Completed",
-          completed: true,
-          completedAt: new Date().toISOString()
-        }
-      );
-
-
-      missionCompleted = true;
-
-
-      statusText.textContent =
-        "✅ Mission 2 Completed & Saved Successfully";
-
-
-      // ===============================
-      // ENABLE CONTINUE
-      // ===============================
-
-      startRadar.textContent =
-        "Continue to Mission 3 →";
-
-      startRadar.disabled = false;
-      startRadar.style.opacity = "1";
-
-
-    } catch (error) {
-
-      console.error("Firebase Error:", error);
-
-      statusText.textContent =
-        "❌ Could not save mission. Please try again.";
-
-      startRadar.disabled = false;
-      startRadar.style.opacity = "1";
-
-      scanStarted = false;
-
-    }
-
-  }, 4500);
-
-});
-
-
-// ===============================
-// CONTINUE TO MISSION 3
-// ===============================
-
-startRadar.addEventListener("click", function () {
-
-  if (startRadar.textContent.includes("Continue")) {
-
-    if (!missionCompleted) {
-
-      alert("Please wait until Mission 2 is saved.");
-
-      return;
-
-    }
-
-    window.location.href = "Enter3.html";
-
-  }
-
-});
+);
