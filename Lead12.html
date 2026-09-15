@@ -1,187 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Operation Firewall Zero</title>
-
-<link rel="stylesheet" href="Lead12.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
-rel="stylesheet">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-</head>
-
-<body>
-
-<!-- Binary Background -->
-
-<div id="binaryRain"></div>
-
-<!-- Scan Lines -->
-
-<div class="scanlines"></div>
-
-<!-- Glitch Overlay -->
-
-<div class="glitchOverlay"></div>
-
-<!-- Boot Screen -->
-
-<div id="bootScreen">
-
-<h1>
-
+<title>Operation Firewall Zero</title><link rel="stylesheet" href="Lead12.css"><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+rel="stylesheet"><link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"></head><body><!-- Binary Background --><div id="binaryRain"></div><!-- Scan Lines --><div class="scanlines"></div><!-- Glitch Overlay --><div class="glitchOverlay"></div><!-- Boot Screen --><div id="bootScreen"><h1>
 SKILL ANALYZER AI
-
-</h1>
-
-<p id="bootText">
-
+</h1><p id="bootText">
 Initializing...
-
-</p>
-
-</div>
-
-<!-- Main Mission -->
-
-<div id="gameScreen">
-
-<!-- Top HUD -->
-
-<div class="hud">
-
-<div class="left">
-
-<h2>
-
+</p></div><!-- Main Mission --><div id="gameScreen"><!-- Top HUD --><div class="hud"><div class="left"><h2>
 🛡 OPERATION : FIREWALL ZERO
-
-</h2>
-
-<p>
-
+</h2><p>
 Leadership Mission 12 / 20
-
-</p>
-
-</div>
-
-<div class="right">
-
-<div class="status">
-
-<span class="red"></span>
+</p></div><div class="right"><div class="status"><span class="red"></span>
 
 AI CORE BREACHED
 
-</div>
-
-</div>
-
-</div>
-
-<!-- AI Terminal -->
-
-<div class="terminal">
-
-<div class="terminalHeader">
-
-<div class="circle red"></div>
-
+</div></div></div><!-- AI Terminal --><div class="terminal"><div class="terminalHeader"><div class="circle red"></div>
 <div class="circle yellow"></div>
-
-<div class="circle green"></div>
-
-<span>
-
+<div class="circle green"></div><span>
 AI COMMAND TERMINAL
+</span></div><div class="terminalBody"><p id="terminalText">Leadership emergency detected...
 
-</span>
-
-</div>
-
-<div class="terminalBody">
-
-<p id="terminalText">
-
-Waiting for authorization...
-
-</p>
-
-</div>
-
-</div>
-
-<!-- Mission Brief -->
-
-<div class="missionCard">
-
-<h2>
-
+</p></div></div><!-- Mission Brief --><div class="missionCard"><h2>
 ⚠ Emergency Alert
-
-</h2>
-
-<p>
-
-Unknown hackers have infiltrated the Leadership AI Core.
+</h2><p>Unknown hackers have infiltrated the Leadership AI Core.
 
 The Firewall has locked every leadership profile.
 
-Your objective is to break through the Firewall before the virus spreads.
+Your team is waiting for your instructions.
 
-Every move you make will secretly reveal your leadership style.
+You must respond quickly, but a poor decision could make the situation worse.
 
-</p>
+</p></div><!-- Leadership Question --><div class="questionBox"><h2>
+What should you do FIRST?
+</h2><div id="options"><button class="option"
+data-answer="panic">
 
-</div>
+A. Panic and give everyone different instructions immediately.
 
-<!-- Firewall -->
+</button><button class="option"
+data-answer="alone">
 
-<div class="firewall">
+B. Try to solve the entire security problem yourself.
 
-<div class="shield">
+</button><button class="option"
+data-answer="assess">
 
-🛡
+C. Stay calm, assess the situation, and assign clear responsibilities to the team.
 
-</div>
+</button><button class="option"
+data-answer="ignore">
 
-<h2>
+D. Ignore the warning and continue normal work.
 
-FIREWALL LOCKED
+</button></div></div><!-- Analysis --><div class="analysis"><p id="statusText">
+Choose the best leadership response.
+</p><div class="progress"><div class="fill"></div></div></div><!-- Continue --><button id="nextBtn" disabled>CONTINUE TO MISSION 13 →
 
-</h2>
-
-<p>
-
-Security Level : MAXIMUM
-
-</p>
-
-</div>
-
-<!-- Begin -->
-
-<button id="beginMission">
-
-ENTER FIREWALL
-
-</button>
-
-</div>
-
-<script type="module" src="Lead12.js"></script>
-
-</body>
-
-</html>
+</button></div><script type="module" src="Lead12.js"></script></body></html>
