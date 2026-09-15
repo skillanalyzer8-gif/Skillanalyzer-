@@ -2,6 +2,7 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
+    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -14,27 +15,69 @@ import {
 // DOM ELEMENTS
 // ===============================
 
-const startBtn = document.getElementById("startChallenge");
-const designArea = document.querySelector(".designArea");
-const status = document.getElementById("statusText");
+const options = document.getElementById("options");
+const statusText = document.getElementById("statusText");
+const fill = document.getElementById("fill");
+const nextBtn = document.getElementById("nextBtn");
+
+
+// ===============================
+// MISSION DETAILS
+// ===============================
+
+const category = "uiux";
+const questionNumber = 10;
+const questionId = "uiux_q10";
+
+const correctAnswer = "research";
+
+
+// ===============================
+// SCORES
+// ===============================
+
+const scores = {
+    features: 2,
+    research: 5,
+    competitor: 3,
+    visuals: 1
+};
+
+
+// ===============================
+// STATE
+// ===============================
 
 let currentUser = null;
+let selectedAnswer = null;
+let selectedScore = 0;
 let missionCompleted = false;
+let answerSaved = false;
+
+
+// ===============================
+// CONTINUE BUTTON
+// ===============================
+
+nextBtn.disabled = true;
 
 
 // ===============================
 // AUTHENTICATION
 // ===============================
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
 
     if (user) {
 
         currentUser = user;
 
+        await checkPreviousAnswer();
+
     } else {
 
         alert("Please login first.");
+
         window.location.href = "Login.html";
 
     }
@@ -43,110 +86,72 @@ onAuthStateChanged(auth, (user) => {
 
 
 // ===============================
-// START RESEARCH
+// CHECK PREVIOUS ANSWER
 // ===============================
 
-startBtn.addEventListener("click", () => {
+async function checkPreviousAnswer() {
 
-    startBtn.style.display = "none";
+    try {
 
-    status.innerHTML = "Analyzing user research scenarios...";
+        const missionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
 
-    navigator.vibrate?.([100, 80, 100]);
-
-    setTimeout(showResearchScenarios, 1800);
-
-});
-
-
-// ===============================
-// SHOW RESEARCH SCENARIOS
-// ===============================
-
-function showResearchScenarios() {
-
-    designArea.innerHTML = `
-
-        <h2>🏥 Identify The Most Important User Need</h2>
-
-        <p>
-            You are researching a healthcare app.
-            Which user need should the design team prioritize?
-        </p>
+        const missionSnap = await getDoc(missionRef);
 
 
-        <div class="researchCard">
+        if (missionSnap.exists()) {
 
-            <h3>Research Insight A</h3>
-
-            <p>
-                🎨 Users want colorful screens<br>
-                ❌ Mainly a visual preference<br>
-                ❌ Not the most important healthcare need
-            </p>
-
-        </div>
+            const data = missionSnap.data();
 
 
-        <div class="researchCard">
+            if (data.completed === true) {
 
-            <h3>Research Insight B</h3>
+                selectedAnswer = data.answer;
+                selectedScore = data.score || 0;
 
-            <p>
-                🩺 Users need quick access to important medical information<br>
-                ✅ Helps users complete critical tasks quickly<br>
-                ✅ Strong user need
-            </p>
+                missionCompleted = true;
+                answerSaved = true;
 
-        </div>
+                lockOptions();
 
+                fill.style.width = "100%";
 
-        <div class="researchCard">
+                statusText.innerHTML =
+                    "✅ Mission 10 already completed. Your previous answer has been restored.";
 
-            <h3>Research Insight C</h3>
+                nextBtn.disabled = false;
 
-            <p>
-                ✨ Users want more animations<br>
-                ❌ Mostly decorative<br>
-                ❌ Does not solve a major user problem
-            </p>
+            }
 
-        </div>
+        }
 
+    } catch (error) {
 
-        <div class="researchCard">
+        console.error(
+            "Error checking previous Ui10 answer:",
+            error
+        );
 
-            <h3>Research Insight D</h3>
-
-            <p>
-                🎭 Users want more visual effects<br>
-                ❌ Entertainment-focused<br>
-                ❌ Low priority for a healthcare application
-            </p>
-
-        </div>
-
-    `;
-
-
-    document.querySelectorAll(".researchCard").forEach((card, index) => {
-
-        card.addEventListener("click", () => {
-
-            reviewResearch(index);
-
-        });
-
-    });
+    }
 
 }
 
 
 // ===============================
-// REVIEW RESEARCH DECISION
+// OPTION CLICK
 // ===============================
 
-async function reviewResearch(choice) {
+options.addEventListener("click", async (event) => {
+
+    const option = event.target.closest(".option");
+
+
+    if (!option) return;
 
     if (missionCompleted) return;
 
@@ -154,6 +159,7 @@ async function reviewResearch(choice) {
     if (!currentUser) {
 
         alert("Please login first.");
+
         window.location.href = "Login.html";
 
         return;
@@ -161,122 +167,129 @@ async function reviewResearch(choice) {
     }
 
 
-    let title = "";
-    let message = "";
-    let researchQuality = "";
-    let userFocus = "";
-    let rating = "";
-    let score = 0;
+    selectedAnswer = option.dataset.answer;
+
+    selectedScore =
+        Number(option.dataset.score);
 
 
-    // Research Insight B = Correct answer
-    if (choice === 1) {
+    const isCorrect =
+        selectedAnswer === correctAnswer;
 
-        title = "🏆 Excellent Research Decision";
 
-        message =
-            "Excellent! Strong UX research focuses on real user problems and prioritizes needs that have meaningful impact.";
+    // ===============================
+    // LOCK OPTIONS
+    // ===============================
 
-        researchQuality = "99 / 100";
+    lockOptions();
 
-        userFocus = "97%";
 
-        rating = "★★★★★";
+    // ===============================
+    // FEEDBACK
+    // ===============================
 
-        score = 100;
+    if (isCorrect) {
+
+        statusText.innerHTML =
+            "🏆 Excellent! Good UX research begins by understanding real users, their goals, difficulties, and needs.";
 
     } else {
 
-        title = "⚠ Research Needs Improvement";
-
-        message =
-            "Good UX research looks beyond visual preferences and identifies the real problems users need the product to solve.";
-
-        researchQuality = "73 / 100";
-
-        userFocus = "79%";
-
-        rating = "★★★☆☆";
-
-        score = 70;
+        statusText.innerHTML =
+            "⚠ Good try. UX research should identify real user problems instead of relying on assumptions or visual preferences.";
 
     }
 
 
     // ===============================
-    // SHOW RESULT
+    // PROGRESS
     // ===============================
 
-    designArea.innerHTML = `
-
-        <h2>${title}</h2>
-
-        <br>
-
-        <p>${message}</p>
-
-        <br>
-
-        <h3>
-            🔍 Research Quality : ${researchQuality}
-        </h3>
-
-        <h3>
-            👤 User Focus : ${userFocus}
-        </h3>
-
-        <h3>
-            ⭐ Research Rating : ${rating}
-        </h3>
-
-        <h3>
-            🎯 Mission Score : ${score}%
-        </h3>
-
-    `;
-
-
-    status.innerHTML = "Saving your research decision...";
+    fill.style.width = "100%";
 
 
     // ===============================
-    // SAVE TO FIRESTORE
+    // SAVE
     // ===============================
+
+    await saveMission(isCorrect);
+
+});
+
+
+// ===============================
+// LOCK OPTIONS
+// ===============================
+
+function lockOptions() {
+
+    const allOptions =
+        document.querySelectorAll(".option");
+
+
+    allOptions.forEach((option) => {
+
+        option.disabled = true;
+
+
+        if (
+            option.dataset.answer === selectedAnswer
+        ) {
+
+            option.classList.add("selected");
+
+        } else {
+
+            option.style.opacity = "0.55";
+
+        }
+
+    });
+
+}
+
+
+// ===============================
+// SAVE MISSION
+// ===============================
+
+async function saveMission(isCorrect) {
 
     try {
 
+        statusText.innerHTML =
+            "💾 Saving your research decision...";
+
+
+        const missionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
+
+
         await setDoc(
 
-            doc(
-                db,
-                "users",
-                currentUser.uid,
-                "missions",
-                "mission10"
-            ),
+            missionRef,
 
             {
 
-                missionNumber: 10,
+                category: category,
 
-                answer:
-                    choice === 1
-                        ? "Research Insight B"
-                        : `Research Insight ${String.fromCharCode(65 + choice)}`,
+                questionNumber: questionNumber,
 
-                score: score,
+                answer: selectedAnswer,
 
-                researchQuality: researchQuality,
+                score: selectedScore,
 
-                userFocus: userFocus,
-
-                researchRating: rating,
-
-                category: "User Research",
+                correct: isCorrect,
 
                 completed: true,
 
-                completedAt: new Date().toISOString()
+                completedAt:
+                    new Date().toISOString()
 
             }
 
@@ -284,19 +297,48 @@ async function reviewResearch(choice) {
 
 
         missionCompleted = true;
+        answerSaved = true;
+
+        nextBtn.disabled = false;
 
 
-        status.innerHTML =
-            "✅ Mission 10 completed! Your research decision has been saved.";
-
+        statusText.innerHTML =
+            isCorrect
+                ? "✅ Correct! Mission 10 completed and saved."
+                : "✅ Mission 10 completed and saved. Keep improving your UI/UX decisions.";
 
     } catch (error) {
 
-        console.error("UI10 Firebase Error:", error);
+        console.error(
+            "Ui10 Firebase Error:",
+            error
+        );
 
-        status.innerHTML =
-            "❌ Could not save your result. Please try again.";
+
+        statusText.innerHTML =
+            "❌ Could not save your answer. Please try again.";
 
     }
 
-}i
+}
+
+
+// ===============================
+// CONTINUE TO MISSION 11
+// ===============================
+
+nextBtn.addEventListener("click", () => {
+
+    if (!answerSaved) {
+
+        statusText.innerHTML =
+            "⚠ Please select an answer first.";
+
+        return;
+
+    }
+
+
+    window.location.href = "Ui11.html";
+
+});
