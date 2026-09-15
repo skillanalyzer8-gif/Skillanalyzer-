@@ -1,196 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Mission 20 - AI Technical Interview</title><link rel="stylesheet" href="Mission20.css"><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet"><link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"></head><body><div class="container"><div class="header"><h1>🤖 AI Technical Interview</h1><p>Mission 20 of 20</p><span>Final Developer Assessment</span>
 
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Mission 20 - AI Technical Interview</title>
-
-<link rel="stylesheet" href="Mission20.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-</head>
-
-<body>
-
-<div class="container">
-
-<div class="header">
-
-<h1>🤖 AI Technical Interview</h1>
-
-<p>Mission 20 of 20</p>
-
-<span>Final Developer Assessment</span>
-
-</div>
-
-<div class="interview">
-
-<h2>💼 Final Question</h2>
-
-<p>
-
-Imagine your application crashes just before deployment.
+</div><div class="interview"><h2>💼 Final Question</h2><p>Imagine your application crashes just before deployment.
 
 What is your first action?
 
-</p>
+</p></div><div class="options" id="options"><div class="option" data-answer="analyzeLogs">📊 Analyze Error Logs
 
-</div>
+</div><div class="option" data-answer="restartEverything">🔄 Restart Everything
 
-<div class="options">
+</div><div class="option" data-answer="deployAnyway">🚀 Deploy Anyway
 
-<div class="option">
+</div><div class="option" data-answer="ignoreError">❌ Ignore the Error
 
-📊 Analyze Error Logs
+</div></div><div class="analysis"><div class="progress"><div class="fill"></div></div><p id="statusText">🤖 Waiting for your final answer...
 
-</div>
+</p><button id="reportBtn" disabled>Generate AI Report
 
-<div class="option">
+</button></div><hr><div class="report" id="report"><h2>🏆 Developer DNA Report
 
-🔄 Restart Everything
+</h2><div class="scoreCard"><h1 id="overallScore">0%
 
-</div>
+</h1><p>Overall Developer Score
 
-<div class="option">
+</p></div><div class="skills"><div class="skill"><span>Problem Solving</span>
 
-🚀 Deploy Anyway
+<progress id="problemSolving" value="0" max="100"></progress>
 
-</div>
+</div><div class="skill"><span>Debugging</span>
 
-<div class="option">
+<progress id="debugging" value="0" max="100"></progress>
 
-❌ Ignore the Error
+</div><div class="skill"><span>Logical Thinking</span>
 
-</div>
+<progress id="logicalThinking" value="0" max="100"></progress>
 
-</div>
+</div><div class="skill"><span>Decision Making</span>
 
-<div class="analysis">
+<progress id="decisionMaking" value="0" max="100"></progress>
 
-<div class="progress">
+</div></div><div class="result"><h2>🎖 AI Verdict
 
-<div class="fill"></div>
+</h2><p id="verdict">Complete the final assessment to generate your Developer DNA.
 
-</div>
+</p></div><button id="finishBtn">🎉 Finish Assessment
 
-<p>
-
-🤖 Waiting for your final answer...
-
-</p>
-
-<button id="reportBtn">
-
-Generate AI Report
-
-</button>
-
-</div>
-
-<hr>
-
-<div class="report" id="report">
-
-<h2>
-
-🏆 Developer DNA Report
-
-</h2>
-
-<div class="scoreCard">
-
-<h1>
-
-92%
-
-</h1>
-
-<p>
-
-Overall Developer Score
-
-</p>
-
-</div>
-
-<div class="skills">
-
-<div class="skill">
-
-<span>Problem Solving</span>
-
-<progress value="95" max="100"></progress>
-
-</div>
-
-<div class="skill">
-
-<span>Debugging</span>
-
-<progress value="90" max="100"></progress>
-
-</div>
-
-<div class="skill">
-
-<span>Logical Thinking</span>
-
-<progress value="93" max="100"></progress>
-
-</div>
-
-<div class="skill">
-
-<span>Decision Making</span>
-
-<progress value="88" max="100"></progress>
-
-</div>
-
-</div>
-
-<div class="result">
-
-<h2>
-
-🎖 AI Verdict
-
-</h2>
-
-<p>
-
-Congratulations!
-
-You demonstrated excellent software development thinking.
-
-You are classified as an
-
-<b>Advanced Developer.</b>
-
-</p>
-
-</div>
-
-<button id="finishBtn">
-
-🎉 Finish Assessment
-
-</button>
-
-</div>
-
-</div>
-
-<script type="module" src="Mission20.js"></script>
-
-</body>
-
-</html>
+</button></div></div><script type="module" src="Mission20.js"></script></body></html>
