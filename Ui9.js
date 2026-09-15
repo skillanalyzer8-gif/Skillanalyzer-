@@ -2,6 +2,7 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
+    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -14,27 +15,69 @@ import {
 // DOM ELEMENTS
 // ===============================
 
-const startBtn = document.getElementById("startChallenge");
-const designArea = document.querySelector(".designArea");
-const status = document.getElementById("statusText");
+const options = document.getElementById("options");
+const statusText = document.getElementById("statusText");
+const fill = document.getElementById("fill");
+const nextBtn = document.getElementById("nextBtn");
+
+
+// ===============================
+// MISSION DETAILS
+// ===============================
+
+const category = "uiux";
+const questionNumber = 9;
+const questionId = "uiux_q9";
+
+const correctAnswer = "balanced";
+
+
+// ===============================
+// SCORES
+// ===============================
+
+const scores = {
+    balanced: 5,
+    black: 2,
+    color: 3,
+    lowcontrast: 1
+};
+
+
+// ===============================
+// STATE
+// ===============================
 
 let currentUser = null;
+let selectedAnswer = null;
+let selectedScore = 0;
 let missionCompleted = false;
+let answerSaved = false;
+
+
+// ===============================
+// CONTINUE BUTTON
+// ===============================
+
+nextBtn.disabled = true;
 
 
 // ===============================
 // AUTHENTICATION
 // ===============================
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
 
     if (user) {
 
         currentUser = user;
 
+        await checkPreviousAnswer();
+
     } else {
 
         alert("Please login first.");
+
         window.location.href = "Login.html";
 
     }
@@ -43,110 +86,72 @@ onAuthStateChanged(auth, (user) => {
 
 
 // ===============================
-// START CHALLENGE
+// CHECK PREVIOUS ANSWER
 // ===============================
 
-startBtn.addEventListener("click", () => {
+async function checkPreviousAnswer() {
 
-    startBtn.style.display = "none";
+    try {
 
-    status.innerHTML = "Loading dark mode interfaces...";
+        const missionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
 
-    navigator.vibrate?.([100, 80, 100]);
-
-    setTimeout(showDarkModes, 1800);
-
-});
-
-
-// ===============================
-// SHOW DARK MODE OPTIONS
-// ===============================
-
-function showDarkModes() {
-
-    designArea.innerHTML = `
-
-        <h2>🎵 Choose The Best Dark Mode</h2>
-
-        <p>
-            Which dark mode interface provides the best
-            readability and user experience?
-        </p>
+        const missionSnap = await getDoc(missionRef);
 
 
-        <div class="darkCard">
+        if (missionSnap.exists()) {
 
-            <h3>Theme A</h3>
-
-            <p>
-                🖤 Pure black background<br>
-                ❌ Extremely bright text<br>
-                ❌ Harsh contrast
-            </p>
-
-        </div>
+            const data = missionSnap.data();
 
 
-        <div class="darkCard">
+            if (data.completed === true) {
 
-            <h3>Theme B</h3>
+                selectedAnswer = data.answer;
+                selectedScore = data.score || 0;
 
-            <p>
-                🌙 Comfortable dark background<br>
-                ✅ Soft readable text<br>
-                ✅ Balanced contrast
-            </p>
+                missionCompleted = true;
+                answerSaved = true;
 
-        </div>
+                lockOptions();
 
+                fill.style.width = "100%";
 
-        <div class="darkCard">
+                statusText.innerHTML =
+                    "✅ Mission 9 already completed. Your previous answer has been restored.";
 
-            <h3>Theme C</h3>
+                nextBtn.disabled = false;
 
-            <p>
-                🌈 Very bright colors<br>
-                ❌ Distracting interface<br>
-                ❌ Poor dark-mode consistency
-            </p>
+            }
 
-        </div>
+        }
 
+    } catch (error) {
 
-        <div class="darkCard">
+        console.error(
+            "Error checking previous Ui9 answer:",
+            error
+        );
 
-            <h3>Theme D</h3>
-
-            <p>
-                ⚡ Low-contrast interface<br>
-                ❌ Text is difficult to read<br>
-                ❌ Poor accessibility
-            </p>
-
-        </div>
-
-    `;
-
-
-    document.querySelectorAll(".darkCard").forEach((card, index) => {
-
-        card.addEventListener("click", () => {
-
-            reviewDarkMode(index);
-
-        });
-
-    });
+    }
 
 }
 
 
 // ===============================
-// REVIEW DARK MODE
+// OPTION CLICK
 // ===============================
 
-async function reviewDarkMode(choice) {
+options.addEventListener("click", async (event) => {
+
+    const option = event.target.closest(".option");
+
+
+    if (!option) return;
 
     if (missionCompleted) return;
 
@@ -154,6 +159,7 @@ async function reviewDarkMode(choice) {
     if (!currentUser) {
 
         alert("Please login first.");
+
         window.location.href = "Login.html";
 
         return;
@@ -161,122 +167,129 @@ async function reviewDarkMode(choice) {
     }
 
 
-    let title = "";
-    let message = "";
-    let readability = "";
-    let accessibility = "";
-    let rating = "";
-    let score = 0;
+    selectedAnswer = option.dataset.answer;
+
+    selectedScore =
+        Number(option.dataset.score);
 
 
-    // Theme B = Correct answer
-    if (choice === 1) {
+    const isCorrect =
+        selectedAnswer === correctAnswer;
 
-        title = "🏆 Perfect Dark Mode Choice";
 
-        message =
-            "Excellent! A comfortable dark background with readable text and balanced contrast creates a better experience.";
+    // ===============================
+    // LOCK OPTIONS
+    // ===============================
 
-        readability = "99 / 100";
+    lockOptions();
 
-        accessibility = "97%";
 
-        rating = "★★★★★";
+    // ===============================
+    // FEEDBACK
+    // ===============================
 
-        score = 100;
+    if (isCorrect) {
+
+        statusText.innerHTML =
+            "🏆 Excellent! A balanced dark theme with comfortable contrast and clear hierarchy provides a better user experience.";
 
     } else {
 
-        title = "⚠ Dark Mode Needs Improvement";
-
-        message =
-            "A good dark theme should maintain comfortable contrast, readable text, and consistent visual hierarchy.";
-
-        readability = "73 / 100";
-
-        accessibility = "79%";
-
-        rating = "★★★☆☆";
-
-        score = 70;
+        statusText.innerHTML =
+            "⚠ Good try. Dark mode should maintain readability, comfortable contrast, and clear visual hierarchy.";
 
     }
 
 
     // ===============================
-    // SHOW RESULT
+    // PROGRESS
     // ===============================
 
-    designArea.innerHTML = `
-
-        <h2>${title}</h2>
-
-        <br>
-
-        <p>${message}</p>
-
-        <br>
-
-        <h3>
-            👁 Readability : ${readability}
-        </h3>
-
-        <h3>
-            ♿ Accessibility : ${accessibility}
-        </h3>
-
-        <h3>
-            ⭐ Design Rating : ${rating}
-        </h3>
-
-        <h3>
-            🎯 Mission Score : ${score}%
-        </h3>
-
-    `;
-
-
-    status.innerHTML = "Saving your dark mode decision...";
+    fill.style.width = "100%";
 
 
     // ===============================
-    // SAVE TO FIRESTORE
+    // SAVE
     // ===============================
+
+    await saveMission(isCorrect);
+
+});
+
+
+// ===============================
+// LOCK OPTIONS
+// ===============================
+
+function lockOptions() {
+
+    const allOptions =
+        document.querySelectorAll(".option");
+
+
+    allOptions.forEach((option) => {
+
+        option.disabled = true;
+
+
+        if (
+            option.dataset.answer === selectedAnswer
+        ) {
+
+            option.classList.add("selected");
+
+        } else {
+
+            option.style.opacity = "0.55";
+
+        }
+
+    });
+
+}
+
+
+// ===============================
+// SAVE MISSION
+// ===============================
+
+async function saveMission(isCorrect) {
 
     try {
 
+        statusText.innerHTML =
+            "💾 Saving your dark mode decision...";
+
+
+        const missionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
+
+
         await setDoc(
 
-            doc(
-                db,
-                "users",
-                currentUser.uid,
-                "missions",
-                "mission9"
-            ),
+            missionRef,
 
             {
 
-                missionNumber: 9,
+                category: category,
 
-                answer:
-                    choice === 1
-                        ? "Theme B"
-                        : `Theme ${String.fromCharCode(65 + choice)}`,
+                questionNumber: questionNumber,
 
-                score: score,
+                answer: selectedAnswer,
 
-                readability: readability,
+                score: selectedScore,
 
-                accessibility: accessibility,
-
-                designRating: rating,
-
-                category: "Dark Mode Design",
+                correct: isCorrect,
 
                 completed: true,
 
-                completedAt: new Date().toISOString()
+                completedAt:
+                    new Date().toISOString()
 
             }
 
@@ -284,19 +297,48 @@ async function reviewDarkMode(choice) {
 
 
         missionCompleted = true;
+        answerSaved = true;
+
+        nextBtn.disabled = false;
 
 
-        status.innerHTML =
-            "✅ Mission 9 completed! Your dark mode decision has been saved.";
-
+        statusText.innerHTML =
+            isCorrect
+                ? "✅ Correct! Mission 9 completed and saved."
+                : "✅ Mission 9 completed and saved. Keep improving your UI/UX decisions.";
 
     } catch (error) {
 
-        console.error("UI9 Firebase Error:", error);
+        console.error(
+            "Ui9 Firebase Error:",
+            error
+        );
 
-        status.innerHTML =
-            "❌ Could not save your result. Please try again.";
+
+        statusText.innerHTML =
+            "❌ Could not save your answer. Please try again.";
 
     }
 
 }
+
+
+// ===============================
+// CONTINUE TO MISSION 10
+// ===============================
+
+nextBtn.addEventListener("click", () => {
+
+    if (!answerSaved) {
+
+        statusText.innerHTML =
+            "⚠ Please select an answer first.";
+
+        return;
+
+    }
+
+
+    window.location.href = "Ui10.html";
+
+});
