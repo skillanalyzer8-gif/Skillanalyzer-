@@ -1,211 +1,406 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc
+doc,
+setDoc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+// ===============================
+// GET HTML ELEMENTS
+// ===============================
 
 const options = document.querySelectorAll(".option");
 const fill = document.querySelector(".fill");
-const analysisText = document.querySelector(".analysis p");
+const analysisText = document.getElementById("statusText");
 const nextBtn = document.getElementById("nextBtn");
 
+// ===============================
+// VARIABLES
+// ===============================
 
 let currentUser = null;
 let selectedAnswer = "";
+let selectedScore = 0;
 let missionCompleted = false;
+let answerSaved = false;
+
+// ===============================
+// MISSION SETTINGS
+// ===============================
+
+const category = "leadership";
+const questionNumber = 10;
+const questionId = "leadership_q10";
+
+// ===============================
+// CORRECT ANSWER
+// ===============================
+
+const correctAnswer = "lead";
+
+// ===============================
+// ANSWER SCORES
+// ===============================
+
+const scores = {
+
+blame: 2,
+
+lead: 5,
+
+ignore: 1,
+
+cancel: 3
+
+};
+
+// ===============================
+// CHECK LOGIN
+// ===============================
+
+onAuthStateChanged(auth, async function (user) {
+
+if (user) {
+
+currentUser = user;
+
+await checkPreviousAnswer();
+
+} else {
+
+alert("Please login first.");
+
+window.location.href = "Login.html";
+
+}
+
+});
+
+// ===============================
+// INITIAL BUTTON STATE
+// ===============================
+
+nextBtn.disabled = true;
+nextBtn.style.opacity = "0.5";
+
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
+
+async function checkPreviousAnswer() {
+
+try {
+
+const missionRef = doc(
+  db,
+  "users",
+  currentUser.uid,
+  "missions",
+  questionId
+);
+
+const missionSnap = await getDoc(missionRef);
 
 
-// Check login status
-onAuthStateChanged(auth, (user) => {
+if (missionSnap.exists()) {
 
-  if (user) {
+  const data = missionSnap.data();
 
-    currentUser = user;
 
-  } else {
+  if (data.completed === true) {
 
-    alert("Please login first.");
-    window.location.href = "Login.html";
+    selectedAnswer = data.answer || "";
+
+    selectedScore = data.score || 0;
+
+    missionCompleted = true;
+
+    answerSaved = true;
+
+
+    // Restore selected answer
+
+    options.forEach(function (option) {
+
+      if (option.dataset.answer === selectedAnswer) {
+
+        option.classList.add("active");
+
+      }
+
+    });
+
+
+    // Lock all options
+
+    options.forEach(function (option) {
+
+      option.style.pointerEvents = "none";
+
+    });
+
+
+    // Restore progress
+
+    fill.style.width = "100%";
+
+
+    analysisText.textContent =
+      "✅ Leadership Decision Already Recorded";
+
+
+    // Enable Continue
+
+    nextBtn.disabled = false;
+    nextBtn.style.opacity = "1";
 
   }
+
+}
+
+} catch (error) {
+
+console.error(
+  "Lead Mission 10 Previous Answer Error:",
+  error
+);
+
+}
+
+}
+
+// ===============================
+// OPTION SELECTION
+// ===============================
+
+options.forEach(function (option) {
+
+option.addEventListener("click", function () {
+
+// Prevent changing a saved answer
+
+if (answerSaved) {
+
+  return;
+
+}
+
+
+// Get answer ID
+
+selectedAnswer = this.dataset.answer;
+
+
+// Get score
+
+selectedScore =
+  scores[selectedAnswer] || 0;
+
+
+// Check correctness
+
+const isCorrect =
+  selectedAnswer === correctAnswer;
+
+
+// Remove previous selection
+
+options.forEach(function (item) {
+
+  item.classList.remove("active");
 
 });
 
 
-// Disable final button initially
+// Highlight selected option
+
+this.classList.add("active");
+
+
+// Lock options during evaluation
+
+options.forEach(function (item) {
+
+  item.style.pointerEvents = "none";
+
+});
+
+
+// Reset progress
+
+fill.style.width = "0%";
+
+
+// Analysis message
+
+analysisText.textContent =
+  "🤖 AI Leadership Evaluation Engine is analyzing your strategy...";
+
+
+// Disable Continue
+
 nextBtn.disabled = true;
 nextBtn.style.opacity = "0.5";
 
 
-// Handle option selection
-options.forEach((option) => {
+// Start progress animation
 
-  option.addEventListener("click", function () {
+setTimeout(function () {
 
-    // Remove previous selection
-    options.forEach((item) => {
-      item.classList.remove("active");
-    });
+  fill.style.width = "100%";
 
-    // Highlight selected option
-    this.classList.add("active");
+}, 100);
 
-    // Store exact selected answer
-    selectedAnswer = this.textContent.trim();
 
-    // Reset completion state
-    missionCompleted = false;
+// ===============================
+// SAVE ANSWER
+// ===============================
 
-    // Reset progress
-    fill.style.width = "0%";
+setTimeout(async function () {
+
+  if (!currentUser) {
 
     analysisText.textContent =
-      "🤖 AI Leadership Evaluation Engine is analyzing your strategy...";
+      "❌ Login session not found.";
+
+    alert("Please login again.");
+
+    window.location.href = "Login.html";
+
+    return;
+
+  }
+
+
+  analysisText.textContent =
+    "🤖 Recording your leadership decision...";
+
+
+  try {
+
+    const missionRef = doc(
+      db,
+      "users",
+      currentUser.uid,
+      "missions",
+      questionId
+    );
+
+
+    await setDoc(
+
+      missionRef,
+
+      {
+
+        category: category,
+
+        questionNumber: questionNumber,
+
+        answer: selectedAnswer,
+
+        score: selectedScore,
+
+        correct: isCorrect,
+
+        completed: true,
+
+        completedAt: new Date().toISOString()
+
+      }
+
+    );
+
+
+    // ===============================
+    // MISSION COMPLETED
+    // ===============================
+
+    missionCompleted = true;
+
+    answerSaved = true;
+
+
+    if (isCorrect) {
+
+      analysisText.textContent =
+        "✅ Excellent! You balanced team leadership, client communication, and critical priorities.";
+
+    } else {
+
+      analysisText.textContent =
+        "📊 Leadership decision recorded. Continue to the next mission.";
+
+    }
+
+
+    // Enable Continue
+
+    nextBtn.disabled = false;
+    nextBtn.style.opacity = "1";
+
+
+  } catch (error) {
+
+    console.error(
+      "Lead Mission 10 Firebase Error:",
+      error
+    );
+
+
+    analysisText.textContent =
+      "❌ Unable to save your decision. Please try again.";
+
+
+    // Allow retry
+
+    options.forEach(function (item) {
+
+      item.style.pointerEvents = "auto";
+
+    });
+
 
     nextBtn.disabled = true;
     nextBtn.style.opacity = "0.5";
 
+  }
 
-    // Start progress animation
-    setTimeout(() => {
-
-      fill.style.width = "100%";
-
-    }, 100);
-
-
-    // Save final mission
-    setTimeout(async () => {
-
-      if (!currentUser) {
-
-        analysisText.textContent =
-          "❌ Login session not found.";
-
-        alert("Please login again.");
-
-        window.location.href = "Login.html";
-
-        return;
-
-      }
-
-
-      analysisText.textContent =
-        "🤖 Recording your final leadership decision...";
-
-
-      try {
-
-        // Save Mission 10
-        await setDoc(
-          doc(
-            db,
-            "users",
-            currentUser.uid,
-            "missions",
-            "mission10"
-          ),
-          {
-            missionNumber: 10,
-            answer: selectedAnswer,
-            completed: true,
-            completedAt: new Date().toISOString()
-          }
-        );
-
-
-        // Mark overall Leadership assessment as completed
-        await setDoc(
-          doc(db, "users", currentUser.uid),
-          {
-            assessmentCompleted: true,
-            finalCategory: "Leadership",
-            finalMission: 10,
-            finalAnswer: selectedAnswer,
-            completedAt: new Date().toISOString()
-          },
-          {
-            merge: true
-          }
-        );
-
-
-        // Mission successfully completed
-        missionCompleted = true;
-
-        analysisText.textContent =
-          "✅ Final Leadership Decision Recorded Successfully";
-
-        nextBtn.disabled = false;
-        nextBtn.style.opacity = "1";
-
-
-      } catch (error) {
-
-        console.error(
-          "Lead Mission 10 Firebase Error:",
-          error
-        );
-
-        analysisText.textContent =
-          "❌ Unable to save your final decision.";
-
-        nextBtn.disabled = true;
-        nextBtn.style.opacity = "0.5";
-
-      }
-
-    }, 1500);
-
-  });
+}, 1500);
 
 });
 
+});
 
-// View Final Result
-nextBtn.addEventListener("click", () => {
+// ===============================
+// CONTINUE TO MISSION 11
+// ===============================
 
-  if (selectedAnswer === "") {
+nextBtn.addEventListener("click", function () {
 
-    alert("Please select a strategy first.");
+if (selectedAnswer === "") {
 
-    return;
+alert("Please select a strategy first.");
 
-  }
+return;
 
+}
 
-  if (!missionCompleted) {
+if (!missionCompleted || !answerSaved) {
 
-    alert(
-      "Please wait until your final leadership decision is saved."
-    );
+alert(
+  "Please wait until your leadership decision is saved."
+);
 
-    return;
+return;
 
-  }
+}
 
-
-  // Show final result on the same page
-  analysisText.textContent =
-    "🎉 Leadership Assessment Completed Successfully!";
-
-  nextBtn.textContent = "Assessment Completed ✓";
-  nextBtn.disabled = true;
-  nextBtn.style.opacity = "0.8";
-
-
-  // Prevent changing the answer after completion
-  options.forEach((option) => {
-
-    option.style.pointerEvents = "none";
-
-  });
+window.location.href = "Lead11.html";
 
 });
