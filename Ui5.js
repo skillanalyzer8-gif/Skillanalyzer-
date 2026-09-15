@@ -2,6 +2,7 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
+    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -14,282 +15,286 @@ import {
 // DOM ELEMENTS
 // ========================================
 
-const startBtn =
-    document.getElementById("startChallenge");
+const options =
+    document.querySelectorAll(".option");
 
-const designArea =
-    document.querySelector(".designArea");
-
-const status =
+const statusText =
     document.getElementById("statusText");
 
+const fill =
+    document.querySelector(".fill");
+
+const nextBtn =
+    document.getElementById("nextBtn");
+
+
+// ========================================
+// MISSION DATA
+// ========================================
+
+const category = "uiux";
+
+const questionNumber = 5;
+
+const questionId = "uiux_q5";
+
+const correctAnswer = "primary";
+
+const scores = {
+
+    small: 2,
+
+    primary: 5,
+
+    animation: 3,
+
+    transparent: 1
+
+};
+
+
+// ========================================
+// STATE
+// ========================================
 
 let currentUser = null;
+
+let selectedAnswer = null;
+
+let selectedScore = 0;
+
 let missionCompleted = false;
+
+let answerSaved = false;
+
+
+// ========================================
+// CONTINUE BUTTON
+// ========================================
+
+nextBtn.disabled = true;
 
 
 // ========================================
 // AUTHENTICATION
 // ========================================
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
 
-    if (user) {
-
-        currentUser = user;
-
-    } else {
+    if (!user) {
 
         alert("Please login first.");
 
         window.location.href = "Login.html";
 
+        return;
+
     }
 
-});
+    currentUser = user;
 
-
-// ========================================
-// START CHALLENGE
-// ========================================
-
-startBtn.addEventListener("click", () => {
-
-    startBtn.style.display = "none";
-
-    status.innerHTML =
-        "Loading typography comparison...";
-
-    navigator.vibrate?.([100, 80, 100]);
-
-    setTimeout(showFonts, 1800);
+    await checkPreviousAnswer();
 
 });
 
 
 // ========================================
-// SHOW FONT CHOICES
+// CHECK PREVIOUS ANSWER
 // ========================================
 
-function showFonts() {
+async function checkPreviousAnswer() {
 
-    designArea.innerHTML = `
+    try {
 
-        <h2>
-            📰 Choose The Best Font
-        </h2>
+        const missionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
 
-        <p>
-            Which typography gives users the best reading experience?
-        </p>
-
-
-        <div class="fontCard">
-
-            <h3>
-                Font A
-            </h3>
-
-            <p>
-                ❌ Decorative font<br>
-                ❌ Small size<br>
-                ❌ Tight spacing
-            </p>
-
-        </div>
+        const missionSnap =
+            await getDoc(missionRef);
 
 
-        <div class="fontCard">
+        if (missionSnap.exists()) {
 
-            <h3>
-                Font B
-            </h3>
-
-            <p>
-                ✅ Clean font<br>
-                ✅ Comfortable spacing<br>
-                ✅ Easy to read
-            </p>
-
-        </div>
+            const data =
+                missionSnap.data();
 
 
-        <div class="fontCard">
+            if (data.completed === true) {
 
-            <h3>
-                Font C
-            </h3>
+                selectedAnswer =
+                    data.answer;
 
-            <p>
-                🎨 Stylish font<br>
-                ❌ Difficult for long articles
-            </p>
+                selectedScore =
+                    data.score || 0;
 
-        </div>
+                missionCompleted = true;
 
+                answerSaved = true;
 
-        <div class="fontCard">
+                lockOptions();
 
-            <h3>
-                Font D
-            </h3>
+                nextBtn.disabled = false;
 
-            <p>
-                ⚡ Thin font<br>
-                ❌ Low readability
-            </p>
+                if (fill) {
 
-        </div>
+                    fill.style.width = "100%";
 
-    `;
+                }
 
+                statusText.textContent =
+                    "✅ Mission 5 already completed. You can continue.";
 
-    // ========================================
-    // FONT CARD EVENTS
-    // ========================================
+            }
 
-    document
-        .querySelectorAll(".fontCard")
-        .forEach((card, index) => {
+        }
 
-            card.addEventListener("click", () => {
+    } catch (error) {
 
-                reviewFont(index);
+        console.error(
+            "Ui5 Restore Error:",
+            error
+        );
 
-            });
-
-        });
+    }
 
 }
 
 
 // ========================================
-// REVIEW FONT
+// OPTION CLICK
 // ========================================
 
-async function reviewFont(choice) {
+options.forEach((option) => {
 
-    // Prevent multiple submissions
-    if (missionCompleted) {
+    option.addEventListener("click", async () => {
 
-        return;
+        // Check login
 
-    }
+        if (!currentUser) {
 
+            alert("Please login first.");
 
-    // ========================================
-    // CHECK AUTHENTICATION
-    // ========================================
+            window.location.href =
+                "Login.html";
 
-    if (!currentUser) {
+            return;
 
-        alert("Please login first.");
-
-        window.location.href = "Login.html";
-
-        return;
-
-    }
+        }
 
 
-    let title = "";
-    let message = "";
-    let readability = "";
-    let usability = "";
-    let rating = "";
-    let score = 0;
+        // Prevent another answer
+
+        if (missionCompleted) {
+
+            return;
+
+        }
+
+        if (answerSaved) {
+
+            return;
+
+        }
 
 
-    // ========================================
-    // CORRECT ANSWER = FONT B
-    // ========================================
+        // ========================================
+        // GET SELECTED ANSWER
+        // ========================================
 
-    if (choice === 1) {
-
-        title =
-            "🏆 Perfect Typography";
-
-        message =
-            "Excellent! Clean fonts with proper spacing improve readability and create a better reading experience.";
-
-        readability =
-            "99 / 100";
-
-        usability =
-            "97%";
-
-        rating =
-            "★★★★★";
-
-        score = 100;
+        selectedAnswer =
+            option.dataset.answer;
 
 
-    } else {
-
-        title =
-            "⚠ Typography Needs Improvement";
-
-        message =
-            "Beautiful fonts are not always readable. Good typography always puts the user first.";
-
-        readability =
-            "73 / 100";
-
-        usability =
-            "79%";
-
-        rating =
-            "★★★☆☆";
-
-        score = 70;
-
-    }
+        selectedScore =
+            scores[selectedAnswer] || 0;
 
 
-    // ========================================
-    // SHOW RESULT
-    // ========================================
+        // ========================================
+        // LOCK OPTIONS
+        // ========================================
 
-    designArea.innerHTML = `
-
-        <h2>
-            ${title}
-        </h2>
-
-        <br>
-
-        <p>
-            ${message}
-        </p>
-
-        <br>
-
-        <h3>
-            📖 Readability : ${readability}
-        </h3>
-
-        <h3>
-            😊 User Experience : ${usability}
-        </h3>
-
-        <h3>
-            ⭐ Design Rating : ${rating}
-        </h3>
-
-        <h3>
-            🎯 Mission Score : ${score}%
-        </h3>
-
-    `;
+        lockOptions(option);
 
 
-    status.innerHTML =
-        "Saving your typography decision...";
+        // ========================================
+        // SHOW FEEDBACK
+        // ========================================
+
+        if (
+            selectedAnswer ===
+            correctAnswer
+        ) {
+
+            statusText.textContent =
+                "✅ Excellent! A clear, noticeable primary button with an understandable label makes the main action easier for users to recognize.";
+
+        } else {
+
+            statusText.textContent =
+                "💡 Good attempt. Important actions should be clear, noticeable, readable, and easy for users to understand.";
+
+        }
 
 
-    // ========================================
-    // SAVE MISSION 4 TO FIRESTORE
-    // ========================================
+        // ========================================
+        // UPDATE PROGRESS
+        // ========================================
+
+        if (fill) {
+
+            fill.style.width = "100%";
+
+        }
+
+
+        // ========================================
+        // SAVE
+        // ========================================
+
+        await saveMission();
+
+    });
+
+});
+
+
+// ========================================
+// LOCK OPTIONS
+// ========================================
+
+function lockOptions(selectedOption = null) {
+
+    options.forEach((option) => {
+
+        option.style.pointerEvents =
+            "none";
+
+
+        if (
+            selectedOption &&
+            option !== selectedOption
+        ) {
+
+            option.style.opacity =
+                "0.55";
+
+        }
+
+    });
+
+}
+
+
+// ========================================
+// SAVE MISSION
+// ========================================
+
+async function saveMission() {
 
     try {
 
@@ -299,30 +304,25 @@ async function reviewFont(choice) {
                 "users",
                 currentUser.uid,
                 "missions",
-                "mission4"
+                questionId
             ),
             {
 
-                missionNumber: 4,
+                category:
+                    category,
+
+                questionNumber:
+                    questionNumber,
 
                 answer:
-                    choice === 1
-                        ? "Font B"
-                        : `Font ${String.fromCharCode(65 + choice)}`,
+                    selectedAnswer,
 
-                score: score,
+                score:
+                    selectedScore,
 
-                readability:
-                    readability,
-
-                usability:
-                    usability,
-
-                designRating:
-                    rating,
-
-                category:
-                    "Typography",
+                correct:
+                    selectedAnswer ===
+                    correctAnswer,
 
                 completed:
                     true,
@@ -335,30 +335,56 @@ async function reviewFont(choice) {
 
 
         // ========================================
-        // MISSION COMPLETED
+        // UPDATE STATE
         // ========================================
+
+        answerSaved = true;
 
         missionCompleted = true;
 
+        nextBtn.disabled = false;
 
-        status.innerHTML =
-            "✅ Mission 4 completed! Your typography decision has been saved.";
+
+        statusText.textContent +=
+            " Mission 5 completed!";
 
     } catch (error) {
 
-        // ========================================
-        // FIREBASE ERROR
-        // ========================================
-
         console.error(
-            "UI4 Firebase Error:",
+            "Ui5 Firebase Error:",
             error
         );
 
 
-        status.innerHTML =
-            "❌ Could not save your result. Please try again.";
+        answerSaved = false;
+
+        missionCompleted = false;
+
+        nextBtn.disabled = true;
+
+
+        statusText.textContent =
+            "❌ Could not save your answer. Please try again.";
 
     }
 
 }
+
+
+// ========================================
+// CONTINUE TO MISSION 6
+// ========================================
+
+nextBtn.addEventListener("click", () => {
+
+    if (!answerSaved) {
+
+        return;
+
+    }
+
+
+    window.location.href =
+        "Ui6.html";
+
+});
