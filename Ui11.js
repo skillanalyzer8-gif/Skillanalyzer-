@@ -2,6 +2,7 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
+    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -14,27 +15,69 @@ import {
 // DOM ELEMENTS
 // ===============================
 
-const startBtn = document.getElementById("startChallenge");
-const designArea = document.querySelector(".designArea");
-const status = document.getElementById("statusText");
+const options = document.getElementById("options");
+const statusText = document.getElementById("statusText");
+const fill = document.getElementById("fill");
+const nextBtn = document.getElementById("nextBtn");
+
+
+// ===============================
+// MISSION DETAILS
+// ===============================
+
+const category = "uiux";
+const questionNumber = 11;
+const questionId = "uiux_q11";
+
+const correctAnswer = "flow";
+
+
+// ===============================
+// SCORES
+// ===============================
+
+const scores = {
+    decorative: 2,
+    features: 3,
+    random: 1,
+    flow: 5
+};
+
+
+// ===============================
+// STATE
+// ===============================
 
 let currentUser = null;
+let selectedAnswer = null;
+let selectedScore = 0;
 let missionCompleted = false;
+let answerSaved = false;
+
+
+// ===============================
+// CONTINUE BUTTON
+// ===============================
+
+nextBtn.disabled = true;
 
 
 // ===============================
 // AUTHENTICATION
 // ===============================
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
 
     if (user) {
 
         currentUser = user;
 
+        await checkPreviousAnswer();
+
     } else {
 
         alert("Please login first.");
+
         window.location.href = "Login.html";
 
     }
@@ -43,112 +86,72 @@ onAuthStateChanged(auth, (user) => {
 
 
 // ===============================
-// START CHALLENGE
+// CHECK PREVIOUS ANSWER
 // ===============================
 
-startBtn.addEventListener("click", () => {
+async function checkPreviousAnswer() {
 
-    startBtn.style.display = "none";
+    try {
 
-    status.innerHTML = "Loading wireframe layouts...";
+        const missionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
 
-    navigator.vibrate?.([100, 80, 100]);
-
-    setTimeout(showWireframes, 1800);
-
-});
-
-
-// ===============================
-// SHOW WIREFRAME OPTIONS
-// ===============================
-
-function showWireframes() {
-
-    designArea.innerHTML = `
-
-        <h2>🏦 Choose The Best Wireframe</h2>
-
-        <p>
-            Which wireframe creates the clearest user journey
-            for a mobile banking application?
-        </p>
+        const missionSnap = await getDoc(missionRef);
 
 
-        <div class="wireframeCard">
+        if (missionSnap.exists()) {
 
-            <h3>Wireframe A</h3>
-
-            <p>
-                🏦 Account balance hidden in menu<br>
-                ❌ Important actions are difficult to find<br>
-                ❌ Poor user flow
-            </p>
-
-        </div>
+            const data = missionSnap.data();
 
 
-        <div class="wireframeCard">
+            if (data.completed === true) {
 
-            <h3>Wireframe B</h3>
+                selectedAnswer = data.answer;
+                selectedScore = data.score || 0;
 
-            <p>
-                💰 Balance clearly visible<br>
-                ✅ Send Money and Pay Bills easily accessible<br>
-                ✅ Clear and logical user journey
-            </p>
+                missionCompleted = true;
+                answerSaved = true;
 
-        </div>
+                lockOptions();
 
+                fill.style.width = "100%";
 
-        <div class="wireframeCard">
+                statusText.innerHTML =
+                    "✅ Mission 11 already completed. Your previous answer has been restored.";
 
-            <h3>Wireframe C</h3>
+                nextBtn.disabled = false;
 
-            <p>
-                📋 Many options on the first screen<br>
-                ❌ Too much information<br>
-                ❌ Difficult to prioritize actions
-            </p>
+            }
 
-        </div>
+        }
 
+    } catch (error) {
 
-        <div class="wireframeCard">
+        console.error(
+            "Error checking previous Ui11 answer:",
+            error
+        );
 
-            <h3>Wireframe D</h3>
-
-            <p>
-                🎨 Focuses heavily on decoration<br>
-                ❌ Important banking actions are unclear<br>
-                ❌ Weak task flow
-            </p>
-
-        </div>
-
-    `;
-
-
-    document
-        .querySelectorAll(".wireframeCard")
-        .forEach((card, index) => {
-
-            card.addEventListener("click", () => {
-
-                reviewWireframe(index);
-
-            });
-
-        });
+    }
 
 }
 
 
 // ===============================
-// REVIEW WIREFRAME
+// OPTION CLICK
 // ===============================
 
-async function reviewWireframe(choice) {
+options.addEventListener("click", async (event) => {
+
+    const option = event.target.closest(".option");
+
+
+    if (!option) return;
 
     if (missionCompleted) return;
 
@@ -156,6 +159,7 @@ async function reviewWireframe(choice) {
     if (!currentUser) {
 
         alert("Please login first.");
+
         window.location.href = "Login.html";
 
         return;
@@ -163,122 +167,129 @@ async function reviewWireframe(choice) {
     }
 
 
-    let title = "";
-    let message = "";
-    let userFlow = "";
-    let usability = "";
-    let rating = "";
-    let score = 0;
+    selectedAnswer = option.dataset.answer;
+
+    selectedScore =
+        Number(option.dataset.score);
 
 
-    // Wireframe B = Correct answer
-    if (choice === 1) {
+    const isCorrect =
+        selectedAnswer === correctAnswer;
 
-        title = "🏆 Excellent Wireframe Choice";
 
-        message =
-            "Excellent! A strong wireframe makes important information visible and guides users through tasks in a clear, logical order.";
+    // ===============================
+    // LOCK OPTIONS
+    // ===============================
 
-        userFlow = "99 / 100";
+    lockOptions();
 
-        usability = "97%";
 
-        rating = "★★★★★";
+    // ===============================
+    // FEEDBACK
+    // ===============================
 
-        score = 100;
+    if (isCorrect) {
+
+        statusText.innerHTML =
+            "🏆 Excellent! A good wireframe focuses on structure, clear content placement, logical navigation, and a smooth user journey.";
 
     } else {
 
-        title = "⚠ Wireframe Needs Improvement";
-
-        message =
-            "A good wireframe should prioritize important content, support clear task flows, and make essential actions easy to find.";
-
-        userFlow = "73 / 100";
-
-        usability = "79%";
-
-        rating = "★★★☆☆";
-
-        score = 70;
+        statusText.innerHTML =
+            "⚠ Good try. Wireframes should prioritize structure, important actions, and logical user flow before visual decoration.";
 
     }
 
 
     // ===============================
-    // SHOW RESULT
+    // PROGRESS
     // ===============================
 
-    designArea.innerHTML = `
-
-        <h2>${title}</h2>
-
-        <br>
-
-        <p>${message}</p>
-
-        <br>
-
-        <h3>
-            🧭 User Flow : ${userFlow}
-        </h3>
-
-        <h3>
-            😊 Usability : ${usability}
-        </h3>
-
-        <h3>
-            ⭐ Wireframe Rating : ${rating}
-        </h3>
-
-        <h3>
-            🎯 Mission Score : ${score}%
-        </h3>
-
-    `;
-
-
-    status.innerHTML = "Saving your wireframe decision...";
+    fill.style.width = "100%";
 
 
     // ===============================
-    // SAVE TO FIRESTORE
+    // SAVE
     // ===============================
+
+    await saveMission(isCorrect);
+
+});
+
+
+// ===============================
+// LOCK OPTIONS
+// ===============================
+
+function lockOptions() {
+
+    const allOptions =
+        document.querySelectorAll(".option");
+
+
+    allOptions.forEach((option) => {
+
+        option.disabled = true;
+
+
+        if (
+            option.dataset.answer === selectedAnswer
+        ) {
+
+            option.classList.add("selected");
+
+        } else {
+
+            option.style.opacity = "0.55";
+
+        }
+
+    });
+
+}
+
+
+// ===============================
+// SAVE MISSION
+// ===============================
+
+async function saveMission(isCorrect) {
 
     try {
 
+        statusText.innerHTML =
+            "💾 Saving your wireframe decision...";
+
+
+        const missionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
+
+
         await setDoc(
 
-            doc(
-                db,
-                "users",
-                currentUser.uid,
-                "missions",
-                "mission11"
-            ),
+            missionRef,
 
             {
 
-                missionNumber: 11,
+                category: category,
 
-                answer:
-                    choice === 1
-                        ? "Wireframe B"
-                        : `Wireframe ${String.fromCharCode(65 + choice)}`,
+                questionNumber: questionNumber,
 
-                score: score,
+                answer: selectedAnswer,
 
-                userFlow: userFlow,
+                score: selectedScore,
 
-                usability: usability,
-
-                wireframeRating: rating,
-
-                category: "Wireframe Design",
+                correct: isCorrect,
 
                 completed: true,
 
-                completedAt: new Date().toISOString()
+                completedAt:
+                    new Date().toISOString()
 
             }
 
@@ -286,19 +297,48 @@ async function reviewWireframe(choice) {
 
 
         missionCompleted = true;
+        answerSaved = true;
+
+        nextBtn.disabled = false;
 
 
-        status.innerHTML =
-            "✅ Mission 11 completed! Your wireframe decision has been saved.";
-
+        statusText.innerHTML =
+            isCorrect
+                ? "✅ Correct! Mission 11 completed and saved."
+                : "✅ Mission 11 completed and saved. Keep improving your UI/UX decisions.";
 
     } catch (error) {
 
-        console.error("UI11 Firebase Error:", error);
+        console.error(
+            "Ui11 Firebase Error:",
+            error
+        );
 
-        status.innerHTML =
-            "❌ Could not save your result. Please try again.";
+
+        statusText.innerHTML =
+            "❌ Could not save your answer. Please try again.";
 
     }
 
 }
+
+
+// ===============================
+// CONTINUE TO MISSION 12
+// ===============================
+
+nextBtn.addEventListener("click", () => {
+
+    if (!answerSaved) {
+
+        statusText.innerHTML =
+            "⚠ Please select an answer first.";
+
+        return;
+
+    }
+
+
+    window.location.href = "Ui12.html";
+
+});
