@@ -2,6 +2,7 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
+    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -9,286 +10,388 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// DOM elements
-const startBtn = document.getElementById("startChallenge");
-const designArea = document.querySelector(".designArea");
-const status = document.getElementById("statusText");
+
+// ========================================
+// DOM ELEMENTS
+// ========================================
+
+const options =
+    document.querySelectorAll(".option");
+
+const statusText =
+    document.getElementById("statusText");
+
+const fill =
+    document.querySelector(".fill");
+
+const nextBtn =
+    document.getElementById("nextBtn");
+
+
+// ========================================
+// MISSION DATA
+// ========================================
+
+const category = "uiux";
+
+const questionNumber = 7;
+
+const questionId = "uiux_q7";
+
+const correctAnswer = "clear";
+
+
+// ========================================
+// OPTION SCORES
+// ========================================
+
+const scores = {
+
+    hidden: 2,
+
+    many: 3,
+
+    random: 1,
+
+    clear: 5
+
+};
+
+
+// ========================================
+// STATE
+// ========================================
 
 let currentUser = null;
+
+let selectedAnswer = null;
+
+let selectedScore = 0;
+
 let missionCompleted = false;
 
+let answerSaved = false;
 
-// ===============================
+
+// ========================================
+// CONTINUE BUTTON
+// ========================================
+
+nextBtn.disabled = true;
+
+
+// ========================================
 // AUTHENTICATION
-// ===============================
+// ========================================
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
 
-    if (user) {
-
-        currentUser = user;
-
-    } else {
+    if (!user) {
 
         alert("Please login first.");
-        window.location.href = "Login.html";
 
-    }
-
-});
-
-
-// ===============================
-// START CHALLENGE
-// ===============================
-
-startBtn.addEventListener("click", () => {
-
-    startBtn.style.display = "none";
-
-    status.innerHTML = "Loading navigation layouts...";
-
-    navigator.vibrate?.([100, 80, 100]);
-
-    setTimeout(showNavigationLayouts, 1800);
-
-});
-
-
-// ===============================
-// SHOW NAVIGATION OPTIONS
-// ===============================
-
-function showNavigationLayouts() {
-
-    designArea.innerHTML = `
-
-        <h2>🛍 Choose The Best Navigation</h2>
-
-        <p>
-            Which navigation style gives shopping app users
-            the easiest experience?
-        </p>
-
-        <div class="navCard">
-
-            <h3>Navigation A</h3>
-
-            <p>
-                🎨 Many menu options<br>
-                ❌ Too many categories<br>
-                ❌ Difficult to find features
-            </p>
-
-        </div>
-
-
-        <div class="navCard">
-
-            <h3>Navigation B</h3>
-
-            <p>
-                🧭 Clear navigation bar<br>
-                ✅ Important sections are easy to reach<br>
-                ✅ Simple and predictable
-            </p>
-
-        </div>
-
-
-        <div class="navCard">
-
-            <h3>Navigation C</h3>
-
-            <p>
-                ✨ Hidden menu system<br>
-                ❌ Users must search for features<br>
-                ❌ Poor discoverability
-            </p>
-
-        </div>
-
-
-        <div class="navCard">
-
-            <h3>Navigation D</h3>
-
-            <p>
-                ⚡ Complex navigation structure<br>
-                ❌ Too many screens<br>
-                ❌ Confusing user flow
-            </p>
-
-        </div>
-
-    `;
-
-
-    document.querySelectorAll(".navCard").forEach((card, index) => {
-
-        card.addEventListener("click", () => {
-
-            reviewNavigation(index);
-
-        });
-
-    });
-
-}
-
-
-// ===============================
-// REVIEW USER'S CHOICE
-// ===============================
-
-async function reviewNavigation(choice) {
-
-    if (missionCompleted) return;
-
-
-    if (!currentUser) {
-
-        alert("Please login first.");
         window.location.href = "Login.html";
 
         return;
 
     }
 
+    currentUser = user;
 
-    let title = "";
-    let message = "";
-    let discoverability = "";
-    let usability = "";
-    let rating = "";
-    let score = 0;
+    await checkPreviousAnswer();
+
+});
 
 
-    // Navigation B = Correct answer
-    if (choice === 1) {
+// ========================================
+// CHECK PREVIOUS ANSWER
+// ========================================
 
-        title = "🏆 Excellent Navigation Choice";
+async function checkPreviousAnswer() {
 
-        message =
-            "Excellent! Clear and predictable navigation helps users find products and features quickly.";
+    try {
 
-        discoverability = "99 / 100";
+        const missionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
 
-        usability = "97%";
+        const missionSnap =
+            await getDoc(missionRef);
 
-        rating = "★★★★★";
 
-        score = 100;
+        if (missionSnap.exists()) {
 
-    } else {
+            const data =
+                missionSnap.data();
 
-        title = "⚠ Navigation Needs Improvement";
 
-        message =
-            "Good navigation should be clear, predictable, easy to discover, and simple for users to understand.";
+            if (data.completed === true) {
 
-        discoverability = "73 / 100";
+                selectedAnswer =
+                    data.answer;
 
-        usability = "79%";
+                selectedScore =
+                    data.score || 0;
 
-        rating = "★★★☆☆";
+                missionCompleted = true;
 
-        score = 70;
+                answerSaved = true;
+
+                lockOptions();
+
+                nextBtn.disabled = false;
+
+
+                if (fill) {
+
+                    fill.style.width = "100%";
+
+                }
+
+
+                statusText.textContent =
+                    "✅ Mission 7 already completed. You can continue.";
+
+            }
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Ui7 Restore Error:",
+            error
+        );
 
     }
 
-
-    // Show result
-    designArea.innerHTML = `
-
-        <h2>${title}</h2>
-
-        <br>
-
-        <p>${message}</p>
-
-        <br>
-
-        <h3>
-            🧭 Navigation Discoverability : ${discoverability}
-        </h3>
-
-        <h3>
-            😊 User Experience : ${usability}
-        </h3>
-
-        <h3>
-            ⭐ Design Rating : ${rating}
-        </h3>
-
-        <h3>
-            🎯 Mission Score : ${score}%
-        </h3>
-
-    `;
+}
 
 
-    status.innerHTML = "Saving your navigation decision...";
+// ========================================
+// OPTION CLICK
+// ========================================
+
+options.forEach((option) => {
+
+    option.addEventListener("click", async () => {
+
+        // Check login
+
+        if (!currentUser) {
+
+            alert("Please login first.");
+
+            window.location.href =
+                "Login.html";
+
+            return;
+
+        }
 
 
-    // ===============================
-    // SAVE TO FIRESTORE
-    // ===============================
+        // Prevent multiple answers
+
+        if (missionCompleted) {
+
+            return;
+
+        }
+
+        if (answerSaved) {
+
+            return;
+
+        }
+
+
+        // ========================================
+        // GET SELECTED ANSWER
+        // ========================================
+
+        selectedAnswer =
+            option.dataset.answer;
+
+
+        selectedScore =
+            scores[selectedAnswer] || 0;
+
+
+        // ========================================
+        // LOCK OPTIONS
+        // ========================================
+
+        lockOptions(option);
+
+
+        // ========================================
+        // FEEDBACK
+        // ========================================
+
+        if (
+            selectedAnswer ===
+            correctAnswer
+        ) {
+
+            statusText.textContent =
+                "✅ Excellent! Clear and consistent navigation helps users find products and features quickly.";
+
+        } else {
+
+            statusText.textContent =
+                "💡 Good attempt. Navigation should be clear, predictable, consistent and easy to discover.";
+
+        }
+
+
+        // ========================================
+        // PROGRESS
+        // ========================================
+
+        if (fill) {
+
+            fill.style.width = "100%";
+
+        }
+
+
+        // ========================================
+        // SAVE MISSION
+        // ========================================
+
+        await saveMission();
+
+    });
+
+});
+
+
+// ========================================
+// LOCK OPTIONS
+// ========================================
+
+function lockOptions(selectedOption = null) {
+
+    options.forEach((option) => {
+
+        option.style.pointerEvents =
+            "none";
+
+
+        if (
+            selectedOption &&
+            option !== selectedOption
+        ) {
+
+            option.style.opacity =
+                "0.55";
+
+        }
+
+    });
+
+}
+
+
+// ========================================
+// SAVE MISSION
+// ========================================
+
+async function saveMission() {
 
     try {
 
         await setDoc(
-
             doc(
                 db,
                 "users",
                 currentUser.uid,
                 "missions",
-                "mission7"
+                questionId
             ),
-
             {
 
-                missionNumber: 7,
+                category:
+                    category,
+
+                questionNumber:
+                    questionNumber,
 
                 answer:
-                    choice === 1
-                        ? "Navigation B"
-                        : `Navigation ${String.fromCharCode(65 + choice)}`,
+                    selectedAnswer,
 
-                score: score,
+                score:
+                    selectedScore,
 
-                discoverability: discoverability,
+                correct:
+                    selectedAnswer ===
+                    correctAnswer,
 
-                usability: usability,
+                completed:
+                    true,
 
-                designRating: rating,
-
-                category: "Navigation Design",
-
-                completed: true,
-
-                completedAt: new Date().toISOString()
+                completedAt:
+                    new Date().toISOString()
 
             }
-
         );
 
 
+        // ========================================
+        // UPDATE STATE
+        // ========================================
+
+        answerSaved = true;
+
         missionCompleted = true;
 
+        nextBtn.disabled = false;
 
-        status.innerHTML =
-            "✅ Mission 7 completed! Your navigation decision has been saved.";
 
+        statusText.textContent +=
+            " Mission 7 completed!";
 
     } catch (error) {
 
-        console.error("UI7 Firebase Error:", error);
+        console.error(
+            "Ui7 Firebase Error:",
+            error
+        );
 
-        status.innerHTML =
-            "❌ Could not save your result. Please try again.";
+
+        answerSaved = false;
+
+        missionCompleted = false;
+
+        nextBtn.disabled = true;
+
+
+        statusText.textContent =
+            "❌ Could not save your answer. Please try again.";
 
     }
 
 }
+
+
+// ========================================
+// CONTINUE TO MISSION 8
+// ========================================
+
+nextBtn.addEventListener("click", () => {
+
+    if (!answerSaved) {
+
+        return;
+
+    }
+
+
+    window.location.href =
+        "Ui8.html";
+
+});
