@@ -1,187 +1,204 @@
-const startBtn = document.getElementById("startChallenge");
+<!DOCTYPE html>
+<html lang="en">
 
-const designArea = document.querySelector(".designArea");
+<head>
 
-const status = document.getElementById("statusText");
+<meta charset="UTF-8">
 
-startBtn.addEventListener("click",()=>{
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-startBtn.style.display="none";
+<title>Ui5 - Button Design Challenge</title>
 
-status.innerHTML="Loading typography comparison...";
+<link rel="stylesheet"
+href="Ui5.css">
 
-navigator.vibrate?.([100,80,100]);
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+rel="stylesheet">
 
-setTimeout(showFonts,1800);
+</head>
 
-});
+<body>
 
-/*=========================
-SHOW CHALLENGE
-=========================*/
+<!-- Background -->
 
-function showFonts(){
+<div class="background">
 
-designArea.innerHTML=`
+    <div class="buttonGrid"></div>
 
-<h2>
+    <div class="buttonGlow"></div>
 
-📰 Choose The Best Font
-
-</h2>
-
-<p>
-
-Which typography gives users the best reading experience?
-
-</p>
-
-<div class="fontCard">
-
-<h3>Font A</h3>
-
-<p>
-
-❌ Decorative font<br>
-
-❌ Small size<br>
-
-❌ Tight spacing
-
-</p>
+    <div class="floatingButtons"></div>
 
 </div>
 
-<div class="fontCard">
 
-<h3>Font B</h3>
+<div class="container">
 
-<p>
+    <!-- Header -->
 
-✅ Clean font<br>
+    <div class="header">
 
-✅ Comfortable spacing<br>
+        <h1>
+            🔘 BUTTON DESIGN
+        </h1>
 
-✅ Easy to read
+        <p>
+            UI/UX Mission 5 / 20
+        </p>
 
-</p>
+    </div>
+
+
+    <!-- AI Mentor -->
+
+    <div class="briefing">
+
+        <h2>
+            🤖 AI Design Mentor
+        </h2>
+
+        <p>
+
+            Buttons are one of the most important
+            interactive elements in a user interface.
+
+            A good button should be easy to notice,
+            understandable and encourage the user
+            to take the intended action.
+
+            Today's client is building an online
+            shopping application.
+
+            Choose the button design users are most
+            likely to notice and click first.
+
+        </p>
+
+    </div>
+
+
+    <!-- Challenge Area -->
+
+    <div class="designArea">
+
+        <h2>
+            🛒 Online Shopping App
+        </h2>
+
+        <p id="challengeText">
+
+            Which button design should be used
+            for the main shopping action?
+
+        </p>
+
+
+        <div id="options">
+
+            <!-- A -->
+
+            <button class="option"
+                    data-answer="small">
+
+                <strong>Button A</strong>
+
+                <span>
+                    Small, light-gray button that is
+                    difficult to notice.
+                </span>
+
+            </button>
+
+
+            <!-- B - CORRECT -->
+
+            <button class="option"
+                    data-answer="primary">
+
+                <strong>Button B</strong>
+
+                <span>
+                    Large, bright primary-color button
+                    with a clear "Buy Now" label.
+                </span>
+
+            </button>
+
+
+            <!-- C -->
+
+            <button class="option"
+                    data-answer="animation">
+
+                <strong>Button C</strong>
+
+                <span>
+                    Fancy animation with low contrast
+                    that makes the text difficult to read.
+                </span>
+
+            </button>
+
+
+            <!-- D -->
+
+            <button class="option"
+                    data-answer="transparent">
+
+                <strong>Button D</strong>
+
+                <span>
+                    Transparent button with no border,
+                    making the action confusing.
+                </span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Status -->
+
+    <div class="statusBox">
+
+        <h3>
+            Button Review
+        </h3>
+
+        <p id="statusText">
+            Select the best button design.
+        </p>
+
+    </div>
+
+
+    <!-- Progress -->
+
+    <div class="progress">
+
+        <div class="fill"></div>
+
+    </div>
+
+
+    <!-- Controls -->
+
+    <div class="controls">
+
+        <button id="nextBtn" disabled>
+            Continue Mission 6 →
+        </button>
+
+    </div>
 
 </div>
 
-<div class="fontCard">
 
-<h3>Font C</h3>
+<script type="module" src="Ui5.js"></script>
 
-<p>
+</body>
 
-🎨 Stylish font<br>
-
-❌ Difficult for long articles
-
-</p>
-
-</div>
-
-<div class="fontCard">
-
-<h3>Font D</h3>
-
-<p>
-
-⚡ Thin font<br>
-
-❌ Low readability
-
-</p>
-
-</div>
-
-`;
-
-document.querySelectorAll(".fontCard")
-
-.forEach((card,index)=>{
-
-card.addEventListener("click",()=>{
-
-reviewFont(index);
-
-});
-
-});
-
-}
-
-/*=========================
-RESULT
-=========================*/
-
-function reviewFont(choice){
-
-let title="";
-let message="";
-let readability="";
-let usability="";
-let rating="";
-
-if(choice===1){
-
-title="🏆 Perfect Typography";
-
-message="Excellent! Clean fonts with proper spacing improve readability and reduce eye strain.";
-
-readability="99 / 100";
-
-usability="97%";
-
-rating="★★★★★";
-
-}else{
-
-title="⚠ Typography Needs Improvement";
-
-message="Beautiful fonts are not always readable. Good typography always puts the user first.";
-
-readability="73 / 100";
-
-usability="79%";
-
-rating="★★★☆☆";
-
-}
-
-designArea.innerHTML=`
-
-<h2>
-
-${title}
-
-</h2>
-
-<br>
-
-<p>
-
-${message}
-
-</p>
-
-<br>
-
-<h3>
-
-📖 Readability : ${readability}
-
-</h3>
-
-<h3>
-
-😊 User Experience : ${usability}
-
-</h3>
-
-<h3>
-
-⭐ Design Rating : ${rating}
-
-</h3>
+</html>
