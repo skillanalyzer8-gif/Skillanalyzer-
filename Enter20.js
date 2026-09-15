@@ -1,48 +1,198 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc
+doc,
+setDoc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 
 // ===============================
 // GET HTML ELEMENTS
 // ===============================
 
-const beginLegacy = document.getElementById("beginLegacy");
-const legacyText = document.getElementById("legacyText");
+const options = document.querySelectorAll(".option");
 const statusText = document.getElementById("statusText");
+const legacyText = document.getElementById("legacyText");
+const nextBtn = document.getElementById("nextBtn");
 
+// ===============================
+// MISSION DETAILS
+// ===============================
+
+const category = "entrepreneurship";
+const questionNumber = 20;
+const questionId = "entrepreneurship_q20";
 
 // ===============================
 // VARIABLES
 // ===============================
 
 let currentUser = null;
-let missionCompleted = false;
-let started = false;
+let selectedAnswer = null;
+let selectedScore = 0;
+let answerLocked = false;
+let answerSaved = false;
 
+// ===============================
+// ANSWER SCORES
+// ===============================
+
+const scores = {
+
+impact: 5,
+
+profit: 1,
+
+fame: 2,
+
+competition: 3
+
+};
+
+// ===============================
+// CORRECT ANSWER
+// ===============================
+
+const correctAnswer = "impact";
 
 // ===============================
 // CHECK LOGIN
 // ===============================
 
-onAuthStateChanged(auth, function (user) {
+onAuthStateChanged(auth, async function (user) {
 
-  if (user) {
+if (user) {
 
-    currentUser = user;
+currentUser = user;
+
+await checkPreviousAnswer();
+
+} else {
+
+alert("Please login first.");
+
+window.location.href = "Login.html";
+
+}
+
+});
+
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
+
+async function checkPreviousAnswer() {
+
+try {
+
+const missionRef = doc(
+  db,
+  "users",
+  currentUser.uid,
+  "missions",
+  questionId
+);
+
+const missionSnap = await getDoc(missionRef);
+
+
+if (missionSnap.exists()) {
+
+  const data = missionSnap.data();
+
+
+  if (data.completed === true) {
+
+    selectedAnswer = data.answer;
+
+    selectedScore = data.score;
+
+    answerLocked = true;
+
+    answerSaved = true;
+
+
+    options.forEach(function (option) {
+
+      option.disabled = true;
+
+      if (option.dataset.answer === selectedAnswer) {
+
+        option.style.border = "2px solid #00ff88";
+
+      } else {
+
+        option.style.opacity = "0.45";
+
+      }
+
+    });
+
+
+    legacyText.textContent =
+      "🌍 Your final entrepreneurship decision has already been recorded.";
+
+    statusText.textContent =
+      "✅ Mission 20 already completed.";
+
+    nextBtn.disabled = false;
+
+  }
+
+}
+
+} catch (error) {
+
+console.error(
+  "Error checking Mission 20:",
+  error
+);
+
+}
+
+}
+
+// ===============================
+// SELECT ANSWER
+// ===============================
+
+options.forEach(function (option) {
+
+option.addEventListener("click", function () {
+
+if (answerLocked) {
+
+  return;
+
+}
+
+
+selectedAnswer = option.dataset.answer;
+
+selectedScore = scores[selectedAnswer];
+
+answerLocked = true;
+
+
+// ===============================
+// LOCK ALL OPTIONS
+// ===============================
+
+options.forEach(function (item) {
+
+  item.disabled = true;
+
+  if (item.dataset.answer === selectedAnswer) {
+
+    item.style.border = "2px solid #00ff88";
 
   } else {
 
-    alert("Please login first.");
-
-    window.location.href = "Login.html";
+    item.style.opacity = "0.45";
 
   }
 
@@ -50,206 +200,182 @@ onAuthStateChanged(auth, function (user) {
 
 
 // ===============================
-// BEGIN FINAL DECISION
+// SHOW RESULT
 // ===============================
 
-beginLegacy.addEventListener("click", function () {
-
-  // Prevent another run after completion
-
-  if (missionCompleted) {
-
-    return;
-
-  }
-
-
-  // Prevent double clicks
-
-  if (started) {
-
-    return;
-
-  }
-
-  started = true;
-
-  beginLegacy.disabled = true;
-
-  beginLegacy.style.opacity = "0.5";
-
-
-  // ===============================
-  // STEP 1 — FINAL CHAMBER
-  // ===============================
-
-  legacyText.textContent =
-    "🌍 The Legacy Council is gathering...";
+if (selectedAnswer === correctAnswer) {
 
   statusText.textContent =
-    "🔄 Preparing your final entrepreneurship evaluation...";
+    "🏆 Excellent! A strong entrepreneurial legacy is built by creating lasting value and solving meaningful problems.";
 
+  legacyText.textContent =
+    "🌍 Your final decision demonstrates long-term vision, responsibility and value creation.";
 
-  setTimeout(function () {
+} else {
 
-    // ===============================
-    // STEP 2 — FINAL ANALYSIS
-    // ===============================
+  statusText.textContent =
+    "⚠️ The strongest choice is to create lasting value by solving meaningful problems and improving people's lives.";
 
-    legacyText.textContent =
-      "🤖 AI Global Council is reviewing your journey through 20 missions...";
+  legacyText.textContent =
+    "💡 Good attempt. A strong entrepreneur should think beyond profit, fame and competition.";
 
-    statusText.textContent =
-      "👑 Evaluating your entrepreneurship mindset...";
+}
 
 
-    setTimeout(function () {
+// ===============================
+// SAVE ANSWER
+// ===============================
 
-      // ===============================
-      // STEP 3 — FINAL DECISION
-      // ===============================
+setTimeout(function () {
 
-      legacyText.textContent =
-        "✨ Your entrepreneurial journey has reached its final stage.";
+  saveAnswer();
 
-      statusText.textContent =
-        "🌟 Generating your final entrepreneurship result...";
+}, 1200);
 
+});
 
-      setTimeout(async function () {
+});
 
-        // ===============================
-        // CHECK LOGIN
-        // ===============================
+// ===============================
+// SAVE ANSWER TO FIRESTORE
+// ===============================
 
-        if (!currentUser) {
+async function saveAnswer() {
 
-          legacyText.textContent =
-            "❌ Login session not found.";
+if (!currentUser) {
 
-          statusText.textContent =
-            "Please login again.";
+alert("Please login again.");
 
-          alert("Please login again.");
+window.location.href = "Login.html";
 
-          window.location.href = "Login.html";
+return;
 
-          return;
+}
 
-        }
+try {
 
+// ===============================
+// SAVE MISSION 20
+// ===============================
 
-        // ===============================
-        // SAVE MISSION 20
-        // ===============================
+await setDoc(
 
-        try {
+  doc(
+    db,
+    "users",
+    currentUser.uid,
+    "missions",
+    questionId
+  ),
 
-          await setDoc(
+  {
 
-            doc(
-              db,
-              "users",
-              currentUser.uid,
-              "missions",
-              "mission20"
-            ),
+    category: category,
 
-            {
+    questionNumber: questionNumber,
 
-              missionNumber: 20,
+    answer: selectedAnswer,
 
-              answer: "Final Entrepreneurship Legacy Completed",
+    score: selectedScore,
 
-              completed: true,
+    correct: selectedAnswer === correctAnswer,
 
-              completedAt: new Date().toISOString()
+    completed: true,
 
-            }
+    completedAt: new Date().toISOString()
 
-          );
+  }
 
+);
 
-          // ===============================
-          // MARK ASSESSMENT COMPLETED
-          // ===============================
 
-          await setDoc(
+// ===============================
+// MARK ENTREPRENEURSHIP COMPLETE
+// ===============================
 
-            doc(
-              db,
-              "users",
-              currentUser.uid
-            ),
+await setDoc(
 
-            {
+  doc(
+    db,
+    "users",
+    currentUser.uid
+  ),
 
-              assessmentCompleted: true,
+  {
 
-              finalCategory: "Entrepreneurship",
+    entrepreneurshipCompleted: true,
 
-              finalMission: 20,
+    entrepreneurshipFinalMission: 20,
 
-              finalAnswer:
-                "Final Entrepreneurship Legacy Completed",
+    entrepreneurshipFinalAnswer: selectedAnswer,
 
-              assessmentCompletedAt:
-                new Date().toISOString()
+    entrepreneurshipCompletedAt:
+      new Date().toISOString()
 
-            },
+  },
 
-            { merge: true }
+  { merge: true }
 
-          );
+);
 
 
-          // ===============================
-          // FINAL SUCCESS
-          // ===============================
+// ===============================
+// SUCCESS
+// ===============================
 
-          missionCompleted = true;
+answerSaved = true;
 
-          legacyText.textContent =
-            "🏆 Your Entrepreneurship Journey Is Complete!";
+legacyText.textContent =
+  "🏆 Your Entrepreneurship Journey Is Complete!";
 
-          statusText.textContent =
-            "👑 FINAL LEGACY RECORDED SUCCESSFULLY";
+statusText.textContent =
+  "👑 Final Entrepreneurship Answer Saved Successfully.";
 
+nextBtn.disabled = false;
 
-          beginLegacy.disabled = true;
+} catch (error) {
 
-          beginLegacy.style.opacity = "1";
+console.error(
+  "Mission 20 Firebase Error:",
+  error
+);
 
-          beginLegacy.textContent =
-            "🎉 ENTREPRENEURSHIP COMPLETED";
 
+statusText.textContent =
+  "❌ Unable to save your final answer. Please try again.";
 
-        } catch (error) {
+answerLocked = false;
 
-          console.error(
-            "Mission 20 Firebase Error:",
-            error
-          );
+answerSaved = false;
 
-          legacyText.textContent =
-            "❌ Unable to save your final mission.";
 
-          statusText.textContent =
-            "Please check your internet connection and try again.";
+options.forEach(function (option) {
 
+  option.disabled = false;
 
-          beginLegacy.disabled = false;
+  option.style.opacity = "1";
 
-          beginLegacy.style.opacity = "1";
+  option.style.border = "";
 
-          started = false;
+});
 
-        }
+}
 
-      }, 1200);
+}
 
-    }, 1200);
+// ===============================
+// FINAL BUTTON
+// ===============================
 
-  }, 1200);
+nextBtn.addEventListener("click", function () {
+
+if (!answerSaved) {
+
+return;
+
+}
+
+// Result page will be connected later
+// after all 80 missions are completed.
 
 });
