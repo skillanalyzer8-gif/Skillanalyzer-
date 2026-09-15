@@ -1,180 +1,390 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc
+doc,
+setDoc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+// ===============================
+// GET HTML ELEMENTS
+// ===============================
 
 const options = document.querySelectorAll(".option");
 const fill = document.querySelector(".fill");
-const analysisText = document.querySelector(".analysis p");
+const analysisText = document.getElementById("statusText");
 const nextBtn = document.getElementById("nextBtn");
 
+// ===============================
+// VARIABLES
+// ===============================
 
 let currentUser = null;
 let selectedAnswer = "";
+let selectedScore = 0;
 let missionCompleted = false;
+let answerSaved = false;
+
+// ===============================
+// MISSION SETTINGS
+// ===============================
+
+const category = "leadership";
+const questionNumber = 5;
+const questionId = "leadership_q5";
+
+// ===============================
+// CORRECT ANSWER
+// ===============================
+
+const correctAnswer = "believe";
+
+// ===============================
+// SCORES
+// ===============================
+
+const scores = {
+
+punish: 2,
+
+instructions: 3,
+
+quick: 1,
+
+believe: 5
+
+};
+
+// ===============================
+// CHECK LOGIN
+// ===============================
+
+onAuthStateChanged(auth, async function (user) {
+
+if (user) {
+
+currentUser = user;
+
+await checkPreviousAnswer();
+
+} else {
+
+alert("Please login first.");
+
+window.location.href = "Login.html";
+
+}
+
+});
+
+// ===============================
+// INITIAL BUTTON STATE
+// ===============================
+
+nextBtn.disabled = true;
+nextBtn.style.opacity = "0.5";
+
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
+
+async function checkPreviousAnswer() {
+
+try {
+
+const missionRef = doc(
+  db,
+  "users",
+  currentUser.uid,
+  "missions",
+  questionId
+);
+
+const missionSnap = await getDoc(missionRef);
 
 
-// Check login status
-onAuthStateChanged(auth, (user) => {
+if (missionSnap.exists()) {
 
-  if (user) {
+  const data = missionSnap.data();
 
-    currentUser = user;
 
-  } else {
+  if (data.completed === true) {
 
-    alert("Please login first.");
-    window.location.href = "Login.html";
+    selectedAnswer = data.answer || "";
+    selectedScore = data.score || 0;
+
+    missionCompleted = true;
+    answerSaved = true;
+
+
+    // Restore selected option
+
+    options.forEach(function (option) {
+
+      if (option.dataset.answer === selectedAnswer) {
+
+        option.classList.add("active");
+
+      }
+
+    });
+
+
+    // Lock all options
+
+    options.forEach(function (option) {
+
+      option.style.pointerEvents = "none";
+
+    });
+
+
+    // Restore progress
+
+    fill.style.width = "100%";
+
+
+    analysisText.textContent =
+      "✅ Public Speaking Decision Already Recorded";
+
+
+    nextBtn.disabled = false;
+    nextBtn.style.opacity = "1";
 
   }
+
+}
+
+} catch (error) {
+
+console.error(
+  "Lead Mission 5 Previous Answer Error:",
+  error
+);
+
+}
+
+}
+
+// ===============================
+// OPTION SELECTION
+// ===============================
+
+options.forEach(function (option) {
+
+option.addEventListener("click", function () {
+
+// Prevent changing answer after saving
+
+if (answerSaved) {
+
+  return;
+
+}
+
+
+// Store answer ID
+
+selectedAnswer = this.dataset.answer;
+
+
+// Get score
+
+selectedScore =
+  scores[selectedAnswer] || 0;
+
+
+// Check correctness
+
+const isCorrect =
+  selectedAnswer === correctAnswer;
+
+
+// Remove previous selection
+
+options.forEach(function (item) {
+
+  item.classList.remove("active");
 
 });
 
 
-// Disable Continue initially
+// Highlight selected option
+
+this.classList.add("active");
+
+
+// Lock options during analysis
+
+options.forEach(function (item) {
+
+  item.style.pointerEvents = "none";
+
+});
+
+
+// Reset progress
+
+fill.style.width = "0%";
+
+
+analysisText.textContent =
+  "🤖 AI Public Speaking Analyzer is analyzing your response...";
+
+
+// Disable Continue
+
 nextBtn.disabled = true;
 nextBtn.style.opacity = "0.5";
 
 
-// Handle option selection
-options.forEach((option) => {
+// Progress animation
 
-  option.addEventListener("click", function () {
+setTimeout(function () {
 
-    // Remove previous selection
-    options.forEach((item) => {
-      item.classList.remove("active");
-    });
+  fill.style.width = "100%";
 
-    // Highlight selected option
-    this.classList.add("active");
+}, 100);
 
-    // Store exact selected answer
-    selectedAnswer = this.textContent.trim();
 
-    // Reset completion state
-    missionCompleted = false;
+// ===============================
+// SAVE ANSWER
+// ===============================
 
-    // Reset progress bar
-    fill.style.width = "0%";
+setTimeout(async function () {
+
+  if (!currentUser) {
 
     analysisText.textContent =
-      "🤖 AI Public Speaking Analyzer is analyzing your response...";
+      "❌ Login session not found.";
+
+    alert("Please login again.");
+
+    window.location.href = "Login.html";
+
+    return;
+
+  }
+
+
+  analysisText.textContent =
+    "🤖 Recording your leadership response...";
+
+
+  try {
+
+    const missionRef = doc(
+      db,
+      "users",
+      currentUser.uid,
+      "missions",
+      questionId
+    );
+
+
+    await setDoc(
+
+      missionRef,
+
+      {
+
+        category: category,
+
+        questionNumber: questionNumber,
+
+        answer: selectedAnswer,
+
+        score: selectedScore,
+
+        correct: isCorrect,
+
+        completed: true,
+
+        completedAt: new Date().toISOString()
+
+      }
+
+    );
+
+
+    // ===============================
+    // SUCCESS
+    // ===============================
+
+    missionCompleted = true;
+    answerSaved = true;
+
+
+    analysisText.textContent =
+      isCorrect
+        ? "✅ Excellent! Your words inspire confidence and teamwork."
+        : "📊 Decision recorded. Continue to the next mission.";
+
+
+    nextBtn.disabled = false;
+    nextBtn.style.opacity = "1";
+
+
+  } catch (error) {
+
+    console.error(
+      "Lead Mission 5 Firebase Error:",
+      error
+    );
+
+
+    analysisText.textContent =
+      "❌ Unable to save your decision. Please try again.";
+
+
+    // Allow retry
+
+    options.forEach(function (item) {
+
+      item.style.pointerEvents = "auto";
+
+    });
+
 
     nextBtn.disabled = true;
     nextBtn.style.opacity = "0.5";
 
+  }
 
-    // Start analysis animation
-    setTimeout(() => {
-
-      fill.style.width = "100%";
-
-    }, 100);
-
-
-    // Save answer after analysis
-    setTimeout(async () => {
-
-      if (!currentUser) {
-
-        analysisText.textContent =
-          "❌ Login session not found.";
-
-        alert("Please login again.");
-
-        window.location.href = "Login.html";
-
-        return;
-
-      }
-
-
-      analysisText.textContent =
-        "🤖 Recording your leadership response...";
-
-
-      try {
-
-        await setDoc(
-          doc(
-            db,
-            "users",
-            currentUser.uid,
-            "missions",
-            "mission5"
-          ),
-          {
-            missionNumber: 5,
-            answer: selectedAnswer,
-            completed: true,
-            completedAt: new Date().toISOString()
-          }
-        );
-
-
-        // Mission successfully completed
-        missionCompleted = true;
-
-        analysisText.textContent =
-          "✅ Public Speaking Decision Recorded Successfully";
-
-        nextBtn.disabled = false;
-        nextBtn.style.opacity = "1";
-
-
-      } catch (error) {
-
-        console.error(
-          "Lead Mission 5 Firebase Error:",
-          error
-        );
-
-        analysisText.textContent =
-          "❌ Unable to save your decision.";
-
-        nextBtn.disabled = true;
-        nextBtn.style.opacity = "0.5";
-
-      }
-
-    }, 1500);
-
-  });
+}, 1500);
 
 });
 
+});
 
-// Continue button
-nextBtn.addEventListener("click", () => {
+// ===============================
+// CONTINUE TO MISSION 6
+// ===============================
 
-  if (selectedAnswer === "") {
+nextBtn.addEventListener("click", function () {
 
-    alert("Please select an option first.");
+if (selectedAnswer === "") {
 
-    return;
+alert("Please select an option first.");
 
-  }
+return;
 
+}
 
-  if (!missionCompleted) {
+if (!missionCompleted || !answerSaved) {
 
-    alert(
-      "Please wait until your leadership response is saved."
-    );
+alert(
+  "Please wait until your leadership response is saved."
+);
 
-    return;
+return;
 
-  }
+}
 
-
-  window.location.href = "Lead6.html";
+window.location.href = "Lead6.html";
 
 });
