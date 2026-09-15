@@ -1,202 +1,434 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc
+    doc,
+    getDoc,
+    setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 // ===============================
-// GET HTML ELEMENTS
+// MISSION CONFIG
 // ===============================
 
-const startDefense = document.getElementById("startDefense");
-const defenseText = document.getElementById("defenseText");
+const category = "entrepreneurship";
+
+const questionNumber = 12;
+
+const questionId = "entrepreneurship_q12";
+
+
+// ===============================
+// ANSWER SCORES
+// ===============================
+
+const scores = {
+
+    innovation: 5,
+
+    priceWar: 3,
+
+    rumors: 2,
+
+    copyBack: 1
+
+};
+
+
+// Correct answer
+
+const correctAnswer = "innovation";
+
+
+// ===============================
+// ELEMENTS
+// ===============================
+
+const options = document.querySelectorAll(".option");
+
+const nextBtn = document.getElementById("nextBtn");
+
 const statusText = document.getElementById("statusText");
 
+const defenseText = document.getElementById("defenseText");
+
+const progressFill = document.querySelector(".fill");
+
 
 // ===============================
-// VARIABLES
+// STATE
 // ===============================
 
 let currentUser = null;
-let missionCompleted = false;
-let started = false;
+
+let selectedAnswer = null;
+
+let selectedScore = 0;
+
+let answerLocked = false;
+
+let answerSaved = false;
 
 
 // ===============================
-// CHECK LOGIN
+// INITIAL STATE
 // ===============================
 
-onAuthStateChanged(auth, function (user) {
+nextBtn.disabled = true;
 
-  if (user) {
+if (progressFill) {
 
-    currentUser = user;
+    progressFill.style.width = "0%";
 
-  } else {
+}
 
-    alert("Please login first.");
 
-    window.location.href = "Login.html";
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
 
-  }
+async function checkPreviousAnswer() {
+
+    if (!currentUser) return;
+
+    try {
+
+        const answerRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
+
+        const answerSnap = await getDoc(answerRef);
+
+
+        if (!answerSnap.exists()) {
+
+            return;
+
+        }
+
+
+        const data = answerSnap.data();
+
+
+        if (!data.completed) {
+
+            return;
+
+        }
+
+
+        // Restore previous answer
+
+        selectedAnswer = data.answer;
+
+        selectedScore = data.score || 0;
+
+        answerLocked = true;
+
+        answerSaved = true;
+
+
+        // Restore visual state
+
+        options.forEach(option => {
+
+            const answer = option.dataset.answer;
+
+
+            if (answer === selectedAnswer) {
+
+                option.classList.add("selected");
+
+            } else {
+
+                option.style.opacity = "0.45";
+
+            }
+
+        });
+
+
+        if (defenseText) {
+
+            defenseText.textContent =
+                "🛡 Your startup defense decision has already been completed.";
+
+        }
+
+
+        if (statusText) {
+
+            if (data.correct) {
+
+                statusText.textContent =
+                    "✅ Strong strategy! You focused on building lasting competitive value.";
+
+            } else {
+
+                statusText.textContent =
+                    "📊 Your previous defense decision has been restored.";
+
+            }
+
+        }
+
+
+        if (progressFill) {
+
+            progressFill.style.width = "100%";
+
+        }
+
+
+        nextBtn.disabled = false;
+
+
+    } catch (error) {
+
+        console.error(
+            "Error checking previous answer:",
+            error
+        );
+
+    }
+
+}
+
+
+// ===============================
+// SAVE ANSWER
+// ===============================
+
+async function saveAnswer() {
+
+    if (!currentUser || !selectedAnswer) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const answerRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
+
+
+        await setDoc(answerRef, {
+
+            category: category,
+
+            questionNumber: questionNumber,
+
+            answer: selectedAnswer,
+
+            score: selectedScore,
+
+            correct: selectedAnswer === correctAnswer,
+
+            completed: true,
+
+            completedAt: new Date()
+
+        });
+
+
+        answerSaved = true;
+
+        nextBtn.disabled = false;
+
+
+        if (statusText) {
+
+            if (selectedAnswer === correctAnswer) {
+
+                statusText.textContent =
+                    "✅ Excellent! You protected the startup by strengthening its unique customer value.";
+
+            } else {
+
+                statusText.textContent =
+                    "📊 Your startup defense decision has been recorded.";
+
+            }
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Error saving answer:",
+            error
+        );
+
+
+        if (statusText) {
+
+            statusText.textContent =
+                "⚠️ Could not save your answer. Please try again.";
+
+        }
+
+    }
+
+}
+
+
+// ===============================
+// OPTION CLICK
+// ===============================
+
+options.forEach(option => {
+
+    option.addEventListener("click", async () => {
+
+
+        // Prevent changing answer
+
+        if (answerLocked) {
+
+            return;
+
+        }
+
+
+        selectedAnswer =
+            option.dataset.answer;
+
+
+        selectedScore =
+            scores[selectedAnswer] || 0;
+
+
+        answerLocked = true;
+
+
+        // Dim other options
+
+        options.forEach(otherOption => {
+
+            if (otherOption !== option) {
+
+                otherOption.style.opacity = "0.45";
+
+            }
+
+        });
+
+
+        // Highlight selected option
+
+        option.classList.add("selected");
+
+
+        // Update defense area
+
+        if (defenseText) {
+
+            defenseText.textContent =
+                "🤖 AI Business Mentor is evaluating your competitive strategy...";
+
+        }
+
+
+        // Update status
+
+        if (statusText) {
+
+            statusText.textContent =
+                "🔍 Analyzing innovation, differentiation, customer value, and competitive risk...";
+
+        }
+
+
+        // Progress
+
+        if (progressFill) {
+
+            progressFill.style.width = "100%";
+
+        }
+
+
+        // Analysis delay
+
+        await new Promise(resolve => {
+
+            setTimeout(resolve, 1200);
+
+        });
+
+
+        // Save answer
+
+        await saveAnswer();
+
+    });
 
 });
 
 
 // ===============================
-// START DEFENSE
+// CONTINUE
 // ===============================
 
-startDefense.addEventListener("click", async function () {
-
-  // If mission is already completed,
-  // go to Mission 13
-
-  if (missionCompleted) {
-
-    window.location.href = "Enter13.html";
-
-    return;
-
-  }
+nextBtn.addEventListener("click", () => {
 
 
-  // Prevent accidental double clicks
-
-  if (started) {
-
-    return;
-
-  }
-
-  started = true;
-
-  startDefense.disabled = true;
-
-  startDefense.style.opacity = "0.5";
-
-  defenseText.textContent =
-    "🛡 Activating startup defense systems...";
-
-  statusText.textContent =
-    "🔍 Analyzing competitor activity...";
-
-
-  // Small animation delay
-
-  setTimeout(async function () {
-
-    defenseText.textContent =
-      "🤖 AI is identifying the most important threats...";
-
-    statusText.textContent =
-      "⚡ Prioritizing critical business risks...";
-
-
-    setTimeout(async function () {
-
-      // ===============================
-      // CHECK USER AGAIN
-      // ===============================
-
-      if (!currentUser) {
-
-        defenseText.textContent =
-          "❌ Login session not found.";
-
-        statusText.textContent =
-          "Please login again.";
-
-        alert("Please login again.");
-
-        window.location.href = "Login.html";
+    if (!selectedAnswer) {
 
         return;
 
-      }
+    }
 
 
-      // ===============================
-      // SAVE TO FIREBASE
-      // ===============================
+    if (!answerSaved) {
 
-      try {
+        return;
 
-        await setDoc(
-
-          doc(
-            db,
-            "users",
-            currentUser.uid,
-            "missions",
-            "mission12"
-          ),
-
-          {
-
-            missionNumber: 12,
-
-            answer: "Startup Defense Strategy Completed",
-
-            completed: true,
-
-            completedAt: new Date().toISOString()
-
-          }
-
-        );
+    }
 
 
-        // ===============================
-        // SUCCESS
-        // ===============================
+    window.location.href =
+        "Enter13.html";
 
-        missionCompleted = true;
-
-        defenseText.textContent =
-          "✅ Startup Defense Strategy Completed";
-
-        statusText.textContent =
-          "🛡 Your startup defense system is active.";
+});
 
 
-        startDefense.disabled = false;
+// ===============================
+// FIREBASE AUTH
+// ===============================
 
-        startDefense.style.opacity = "1";
-
-        startDefense.textContent =
-          "➡ CONTINUE TO MISSION 13";
+onAuthStateChanged(auth, async user => {
 
 
-      } catch (error) {
+    if (!user) {
 
-        console.error(
-          "Mission 12 Firebase Error:",
-          error
-        );
+        window.location.href =
+            "Login.html";
 
-        defenseText.textContent =
-          "❌ Unable to save your mission.";
+        return;
 
-        statusText.textContent =
-          "Please check your connection and try again.";
+    }
 
-        startDefense.disabled = false;
 
-        startDefense.style.opacity = "1";
+    currentUser = user;
 
-        started = false;
 
-      }
-
-    }, 1200);
-
-  }, 1000);
+    await checkPreviousAnswer();
 
 });
