@@ -1,207 +1,401 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc
+doc,
+setDoc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+// ===============================
+// ELEMENTS
+// ===============================
 
-const startBtn = document.getElementById("startBtn");
-const rewindBtn = document.getElementById("rewindBtn");
-const timer = document.getElementById("timer");
-const timelineFill = document.getElementById("timelineFill");
+const options = document.getElementById("options");
 const statusText = document.getElementById("statusText");
+const nextBtn = document.getElementById("nextBtn");
+const progressFill = document.querySelector(".fill");
+
+// ===============================
+// MISSION SETTINGS
+// ===============================
+
+const category = "leadership";
+const questionNumber = 15;
+const questionId = "leadership_q15";
+
+const correctAnswer = "prioritize";
+
+const scores = {
+prioritize: 5,
+rush: 2,
+alone: 3,
+equal: 1
+};
+
+// ===============================
+// STATE
+// ===============================
 
 let currentUser = null;
-let missionStarted = false;
+let selectedAnswer = null;
+let selectedScore = null;
 let missionCompleted = false;
-let timeRemaining = 20;
-let timerInterval = null;
+let answerSaved = false;
 
+// Continue disabled initially
 
-// Authentication
-onAuthStateChanged(auth, (user) => {
+if (nextBtn) {
+nextBtn.disabled = true;
+}
 
-  if (user) {
+// ===============================
+// AUTHENTICATION
+// ===============================
 
-    currentUser = user;
+onAuthStateChanged(auth, async (user) => {
 
-  } else {
+if (user) {
 
-    alert("Please login first.");
-    window.location.href = "Login.html";
+currentUser = user;
 
-  }
+await checkPreviousAnswer();
+
+} else {
+
+alert("Please login first.");
+window.location.href = "Login.html";
+
+}
 
 });
 
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
 
-// Start Mission
-startBtn.addEventListener("click", () => {
+async function checkPreviousAnswer() {
 
-  if (!currentUser) {
+if (!currentUser) return;
 
-    alert("Please login first.");
-    window.location.href = "Login.html";
+try {
 
-    return;
+const missionRef = doc(
+  db,
+  "users",
+  currentUser.uid,
+  "missions",
+  questionId
+);
 
-  }
+const missionSnap = await getDoc(missionRef);
 
-  if (missionStarted || missionCompleted) {
+if (missionSnap.exists()) {
 
-    return;
+  const data = missionSnap.data();
 
-  }
+  if (data.completed === true) {
 
-  missionStarted = true;
+    selectedAnswer = data.answer;
+    selectedScore = data.score;
 
-  startBtn.disabled = true;
-  startBtn.style.opacity = "0.6";
+    missionCompleted = true;
+    answerSaved = true;
 
-  statusText.textContent =
-    "⚠ Timeline active... Choose your rewind wisely.";
+    lockOptions();
 
-  timerInterval = setInterval(() => {
-
-    if (timeRemaining > 0) {
-
-      timeRemaining--;
-
-      timer.textContent = timeRemaining;
-
-      const percentage =
-        (timeRemaining / 20) * 100;
-
-      timelineFill.style.width =
-        percentage + "%";
-
-    } else {
-
-      clearInterval(timerInterval);
-
-      statusText.textContent =
-        "⏰ Time expired. Timeline can no longer be changed.";
-
-      completeMission();
-
+    if (progressFill) {
+      progressFill.style.width = "100%";
     }
 
-  }, 1000);
+    if (statusText) {
+      statusText.textContent =
+        "Mission 15 already completed. You can continue.";
+    }
 
-});
-
-
-// Rewind 5 seconds
-rewindBtn.addEventListener("click", () => {
-
-  if (!missionStarted || missionCompleted) {
-
-    return;
-
-  }
-
-  if (timeRemaining <= 0) {
-
-    return;
-
-  }
-
-  timeRemaining = Math.max(
-    0,
-    timeRemaining - 5
-  );
-
-  timer.textContent = timeRemaining;
-
-  const percentage =
-    (timeRemaining / 20) * 100;
-
-  timelineFill.style.width =
-    percentage + "%";
-
-  statusText.textContent =
-    "⏪ Timeline rewound by 5 seconds.";
-
-  if (timeRemaining === 0) {
-
-    clearInterval(timerInterval);
-
-    completeMission();
-
-  }
-
-});
-
-
-// Save Mission 15
-async function completeMission() {
-
-  if (missionCompleted) {
-
-    return;
-
-  }
-
-  missionCompleted = true;
-
-  clearInterval(timerInterval);
-
-  startBtn.disabled = true;
-  rewindBtn.disabled = true;
-
-  statusText.textContent =
-    "🤖 Recording your Time Fracture decision...";
-
-
-  try {
-
-    await setDoc(
-      doc(
-        db,
-        "users",
-        currentUser.uid,
-        "missions",
-        "mission15"
-      ),
-      {
-        missionNumber: 15,
-        answer: "Time Fracture Mission Completed",
-        completed: true,
-        completedAt: new Date().toISOString()
-      }
-    );
-
-
-    statusText.textContent =
-      "✅ Mission 15 completed successfully!";
-
-    setTimeout(() => {
-
-      window.location.href = "Lead16.html";
-
-    }, 1000);
-
-
-  } catch (error) {
-
-    console.error(
-      "Lead15 Firebase Error:",
-      error
-    );
-
-    missionCompleted = false;
-
-    startBtn.disabled = false;
-    rewindBtn.disabled = false;
-
-    statusText.textContent =
-      "❌ Could not save mission progress. Please try again.";
+    if (nextBtn) {
+      nextBtn.disabled = false;
+    }
 
   }
 
 }
+
+} catch (error) {
+
+console.error(
+  "Lead Mission 15 restore error:",
+  error
+);
+
+}
+
+}
+
+// ===============================
+// OPTION SELECTION
+// ===============================
+
+if (options) {
+
+options.addEventListener("click", async (event) => {
+
+const option = event.target.closest(".option");
+
+if (!option) return;
+
+if (missionCompleted || answerSaved) {
+  return;
+}
+
+
+selectedAnswer = option.dataset.answer;
+
+selectedScore = scores[selectedAnswer] || 0;
+
+const isCorrect =
+  selectedAnswer === correctAnswer;
+
+
+// ===============================
+// LOCK OPTIONS
+// ===============================
+
+const allOptions =
+  options.querySelectorAll(".option");
+
+allOptions.forEach((item) => {
+
+  item.style.pointerEvents = "none";
+  item.style.opacity = "0.6";
+
+});
+
+option.style.opacity = "1";
+
+
+// ===============================
+// SHOW RESULT
+// ===============================
+
+if (isCorrect) {
+
+  option.style.border =
+    "2px solid #00ff88";
+
+  if (statusText) {
+
+    statusText.textContent =
+      "Correct! Strong leaders prioritize critical problems and use the team's strengths effectively.";
+
+  }
+
+} else {
+
+  option.style.border =
+    "2px solid #ff5555";
+
+
+  const correctOption =
+    options.querySelector(
+      `[data-answer="${correctAnswer}"]`
+    );
+
+  if (correctOption) {
+
+    correctOption.style.opacity = "1";
+    correctOption.style.border =
+      "2px solid #00ff88";
+
+  }
+
+
+  if (statusText) {
+
+    statusText.textContent =
+      "Not the best choice. Effective leaders prioritize the most important problems instead of rushing or handling everything alone.";
+
+  }
+
+}
+
+
+// ===============================
+// PROGRESS
+// ===============================
+
+if (progressFill) {
+
+  progressFill.style.width = "100%";
+
+}
+
+
+// ===============================
+// SAVE ANSWER
+// ===============================
+
+await saveAnswer();
+
+});
+
+}
+
+// ===============================
+// SAVE ANSWER TO FIRESTORE
+// ===============================
+
+async function saveAnswer() {
+
+if (!currentUser) return;
+
+if (!selectedAnswer) return;
+
+if (answerSaved) return;
+
+try {
+
+const missionRef = doc(
+  db,
+  "users",
+  currentUser.uid,
+  "missions",
+  questionId
+);
+
+
+await setDoc(
+  missionRef,
+  {
+    category: category,
+    questionNumber: questionNumber,
+    answer: selectedAnswer,
+    score: selectedScore,
+    correct: selectedAnswer === correctAnswer,
+    completed: true,
+    completedAt: new Date().toISOString()
+  }
+);
+
+
+answerSaved = true;
+missionCompleted = true;
+
+
+if (nextBtn) {
+  nextBtn.disabled = false;
+}
+
+} catch (error) {
+
+console.error(
+  "Lead Mission 15 Firebase Error:",
+  error
+);
+
+
+answerSaved = false;
+missionCompleted = false;
+
+
+if (statusText) {
+
+  statusText.textContent =
+    "❌ Unable to save your answer. Please try again.";
+
+}
+
+}
+
+}
+
+// ===============================
+// LOCK PREVIOUSLY ANSWERED OPTIONS
+// ===============================
+
+function lockOptions() {
+
+if (!options) return;
+
+const allOptions =
+options.querySelectorAll(".option");
+
+allOptions.forEach((option) => {
+
+option.style.pointerEvents = "none";
+
+
+if (
+  option.dataset.answer === selectedAnswer
+) {
+
+  option.style.opacity = "1";
+
+
+  if (selectedAnswer === correctAnswer) {
+
+    option.style.border =
+      "2px solid #00ff88";
+
+  } else {
+
+    option.style.border =
+      "2px solid #ff5555";
+
+
+    const correctOption =
+      options.querySelector(
+        `[data-answer="${correctAnswer}"]`
+      );
+
+
+    if (correctOption) {
+
+      correctOption.style.opacity = "1";
+      correctOption.style.border =
+        "2px solid #00ff88";
+
+    }
+
+  }
+
+} else {
+
+  option.style.opacity = "0.6";
+
+}
+
+});
+
+}
+
+// ===============================
+// CONTINUE TO MISSION 16
+// ===============================
+
+if (nextBtn) {
+
+nextBtn.addEventListener("click", () => {
+
+if (!answerSaved) {
+
+  if (statusText) {
+
+    statusText.textContent =
+      "Please select an answer first.";
+
+  }
+
+  return;
+
+}
+
+
+window.location.href = "Lead16.html";
+
+});
+
+                         }
