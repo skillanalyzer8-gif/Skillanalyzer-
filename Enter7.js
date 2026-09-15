@@ -1,207 +1,187 @@
-import { auth, db } from "./firebase.js";
+<!DOCTYPE html>
+<html lang="en">
 
-import {
-  doc,
-  setDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<head>
 
-import {
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+<meta charset="UTF-8">
 
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-const startHiring = document.getElementById("startHiring");
-const officeText = document.getElementById("officeText");
-const statusText = document.getElementById("statusText");
+<title>Entrepreneurship Mission 7</title>
 
-let currentUser = null;
-let hiringStarted = false;
-let missionCompleted = false;
+<link rel="stylesheet"
+href="Enter7.css">
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+rel="stylesheet">
 
-// ===============================
-// CHECK LOGIN
-// ===============================
+</head>
 
-onAuthStateChanged(auth, function (user) {
+<body>
 
-  if (user) {
+<!-- Background -->
 
-    currentUser = user;
+<div class="background">
 
-  } else {
+    <div class="officeGrid"></div>
 
-    alert("Please login first.");
+    <div class="officeGlow"></div>
 
-    window.location.href = "Login.html";
+    <div class="particles"></div>
 
-  }
+</div>
 
-});
 
+<div class="container">
 
-// ===============================
-// START HIRING
-// ===============================
+    <!-- Header -->
 
-startHiring.addEventListener("click", function () {
+    <div class="header">
 
-  // ===============================
-  // CONTINUE TO MISSION 8
-  // ===============================
+        <h1>
+            👥 HIRING YOUR FIRST TEAM
+        </h1>
 
-  if (startHiring.textContent.includes("Continue")) {
+        <p>
+            Entrepreneurship Mission 7 / 20
+        </p>
 
-    if (!missionCompleted) {
+    </div>
 
-      alert("Please wait until Mission 7 is saved.");
 
-      return;
+    <!-- AI Brief -->
 
-    }
+    <div class="briefing">
 
-    window.location.href = "Enter8.html";
+        <h2>
+            🤖 AI Startup Mentor
+        </h2>
 
-    return;
+        <p>
 
-  }
+            Congratulations!
 
+            Your startup has received funding.
 
-  if (hiringStarted) {
-    return;
-  }
+            You can't build everything alone anymore.
 
-  hiringStarted = true;
+            Your first hires should fill important
+            skill gaps and help the startup move forward.
 
-  startHiring.disabled = true;
-  startHiring.style.opacity = "0.6";
+            Choose the best first team member.
 
+        </p>
 
-  // ===============================
-  // HIRING STAGE 1
-  // ===============================
+    </div>
 
-  statusText.textContent =
-    "🔎 Searching for the right talent...";
 
-  officeText.textContent =
-    "Reviewing potential team members...";
+    <!-- Mission -->
 
+    <div class="officeArea">
 
-  // ===============================
-  // HIRING STAGE 2
-  // ===============================
+        <div class="teamIcon">
+            🏢
+        </div>
 
-  setTimeout(function () {
+        <h2>
+            Startup Office
+        </h2>
 
-    statusText.textContent =
-      "👥 Evaluating candidate strengths...";
+        <p id="officeText">
 
-    officeText.textContent =
-      "Matching skills with startup needs...";
+            💡 Which candidate should you hire first?
 
-  }, 1500);
+        </p>
 
+    </div>
 
-  // ===============================
-  // HIRING STAGE 3
-  // ===============================
 
-  setTimeout(function () {
+    <!-- Options -->
 
-    statusText.textContent =
-      "⭐ Strong team members identified!";
+    <div class="options" id="options">
 
-    officeText.textContent =
-      "Your first team is ready to join the startup.";
+        <button class="option"
+                data-answer="technical">
 
-  }, 3000);
+            💻 A skilled developer who can build
+            and improve the product
 
+        </button>
 
-  // ===============================
-  // HIRING COMPLETE
-  // ===============================
 
-  setTimeout(async function () {
+        <button class="option"
+                data-answer="friend">
 
-    officeText.textContent =
-      "🚀 Your startup team has been formed.";
+            🧑‍🤝‍🧑 Your best friend, even though
+            they lack the required skills
 
-    statusText.textContent =
-      "🤖 AI has evaluated your hiring decision.";
+        </button>
 
 
-    // ===============================
-    // CHECK USER SESSION
-    // ===============================
+        <button class="option"
+                data-answer="famous">
 
-    if (!currentUser) {
+            ⭐ A famous person who has no relevant
+            startup skills
 
-      statusText.textContent =
-        "❌ Login session not found.";
+        </button>
 
-      alert("Please login again.");
 
-      return;
+        <button class="option"
+                data-answer="largeTeam">
 
-    }
+            👥 Hire many people immediately without
+            identifying skill gaps
 
+        </button>
 
-    // ===============================
-    // SAVE MISSION 7 TO FIREBASE
-    // ===============================
+    </div>
 
-    try {
 
-      await setDoc(
-        doc(
-          db,
-          "users",
-          currentUser.uid,
-          "missions",
-          "mission7"
-        ),
-        {
-          missionNumber: 7,
-          answer: "First Startup Team Hired",
-          completed: true,
-          completedAt: new Date().toISOString()
-        }
-      );
+    <!-- Status -->
 
+    <div class="statusBox">
 
-      missionCompleted = true;
+        <h3>
+            Team Status
+        </h3>
 
+        <p id="statusText">
 
-      statusText.textContent =
-        "✅ Mission 7 Completed & Saved Successfully";
+            Choose your first team member.
 
+        </p>
 
-      // ===============================
-      // ENABLE CONTINUE
-      // ===============================
+    </div>
 
-      startHiring.textContent =
-        "Continue to Mission 8 →";
 
-      startHiring.disabled = false;
-      startHiring.style.opacity = "1";
+    <!-- Progress -->
 
+    <div class="progress">
 
-    } catch (error) {
+        <div class="fill"></div>
 
-      console.error("Firebase Error:", error);
+    </div>
 
-      statusText.textContent =
-        "❌ Could not save mission. Please try again.";
 
-      startHiring.disabled = false;
-      startHiring.style.opacity = "1";
+    <!-- Controls -->
 
-      hiringStarted = false;
+    <div class="controls">
 
-    }
+        <button id="nextBtn" disabled>
 
-  }, 4500);
+            ➡️ CONTINUE TO MISSION 8
 
-});
+        </button>
+
+    </div>
+
+</div>
+
+
+<script type="module" src="Enter7.js"></script>
+
+</body>
+
+</html>
