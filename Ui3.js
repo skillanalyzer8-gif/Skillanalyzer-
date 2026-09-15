@@ -2,6 +2,7 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
+    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -14,35 +15,91 @@ import {
 // DOM ELEMENTS
 // ========================================
 
-const challengeText =
-    document.getElementById("challengeText");
+const options =
+    document.querySelectorAll(".option");
 
 const statusText =
     document.getElementById("statusText");
 
-const startChallenge =
-    document.getElementById("startChallenge");
+const fill =
+    document.querySelector(".fill");
 
+const nextBtn =
+    document.getElementById("nextBtn");
+
+
+// ========================================
+// MISSION INFORMATION
+// ========================================
+
+const category = "uiux";
+
+const questionNumber = 3;
+
+const questionId =
+    "uiux_q3";
+
+
+// ========================================
+// CORRECT ANSWER
+// ========================================
+
+const correctAnswer =
+    "inclusive";
+
+
+// ========================================
+// SCORES
+// ========================================
+
+const scores = {
+
+    inclusive: 5,
+
+    tiny: 1,
+
+    color: 2,
+
+    complex: 3
+
+};
+
+
+// ========================================
+// STATE
+// ========================================
 
 let currentUser = null;
+
+let selectedAnswer = null;
+
+let selectedScore = 0;
+
 let missionCompleted = false;
+
+let answerSaved = false;
 
 
 // ========================================
 // AUTHENTICATION
 // ========================================
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
 
     if (user) {
 
         currentUser = user;
 
-    } else {
+        await checkPreviousAnswer();
+
+    }
+
+    else {
 
         alert("Please login first.");
 
-        window.location.href = "Login.html";
+        window.location.href =
+            "Login.html";
 
     }
 
@@ -50,53 +107,229 @@ onAuthStateChanged(auth, (user) => {
 
 
 // ========================================
-// START ACCESSIBILITY CHALLENGE
+// CHECK PREVIOUS ANSWER
 // ========================================
 
-startChallenge.addEventListener("click", async () => {
-
-    // Check login
-    if (!currentUser) {
-
-        alert("Please login first.");
-
-        window.location.href = "Login.html";
-
-        return;
-
-    }
-
-
-    // Prevent duplicate completion
-    if (missionCompleted) {
-
-        return;
-
-    }
-
-
-    // Disable button
-    startChallenge.disabled = true;
-
-    startChallenge.style.opacity = "0.6";
-
-
-    // ========================================
-    // START CHALLENGE
-    // ========================================
-
-    challengeText.textContent =
-        "Choose a design that is easy to read, easy to understand, and usable by children, adults, and elderly users.";
-
-    statusText.textContent =
-        "♿ AI Design Mentor is analyzing accessibility requirements...";
-
+async function checkPreviousAnswer() {
 
     try {
 
-        // ========================================
-        // SAVE MISSION 3
-        // ========================================
+        const missionRef =
+            doc(
+                db,
+                "users",
+                currentUser.uid,
+                "missions",
+                questionId
+            );
+
+
+        const missionSnap =
+            await getDoc(missionRef);
+
+
+        if (missionSnap.exists()) {
+
+            const data =
+                missionSnap.data();
+
+
+            if (data.completed === true) {
+
+                selectedAnswer =
+                    data.answer;
+
+                selectedScore =
+                    Number(data.score) || 0;
+
+                missionCompleted = true;
+
+                answerSaved = true;
+
+
+                lockOptions(
+                    selectedAnswer,
+                    data.correct
+                );
+
+
+                statusText.textContent =
+                    data.correct
+                        ? "✅ Correct answer already completed."
+                        : "⚠️ Mission already completed. You can continue.";
+
+
+                fill.style.width =
+                    "100%";
+
+
+                nextBtn.disabled = false;
+
+            }
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "UI3 Previous Answer Error:",
+            error
+        );
+
+    }
+
+}
+
+
+// ========================================
+// OPTION CLICK
+// ========================================
+
+options.forEach((option) => {
+
+    option.addEventListener("click", async () => {
+
+        if (!currentUser) {
+
+            alert("Please login first.");
+
+            return;
+
+        }
+
+
+        if (missionCompleted) {
+
+            return;
+
+        }
+
+
+        if (answerSaved) {
+
+            return;
+
+        }
+
+
+        selectedAnswer =
+            option.dataset.answer;
+
+
+        selectedScore =
+            scores[selectedAnswer] || 0;
+
+
+        const isCorrect =
+            selectedAnswer === correctAnswer;
+
+
+        // Lock options
+        lockOptions(
+            selectedAnswer,
+            isCorrect
+        );
+
+
+        // Review answer
+        if (isCorrect) {
+
+            statusText.textContent =
+                "✅ Excellent! Inclusive design considers readability, contrast, clear labels, touch targets, and assistive technologies.";
+
+        }
+
+        else {
+
+            statusText.textContent =
+                "❌ Good attempt. Accessibility means designing the interface so users with different abilities can use it effectively.";
+
+        }
+
+
+        // Complete progress
+        fill.style.width =
+            "100%";
+
+
+        // Save answer
+        const saved =
+            await saveAnswer(isCorrect);
+
+
+        if (saved) {
+
+            answerSaved = true;
+
+            missionCompleted = true;
+
+            nextBtn.disabled = false;
+
+        }
+
+    });
+
+});
+
+
+// ========================================
+// LOCK OPTIONS
+// ========================================
+
+function lockOptions(
+    selected,
+    isCorrect
+) {
+
+    options.forEach((option) => {
+
+        option.disabled = true;
+
+
+        if (
+            option.dataset.answer ===
+            selected
+        ) {
+
+            option.style.border =
+                isCorrect
+                    ? "2px solid #00ff88"
+                    : "2px solid #ff4d4d";
+
+        }
+
+
+        if (
+            option.dataset.answer ===
+            correctAnswer
+        ) {
+
+            option.style.opacity =
+                "1";
+
+        }
+
+        else {
+
+            option.style.opacity =
+                "0.55";
+
+        }
+
+    });
+
+}
+
+
+// ========================================
+// SAVE ANSWER
+// ========================================
+
+async function saveAnswer(isCorrect) {
+
+    try {
 
         await setDoc(
             doc(
@@ -104,20 +337,27 @@ startChallenge.addEventListener("click", async () => {
                 "users",
                 currentUser.uid,
                 "missions",
-                "mission3"
+                questionId
             ),
             {
 
-                missionNumber: 3,
+                category:
+                    category,
+
+                questionNumber:
+                    questionNumber,
 
                 answer:
-                    "Use clear text, readable font sizes, strong contrast, simple navigation, and accessible controls.",
+                    selectedAnswer,
 
-                score: 100,
+                score:
+                    selectedScore,
 
-                category: "Accessibility",
+                correct:
+                    isCorrect,
 
-                completed: true,
+                completed:
+                    true,
 
                 completedAt:
                     new Date().toISOString()
@@ -126,50 +366,53 @@ startChallenge.addEventListener("click", async () => {
         );
 
 
-        // ========================================
-        // FINAL RESULT
-        // ========================================
+        return true;
 
-        challengeText.textContent =
-            "Excellent! Accessible design should be clear, readable, simple, and usable by people with different needs.";
+    }
 
-        statusText.textContent =
-            "✅ Mission 3 completed! Accessibility comes first.";
-
-
-        missionCompleted = true;
-
-
-        // Update button
-        startChallenge.textContent =
-            "MISSION COMPLETED ✓";
-
-        startChallenge.disabled = true;
-
-        startChallenge.style.opacity = "0.7";
-
-
-    } catch (error) {
-
-        // ========================================
-        // FIREBASE ERROR
-        // ========================================
+    catch (error) {
 
         console.error(
-            "UI3 Firebase Error:",
+            "UI3 Firebase Save Error:",
             error
         );
 
 
-        // Allow retry
-        startChallenge.disabled = false;
-
-        startChallenge.style.opacity = "1";
-
-
         statusText.textContent =
-            "❌ Could not save your mission. Please try again.";
+            "❌ Could not save your answer. Please try again.";
+
+
+        options.forEach((option) => {
+
+            option.disabled = false;
+
+        });
+
+
+        return false;
 
     }
 
-});
+}
+
+
+// ========================================
+// CONTINUE TO MISSION 4
+// ========================================
+
+nextBtn.addEventListener(
+    "click",
+    () => {
+
+        if (!answerSaved) {
+
+            return;
+
+        }
+
+
+        window.location.href =
+            "Ui4.html";
+
+    }
+);
