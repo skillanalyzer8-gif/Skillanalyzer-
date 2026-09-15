@@ -21,183 +21,212 @@ rel="stylesheet">
 
 <div class="background">
 
-<div class="sky"></div>
+    <div class="sky"></div>
 
-<div class="clouds"></div>
+    <div class="clouds"></div>
 
-<div class="sun"></div>
+    <div class="sun"></div>
 
-<div class="birds"></div>
+    <div class="birds"></div>
 
 </div>
+
 
 <div class="container">
 
-<!-- Header -->
+    <!-- Header -->
 
-<div class="header">
+    <div class="header">
 
-<h1>🦋 BUTTERFLY EFFECT</h1>
+        <h1>🦋 BUTTERFLY EFFECT</h1>
 
-<p>Leadership Mission 17 / 20</p>
+        <p>Leadership Mission 17 / 20</p>
+
+    </div>
+
+
+    <!-- Story -->
+
+    <div class="briefing">
+
+        <h2>🌍 AI Ecosystem Simulation</h2>
+
+        <p>
+
+            Every leader makes small decisions.
+
+            Small decisions can create huge consequences.
+
+            Your team is managing a community where nature,
+            economy, and people's well-being are connected.
+
+            The AI will analyze how you make decisions
+            when different priorities compete.
+
+        </p>
+
+    </div>
+
+
+    <!-- Ecosystem Health -->
+
+    <div class="healthBox">
+
+        <h3>Ecosystem Health</h3>
+
+        <div class="healthBar">
+
+            <div id="healthFill"></div>
+
+        </div>
+
+        <p id="healthText">
+            50%
+        </p>
+
+    </div>
+
+
+    <!-- Statistics -->
+
+    <div class="stats">
+
+        <div class="stat">
+
+            🌳
+
+            <h4>Nature</h4>
+
+            <p id="natureValue">50</p>
+
+        </div>
+
+
+        <div class="stat">
+
+            💰
+
+            <h4>Economy</h4>
+
+            <p id="economyValue">50</p>
+
+        </div>
+
+
+        <div class="stat">
+
+            😊
+
+            <h4>Happiness</h4>
+
+            <p id="happyValue">50</p>
+
+        </div>
+
+
+        <div class="stat">
+
+            💧
+
+            <h4>Water</h4>
+
+            <p id="waterValue">50</p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Question -->
+
+    <div class="questionBox">
+
+        <h2>
+            Your community must choose one major action.
+            What should a strong leader consider FIRST?
+        </h2>
+
+
+        <div id="options">
+
+            <button class="option"
+                data-answer="profit">
+
+                A. Choose the option that produces the
+                highest immediate financial profit.
+
+            </button>
+
+
+            <button class="option"
+                data-answer="speed">
+
+                B. Choose the fastest option without
+                considering its long-term effects.
+
+            </button>
+
+
+            <button class="option"
+                data-answer="balance">
+
+                C. Consider the impact on people, the
+                environment, and the economy before deciding.
+
+            </button>
+
+
+            <button class="option"
+                data-answer="popular">
+
+                D. Choose whatever option is currently
+                the most popular with the public.
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- AI Monitor -->
+
+    <div class="status">
+
+        <h3>AI Analysis</h3>
+
+        <p id="statusText">
+
+            Waiting for your leadership decision...
+
+        </p>
+
+    </div>
+
+
+    <!-- Progress -->
+
+    <div class="progress">
+
+        <div class="fill"></div>
+
+    </div>
+
+
+    <!-- Continue -->
+
+    <div class="controls">
+
+        <button id="nextBtn" disabled>
+
+            CONTINUE TO MISSION 18
+
+        </button>
+
+    </div>
 
 </div>
 
-<!-- Story -->
-
-<div class="briefing">
-
-<h2>🌍 AI Ecosystem Simulation</h2>
-
-<p>
-
-Every leader makes small decisions.
-
-Small decisions create huge consequences.
-
-You have only <b>5 Turns</b>.
-
-Balance nature, economy and people.
-
-There is no perfect answer.
-
-The AI will analyze how you think.
-
-</p>
-
-</div>
-
-<!-- Ecosystem Health -->
-
-<div class="healthBox">
-
-<h3>Ecosystem Health</h3>
-
-<div class="healthBar">
-
-<div id="healthFill"></div>
-
-</div>
-
-<p id="healthText">
-
-50%
-
-</p>
-
-</div>
-
-<!-- Statistics -->
-
-<div class="stats">
-
-<div class="stat">
-
-🌳
-
-<h4>Nature</h4>
-
-<p id="natureValue">50</p>
-
-</div>
-
-<div class="stat">
-
-💰
-
-<h4>Economy</h4>
-
-<p id="economyValue">50</p>
-
-</div>
-
-<div class="stat">
-
-😊
-
-<h4>Happiness</h4>
-
-<p id="happyValue">50</p>
-
-</div>
-
-<div class="stat">
-
-💧
-
-<h4>Water</h4>
-
-<p id="waterValue">50</p>
-
-</div>
-
-</div>
-
-<!-- Turn Counter -->
-
-<div class="turnBox">
-
-Turns Remaining
-
-<h2 id="turns">
-
-5
-
-</h2>
-
-</div>
-
-<!-- Action Buttons -->
-
-<div class="actions">
-
-<button id="forestBtn">
-
-🌳 Plant Forest
-
-</button>
-
-<button id="riverBtn">
-
-🌊 Clean River
-
-</button>
-
-<button id="pollinatorBtn">
-
-🐝 Protect Pollinators
-
-</button>
-
-<button id="wildlifeBtn">
-
-🦌 Protect Wildlife
-
-</button>
-
-<button id="industryBtn">
-
-🏭 Expand Industry
-
-</button>
-
-</div>
-
-<!-- AI Monitor -->
-
-<div class="status">
-
-<h3>AI Analysis</h3>
-
-<p id="statusText">
-
-Waiting for your first decision...
-
-</p>
-
-</div>
-
-</div>
 
 <script type="module" src="Lead17.js"></script>
 
