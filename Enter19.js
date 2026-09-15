@@ -1,48 +1,198 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc
+doc,
+setDoc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 
 // ===============================
 // GET HTML ELEMENTS
 // ===============================
 
-const startFuture = document.getElementById("startFuture");
-const futureText = document.getElementById("futureText");
+const options = document.querySelectorAll(".option");
 const statusText = document.getElementById("statusText");
+const futureText = document.getElementById("futureText");
+const nextBtn = document.getElementById("nextBtn");
 
+// ===============================
+// MISSION DETAILS
+// ===============================
+
+const category = "entrepreneurship";
+const questionNumber = 19;
+const questionId = "entrepreneurship_q19";
 
 // ===============================
 // VARIABLES
 // ===============================
 
 let currentUser = null;
-let missionCompleted = false;
-let started = false;
+let selectedAnswer = null;
+let selectedScore = 0;
+let answerLocked = false;
+let answerSaved = false;
 
+// ===============================
+// ANSWER SCORES
+// ===============================
+
+const scores = {
+
+sustainable: 5,
+
+luxury: 2,
+
+trend: 3,
+
+profit: 1
+
+};
+
+// ===============================
+// CORRECT ANSWER
+// ===============================
+
+const correctAnswer = "sustainable";
 
 // ===============================
 // CHECK LOGIN
 // ===============================
 
-onAuthStateChanged(auth, function (user) {
+onAuthStateChanged(auth, async function (user) {
 
-  if (user) {
+if (user) {
 
-    currentUser = user;
+currentUser = user;
+
+await checkPreviousAnswer();
+
+} else {
+
+alert("Please login first.");
+
+window.location.href = "Login.html";
+
+}
+
+});
+
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
+
+async function checkPreviousAnswer() {
+
+try {
+
+const missionRef = doc(
+  db,
+  "users",
+  currentUser.uid,
+  "missions",
+  questionId
+);
+
+const missionSnap = await getDoc(missionRef);
+
+
+if (missionSnap.exists()) {
+
+  const data = missionSnap.data();
+
+
+  if (data.completed === true) {
+
+    selectedAnswer = data.answer;
+
+    selectedScore = data.score;
+
+    answerLocked = true;
+
+    answerSaved = true;
+
+
+    options.forEach(function (option) {
+
+      option.disabled = true;
+
+      if (option.dataset.answer === selectedAnswer) {
+
+        option.style.border = "2px solid #00ff88";
+
+      } else {
+
+        option.style.opacity = "0.45";
+
+      }
+
+    });
+
+
+    futureText.textContent =
+      "🌍 Your global future decision has already been recorded.";
+
+    statusText.textContent =
+      "✅ Mission 19 already completed.";
+
+    nextBtn.disabled = false;
+
+  }
+
+}
+
+} catch (error) {
+
+console.error(
+  "Error checking Mission 19:",
+  error
+);
+
+}
+
+}
+
+// ===============================
+// SELECT ANSWER
+// ===============================
+
+options.forEach(function (option) {
+
+option.addEventListener("click", function () {
+
+if (answerLocked) {
+
+  return;
+
+}
+
+
+selectedAnswer = option.dataset.answer;
+
+selectedScore = scores[selectedAnswer];
+
+answerLocked = true;
+
+
+// ===============================
+// LOCK ALL OPTIONS
+// ===============================
+
+options.forEach(function (item) {
+
+  item.disabled = true;
+
+  if (item.dataset.answer === selectedAnswer) {
+
+    item.style.border = "2px solid #00ff88";
 
   } else {
 
-    alert("Please login first.");
-
-    window.location.href = "Login.html";
+    item.style.opacity = "0.45";
 
   }
 
@@ -50,161 +200,140 @@ onAuthStateChanged(auth, function (user) {
 
 
 // ===============================
-// START FUTURE SUMMIT
+// SHOW RESULT
 // ===============================
 
-startFuture.addEventListener("click", function () {
-
-  // If Mission 19 is already completed,
-  // continue to Mission 20
-
-  if (missionCompleted) {
-
-    window.location.href = "Enter20.html";
-
-    return;
-
-  }
-
-
-  // Prevent double clicks
-
-  if (started) {
-
-    return;
-
-  }
-
-  started = true;
-
-  startFuture.disabled = true;
-
-  startFuture.style.opacity = "0.5";
-
-
-  // ===============================
-  // STEP 1 — SUMMIT BEGINS
-  // ===============================
-
-  futureText.textContent =
-    "🌍 Gathering governments, scientists and global leaders...";
+if (selectedAnswer === correctAnswer) {
 
   statusText.textContent =
-    "🔄 Preparing the Future Council...";
+    "✅ Excellent vision! You selected a sustainable project with long-term benefits for humanity.";
+
+  futureText.textContent =
+    "🌱 Strong entrepreneurial thinking: consider sustainability, global impact and long-term value.";
+
+} else {
+
+  statusText.textContent =
+    "⚠️ The strongest choice is the sustainable project with meaningful long-term benefits for humanity.";
+
+  futureText.textContent =
+    "💡 Good attempt. Strong entrepreneurs consider long-term impact instead of popularity or short-term profit.";
+
+}
 
 
-  setTimeout(function () {
+// ===============================
+// SAVE ANSWER
+// ===============================
 
-    // ===============================
-    // STEP 2 — FUTURE VISION
-    // ===============================
+setTimeout(function () {
 
-    futureText.textContent =
-      "🤖 AI Global Mentor is evaluating the future project opportunities...";
+  saveAnswer();
 
-    statusText.textContent =
-      "🚀 Analyzing global impact and long-term potential...";
+}, 1200);
 
+});
 
-    setTimeout(async function () {
+});
 
-      // ===============================
-      // CHECK LOGIN
-      // ===============================
+// ===============================
+// SAVE ANSWER TO FIRESTORE
+// ===============================
 
-      if (!currentUser) {
+async function saveAnswer() {
 
-        futureText.textContent =
-          "❌ Login session not found.";
+if (!currentUser) {
 
-        statusText.textContent =
-          "Please login again.";
+alert("Please login again.");
 
-        alert("Please login again.");
+window.location.href = "Login.html";
 
-        window.location.href = "Login.html";
+return;
 
-        return;
+}
 
-      }
+try {
 
+await setDoc(
 
-      // ===============================
-      // SAVE MISSION 19
-      // ===============================
+  doc(
+    db,
+    "users",
+    currentUser.uid,
+    "missions",
+    questionId
+  ),
 
-      try {
+  {
 
-        await setDoc(
+    category: category,
 
-          doc(
-            db,
-            "users",
-            currentUser.uid,
-            "missions",
-            "mission19"
-          ),
+    questionNumber: questionNumber,
 
-          {
+    answer: selectedAnswer,
 
-            missionNumber: 19,
+    score: selectedScore,
 
-            answer: "Global Future Summit Completed",
+    correct: selectedAnswer === correctAnswer,
 
-            completed: true,
+    completed: true,
 
-            completedAt: new Date().toISOString()
+    completedAt: new Date().toISOString()
 
-          }
+  }
 
-        );
+);
 
 
-        // ===============================
-        // SUCCESS
-        // ===============================
+answerSaved = true;
 
-        missionCompleted = true;
+statusText.textContent =
+  "✅ Answer saved successfully. Continue to Mission 20.";
 
-        futureText.textContent =
-          "✅ Global Future Summit completed successfully.";
+nextBtn.disabled = false;
 
-        statusText.textContent =
-          "🌍 Global Future Status: Summit Completed";
+} catch (error) {
 
-
-        startFuture.disabled = false;
-
-        startFuture.style.opacity = "1";
-
-        startFuture.textContent =
-          "➡ CONTINUE TO MISSION 20";
+console.error(
+  "Mission 19 Firebase Error:",
+  error
+);
 
 
-      } catch (error) {
+statusText.textContent =
+  "❌ Unable to save your answer. Please try again.";
 
-        console.error(
-          "Mission 19 Firebase Error:",
-          error
-        );
+answerLocked = false;
 
-        futureText.textContent =
-          "❌ Unable to save mission.";
-
-        statusText.textContent =
-          "Please check your internet connection and try again.";
+answerSaved = false;
 
 
-        startFuture.disabled = false;
+options.forEach(function (option) {
 
-        startFuture.style.opacity = "1";
+  option.disabled = false;
 
-        started = false;
+  option.style.opacity = "1";
 
-      }
+  option.style.border = "";
 
-    }, 1200);
+});
 
-  }, 1000);
+}
+
+}
+
+// ===============================
+// CONTINUE TO MISSION 20
+// ===============================
+
+nextBtn.addEventListener("click", function () {
+
+if (!answerSaved) {
+
+return;
+
+}
+
+window.location.href = "Enter20.html";
 
 });
