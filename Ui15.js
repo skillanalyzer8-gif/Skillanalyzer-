@@ -2,6 +2,7 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
+    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -11,240 +12,213 @@ import {
 
 
 // ===============================
+// MISSION CONFIG
+// ===============================
+
+const category = "uiux";
+const questionNumber = 15;
+const questionId = "uiux_q15";
+
+const correctAnswer = "adaptive";
+
+
+// ===============================
 // DOM ELEMENTS
 // ===============================
 
-const startBtn = document.getElementById("startChallenge");
-const designArea = document.querySelector(".designArea");
-const status = document.getElementById("statusText");
+const options =
+    document.querySelectorAll(".option");
+
+const statusText =
+    document.getElementById("statusText");
+
+const fill =
+    document.getElementById("fill");
+
+const nextBtn =
+    document.getElementById("nextBtn");
+
+
+// ===============================
+// SCORES
+// ===============================
+
+const scores = {
+
+    fixed: 2,
+
+    adaptive: 5,
+
+    horizontal: 3,
+
+    separate: 1
+
+};
+
+
+// ===============================
+// VARIABLES
+// ===============================
 
 let currentUser = null;
+
+let selectedAnswer = "";
+
+let selectedScore = 0;
+
 let missionCompleted = false;
 
-
-// ===============================
-// AUTHENTICATION
-// ===============================
-
-onAuthStateChanged(auth, (user) => {
-
-    if (user) {
-
-        currentUser = user;
-
-    } else {
-
-        alert("Please login first.");
-        window.location.href = "Login.html";
-
-    }
-
-});
+let answerSaved = false;
 
 
 // ===============================
-// START CHALLENGE
+// INITIAL BUTTON STATE
 // ===============================
 
-startBtn.addEventListener("click", () => {
-
-    startBtn.style.display = "none";
-
-    status.innerHTML = "Loading responsive layouts...";
-
-    navigator.vibrate?.([100, 80, 100]);
-
-    setTimeout(showResponsiveLayouts, 1800);
-
-});
+nextBtn.disabled = true;
+nextBtn.style.opacity = "0.5";
 
 
 // ===============================
-// SHOW RESPONSIVE OPTIONS
+// CHECK PREVIOUS ANSWER
 // ===============================
 
-function showResponsiveLayouts() {
+async function checkPreviousAnswer() {
 
-    designArea.innerHTML = `
-
-        <h2>🛒 Choose The Best Responsive Layout</h2>
-
-        <p>
-            Which layout provides the best experience
-            across phones, tablets and desktops?
-        </p>
+    if (!currentUser) return;
 
 
-        <div class="responsiveCard">
+    try {
 
-            <h3>Layout A</h3>
-
-            <p>
-                📱 Fixed desktop-width layout<br>
-                ❌ Content gets cut off on small screens<br>
-                ❌ Requires excessive horizontal scrolling
-            </p>
-
-        </div>
+        const answerRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
 
 
-        <div class="responsiveCard">
-
-            <h3>Layout B</h3>
-
-            <p>
-                📱 Fluid responsive layout<br>
-                ✅ Content adapts to different screen sizes<br>
-                ✅ Flexible images and navigation<br>
-                ✅ Comfortable on mobile, tablet and desktop
-            </p>
-
-        </div>
+        const answerSnap =
+            await getDoc(answerRef);
 
 
-        <div class="responsiveCard">
+        if (
+            answerSnap.exists() &&
+            answerSnap.data().completed === true
+        ) {
 
-            <h3>Layout C</h3>
-
-            <p>
-                🖥 Desktop-focused layout<br>
-                ❌ Small controls on mobile<br>
-                ❌ Difficult touch interaction
-            </p>
-
-        </div>
+            const data =
+                answerSnap.data();
 
 
-        <div class="responsiveCard">
-
-            <h3>Layout D</h3>
-
-            <p>
-                🔄 Separate random layouts<br>
-                ❌ Inconsistent experience between devices<br>
-                ❌ Content hierarchy changes unnecessarily
-            </p>
-
-        </div>
-
-    `;
+            selectedAnswer =
+                data.answer || "";
 
 
-    document
-        .querySelectorAll(".responsiveCard")
-        .forEach((card, index) => {
+            selectedScore =
+                data.score || 0;
 
-            card.addEventListener("click", () => {
 
-                reviewResponsiveLayout(index);
+            missionCompleted = true;
+
+            answerSaved = true;
+
+
+            // Restore selected option
+
+            options.forEach(function (option) {
+
+                if (
+                    option.dataset.answer ===
+                    selectedAnswer
+                ) {
+
+                    option.classList.add("active");
+
+                } else {
+
+                    option.style.opacity =
+                        "0.6";
+
+                }
+
+
+                option.style.pointerEvents =
+                    "none";
 
             });
 
-        });
+
+            // Restore progress
+
+            if (fill) {
+
+                fill.style.width =
+                    `${selectedScore * 20}%`;
+
+            }
+
+
+            // Restore status
+
+            if (
+                selectedAnswer ===
+                correctAnswer
+            ) {
+
+                statusText.textContent =
+                    "✅ Excellent! A responsive layout adapts the interface to different screen sizes while keeping the experience consistent.";
+
+            } else {
+
+                statusText.textContent =
+                    "⚠ You already completed Mission 15.";
+
+            }
+
+
+            nextBtn.disabled = false;
+            nextBtn.style.opacity = "1";
+
+
+            console.log(
+                "UI/UX Mission 15 previous answer restored."
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Error checking Mission 15:",
+            error
+        );
+
+    }
 
 }
 
 
 // ===============================
-// REVIEW RESPONSIVE LAYOUT
+// SAVE MISSION
 // ===============================
 
-async function reviewResponsiveLayout(choice) {
-
-    if (missionCompleted) return;
-
+async function saveMission() {
 
     if (!currentUser) {
 
-        alert("Please login first.");
-        window.location.href = "Login.html";
+        statusText.textContent =
+            "❌ Please login again.";
 
         return;
 
     }
 
 
-    let title = "";
-    let message = "";
-    let adaptability = "";
-    let usability = "";
-    let rating = "";
-    let score = 0;
+    const isCorrect =
+        selectedAnswer === correctAnswer;
 
-
-    // Layout B = Correct answer
-    if (choice === 1) {
-
-        title = "🏆 Excellent Responsive Design Choice";
-
-        message =
-            "Excellent! A responsive layout adapts content, navigation, images, and controls to different screen sizes while maintaining a consistent user experience.";
-
-        adaptability = "99 / 100";
-
-        usability = "97%";
-
-        rating = "★★★★★";
-
-        score = 100;
-
-    } else {
-
-        title = "⚠ Responsive Design Needs Improvement";
-
-        message =
-            "Good responsive design should adapt to different screen sizes without making content difficult to read, navigate, or interact with.";
-
-        adaptability = "73 / 100";
-
-        usability = "79%";
-
-        rating = "★★★☆☆";
-
-        score = 70;
-
-    }
-
-
-    // ===============================
-    // SHOW RESULT
-    // ===============================
-
-    designArea.innerHTML = `
-
-        <h2>${title}</h2>
-
-        <br>
-
-        <p>${message}</p>
-
-        <br>
-
-        <h3>
-            📱 Device Adaptability : ${adaptability}
-        </h3>
-
-        <h3>
-            😊 User Experience : ${usability}
-        </h3>
-
-        <h3>
-            ⭐ Responsive Design Rating : ${rating}
-        </h3>
-
-        <h3>
-            🎯 Mission Score : ${score}%
-        </h3>
-
-    `;
-
-
-    status.innerHTML = "Saving your responsive design decision...";
-
-
-    // ===============================
-    // SAVE TO FIRESTORE
-    // ===============================
 
     try {
 
@@ -255,31 +229,31 @@ async function reviewResponsiveLayout(choice) {
                 "users",
                 currentUser.uid,
                 "missions",
-                "mission15"
+                questionId
             ),
 
             {
 
-                missionNumber: 15,
+                category:
+                    category,
+
+                questionNumber:
+                    questionNumber,
 
                 answer:
-                    choice === 1
-                        ? "Layout B"
-                        : `Layout ${String.fromCharCode(65 + choice)}`,
+                    selectedAnswer,
 
-                score: score,
+                score:
+                    selectedScore,
 
-                deviceAdaptability: adaptability,
+                correct:
+                    isCorrect,
 
-                usability: usability,
+                completed:
+                    true,
 
-                responsiveRating: rating,
-
-                category: "Responsive Design",
-
-                completed: true,
-
-                completedAt: new Date().toISOString()
+                completedAt:
+                    new Date().toISOString()
 
             }
 
@@ -288,18 +262,232 @@ async function reviewResponsiveLayout(choice) {
 
         missionCompleted = true;
 
+        answerSaved = true;
 
-        status.innerHTML =
-            "✅ Mission 15 completed! Your responsive design decision has been saved.";
+
+        if (isCorrect) {
+
+            statusText.textContent =
+                "✅ Excellent! Responsive design ensures the shopping app works comfortably across phones, tablets, and desktops.";
+
+        } else {
+
+            statusText.textContent =
+                "⚠ Review the choice. A responsive layout should adapt content, controls, and navigation to different screen sizes.";
+
+        }
+
+
+        nextBtn.disabled = false;
+        nextBtn.style.opacity = "1";
+
+
+        console.log(
+            "UI/UX Mission 15 saved successfully."
+        );
 
 
     } catch (error) {
 
-        console.error("UI15 Firebase Error:", error);
+        console.error(
+            "Error saving Mission 15:",
+            error
+        );
 
-        status.innerHTML =
-            "❌ Could not save your result. Please try again.";
+
+        answerSaved = false;
+
+
+        statusText.textContent =
+            "❌ Could not save your decision. Please try again.";
+
+
+        nextBtn.disabled = true;
+        nextBtn.style.opacity = "0.5";
 
     }
 
 }
+
+
+// ===============================
+// OPTION CLICK
+// ===============================
+
+options.forEach(function (option) {
+
+    option.addEventListener(
+        "click",
+        async function () {
+
+            if (missionCompleted) return;
+
+
+            if (!currentUser) {
+
+                alert("Please login first.");
+
+                window.location.href =
+                    "Login.html";
+
+                return;
+
+            }
+
+
+            selectedAnswer =
+                option.dataset.answer;
+
+
+            selectedScore =
+                Number(option.dataset.score);
+
+
+            // Lock all options
+
+            options.forEach(function (item) {
+
+                item.style.pointerEvents =
+                    "none";
+
+            });
+
+
+            // Highlight selected option
+
+            options.forEach(function (item) {
+
+                if (
+                    item.dataset.answer ===
+                    selectedAnswer
+                ) {
+
+                    item.classList.add("active");
+
+                } else {
+
+                    item.style.opacity =
+                        "0.6";
+
+                }
+
+            });
+
+
+            // Update progress
+
+            if (fill) {
+
+                fill.style.width =
+                    `${selectedScore * 20}%`;
+
+            }
+
+
+            statusText.textContent =
+                "📱 Analyzing your responsive design decision...";
+
+
+            // Small assessment delay
+
+            await new Promise(function (resolve) {
+
+                setTimeout(resolve, 700);
+
+            });
+
+
+            await saveMission();
+
+        }
+    );
+
+});
+
+
+// ===============================
+// AUTHENTICATION
+// ===============================
+
+onAuthStateChanged(
+
+    auth,
+
+    async function (user) {
+
+        if (user) {
+
+            currentUser = user;
+
+
+            console.log(
+                "Logged in:",
+                currentUser.uid
+            );
+
+
+            await checkPreviousAnswer();
+
+        } else {
+
+            currentUser = null;
+
+
+            statusText.textContent =
+                "❌ Please login to continue.";
+
+
+            nextBtn.disabled = true;
+            nextBtn.style.opacity = "0.5";
+
+
+            alert(
+                "Please login first."
+            );
+
+
+            window.location.href =
+                "Login.html";
+
+        }
+
+    }
+
+);
+
+
+// ===============================
+// CONTINUE TO MISSION 16
+// ===============================
+
+nextBtn.addEventListener(
+    "click",
+    function () {
+
+        if (!selectedAnswer) {
+
+            alert(
+                "Please select an option first."
+            );
+
+            return;
+
+        }
+
+
+        if (!answerSaved) {
+
+            alert(
+                "Please wait until your answer is saved."
+            );
+
+            return;
+
+        }
+
+
+        window.location.href =
+            "Ui16.html";
+
+    }
+);
