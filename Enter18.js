@@ -1,48 +1,197 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc
+doc,
+setDoc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 
 // ===============================
 // GET HTML ELEMENTS
 // ===============================
 
-const startInnovation = document.getElementById("startInnovation");
-const innovationText = document.getElementById("innovationText");
+const options = document.querySelectorAll(".option");
 const statusText = document.getElementById("statusText");
-
+const innovationText = document.getElementById("innovationText");
+const nextBtn = document.getElementById("nextBtn");
 
 // ===============================
 // VARIABLES
 // ===============================
 
 let currentUser = null;
-let missionCompleted = false;
-let started = false;
+let selectedAnswer = null;
+let selectedScore = 0;
+let answerLocked = false;
+let answerSaved = false;
 
+// ===============================
+// MISSION DETAILS
+// ===============================
+
+const category = "entrepreneurship";
+const questionNumber = 18;
+const questionId = "entrepreneurship_q18";
+
+// ===============================
+// ANSWER SCORES
+// ===============================
+
+const scores = {
+
+impact: 5,
+
+trendy: 3,
+
+cheap: 2,
+
+famous: 1
+
+};
+
+// ===============================
+// CORRECT ANSWER
+// ===============================
+
+const correctAnswer = "impact";
 
 // ===============================
 // CHECK LOGIN
 // ===============================
 
-onAuthStateChanged(auth, function (user) {
+onAuthStateChanged(auth, async function (user) {
 
-  if (user) {
+if (user) {
 
-    currentUser = user;
+currentUser = user;
+
+await checkPreviousAnswer();
+
+} else {
+
+alert("Please login first.");
+
+window.location.href = "Login.html";
+
+}
+
+});
+
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
+
+async function checkPreviousAnswer() {
+
+try {
+
+const missionRef = doc(
+  db,
+  "users",
+  currentUser.uid,
+  "missions",
+  questionId
+);
+
+const missionSnap = await getDoc(missionRef);
+
+
+if (missionSnap.exists()) {
+
+  const data = missionSnap.data();
+
+
+  if (data.completed === true) {
+
+    selectedAnswer = data.answer;
+
+    selectedScore = data.score;
+
+    answerLocked = true;
+
+    answerSaved = true;
+
+    options.forEach(function (option) {
+
+      option.disabled = true;
+
+      if (option.dataset.answer === selectedAnswer) {
+
+        option.style.border = "2px solid #00ff88";
+
+      } else {
+
+        option.style.opacity = "0.45";
+
+      }
+
+    });
+
+
+    statusText.textContent =
+      "✅ Mission 18 already completed.";
+
+    innovationText.textContent =
+      "🚀 Your invention selection has already been recorded.";
+
+    nextBtn.disabled = false;
+
+  }
+
+}
+
+} catch (error) {
+
+console.error(
+  "Error checking Mission 18:",
+  error
+);
+
+}
+
+}
+
+// ===============================
+// SELECT ANSWER
+// ===============================
+
+options.forEach(function (option) {
+
+option.addEventListener("click", function () {
+
+if (answerLocked) {
+
+  return;
+
+}
+
+
+selectedAnswer = option.dataset.answer;
+
+selectedScore = scores[selectedAnswer];
+
+answerLocked = true;
+
+
+// ===============================
+// LOCK ALL OPTIONS
+// ===============================
+
+options.forEach(function (item) {
+
+  item.disabled = true;
+
+  if (item.dataset.answer === selectedAnswer) {
+
+    item.style.border = "2px solid #00ff88";
 
   } else {
 
-    alert("Please login first.");
-
-    window.location.href = "Login.html";
+    item.style.opacity = "0.45";
 
   }
 
@@ -50,161 +199,140 @@ onAuthStateChanged(auth, function (user) {
 
 
 // ===============================
-// REVIEW INVENTIONS
+// SHOW RESULT
 // ===============================
 
-startInnovation.addEventListener("click", function () {
-
-  // If Mission 18 is already completed,
-  // continue to Mission 19
-
-  if (missionCompleted) {
-
-    window.location.href = "Enter19.html";
-
-    return;
-
-  }
-
-
-  // Prevent double clicks
-
-  if (started) {
-
-    return;
-
-  }
-
-  started = true;
-
-  startInnovation.disabled = true;
-
-  startInnovation.style.opacity = "0.5";
-
-
-  // ===============================
-  // STEP 1 — COLLECT INVENTIONS
-  // ===============================
-
-  innovationText.textContent =
-    "🧪 Collecting new inventions from the Innovation Lab...";
+if (selectedAnswer === correctAnswer) {
 
   statusText.textContent =
-    "🔄 Preparing projects for review...";
+    "✅ Excellent choice! You selected an invention based on meaningful impact and long-term potential.";
+
+  innovationText.textContent =
+    "🌍 Strong entrepreneurial thinking: identify valuable problems and support innovations that can create lasting impact.";
+
+} else {
+
+  statusText.textContent =
+    "⚠️ The strongest choice is the invention that solves an important problem and has strong long-term potential.";
+
+  innovationText.textContent =
+    "💡 Good attempt. Innovation decisions should consider usefulness, impact and future potential.";
+
+}
 
 
-  setTimeout(function () {
+// ===============================
+// SAVE ANSWER
+// ===============================
 
-    // ===============================
-    // STEP 2 — AI REVIEW
-    // ===============================
+setTimeout(function () {
 
-    innovationText.textContent =
-      "🤖 AI is analyzing the most promising inventions...";
+  saveAnswer();
 
-    statusText.textContent =
-      "💡 Evaluating innovation, impact and future potential...";
+}, 1200);
 
+});
 
-    setTimeout(async function () {
+});
 
-      // ===============================
-      // CHECK LOGIN
-      // ===============================
+// ===============================
+// SAVE ANSWER TO FIRESTORE
+// ===============================
 
-      if (!currentUser) {
+async function saveAnswer() {
 
-        innovationText.textContent =
-          "❌ Login session not found.";
+if (!currentUser) {
 
-        statusText.textContent =
-          "Please login again.";
+alert("Please login again.");
 
-        alert("Please login again.");
+window.location.href = "Login.html";
 
-        window.location.href = "Login.html";
+return;
 
-        return;
+}
 
-      }
+try {
 
+await setDoc(
 
-      // ===============================
-      // SAVE MISSION 18
-      // ===============================
+  doc(
+    db,
+    "users",
+    currentUser.uid,
+    "missions",
+    questionId
+  ),
 
-      try {
+  {
 
-        await setDoc(
+    category: category,
 
-          doc(
-            db,
-            "users",
-            currentUser.uid,
-            "missions",
-            "mission18"
-          ),
+    questionNumber: questionNumber,
 
-          {
+    answer: selectedAnswer,
 
-            missionNumber: 18,
+    score: selectedScore,
 
-            answer: "Innovation Project Review Completed",
+    correct: selectedAnswer === correctAnswer,
 
-            completed: true,
+    completed: true,
 
-            completedAt: new Date().toISOString()
+    completedAt: new Date().toISOString()
 
-          }
+  }
 
-        );
+);
 
 
-        // ===============================
-        // SUCCESS
-        // ===============================
+answerSaved = true;
 
-        missionCompleted = true;
+statusText.textContent =
+  "✅ Answer saved successfully. Continue to Mission 19.";
 
-        innovationText.textContent =
-          "✅ Innovation project review completed successfully.";
+nextBtn.disabled = false;
 
-        statusText.textContent =
-          "🚀 Innovation Status: Review Completed";
+} catch (error) {
 
-
-        startInnovation.disabled = false;
-
-        startInnovation.style.opacity = "1";
-
-        startInnovation.textContent =
-          "➡ CONTINUE TO MISSION 19";
+console.error(
+  "Mission 18 Firebase Error:",
+  error
+);
 
 
-      } catch (error) {
+statusText.textContent =
+  "❌ Unable to save your answer. Please try again.";
 
-        console.error(
-          "Mission 18 Firebase Error:",
-          error
-        );
+answerLocked = false;
 
-        innovationText.textContent =
-          "❌ Unable to save mission.";
-
-        statusText.textContent =
-          "Please check your internet connection and try again.";
+answerSaved = false;
 
 
-        startInnovation.disabled = false;
+options.forEach(function (option) {
 
-        startInnovation.style.opacity = "1";
+  option.disabled = false;
 
-        started = false;
+  option.style.opacity = "1";
 
-      }
+  option.style.border = "";
 
-    }, 1200);
+});
 
-  }, 1000);
+}
+
+}
+
+// ===============================
+// CONTINUE TO MISSION 19
+// ===============================
+
+nextBtn.addEventListener("click", function () {
+
+if (!answerSaved) {
+
+return;
+
+}
+
+window.location.href = "Enter19.html";
 
 });
