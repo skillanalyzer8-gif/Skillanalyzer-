@@ -18,121 +18,191 @@ rel="stylesheet">
 
 </head>
 
+
 <body>
+
 
 <!-- Background -->
 
 <div class="background">
 
-<div class="accessGrid"></div>
+    <div class="accessGrid"></div>
 
-<div class="accessGlow"></div>
+    <div class="accessGlow"></div>
 
-<div class="floatingIcons"></div>
+    <div class="floatingIcons"></div>
 
 </div>
+
 
 <div class="container">
 
-<!-- Header -->
 
-<div class="header">
+    <!-- Header -->
 
-<h1>
+    <div class="header">
 
-♿ ACCESSIBILITY FIRST
+        <h1>
+            ♿ ACCESSIBILITY FIRST
+        </h1>
 
-</h1>
+        <p>
+            UI/UX Mission 3 / 20
+        </p>
 
-<p>
+    </div>
 
-UI/UX Mission 3 / 20
 
-</p>
+    <!-- AI Mentor -->
+
+    <div class="briefing">
+
+        <h2>
+            🤖 AI Design Mentor
+        </h2>
+
+        <p>
+
+            Today's challenge is different.
+
+            A beautiful app is not useful if
+            some people cannot use it.
+
+            <br><br>
+
+            Your client wants an app that can be
+            comfortably used by children, adults,
+            elderly people, and users with different
+            accessibility needs.
+
+            <br><br>
+
+            Choose the design decision that
+            best supports accessibility.
+
+        </p>
+
+    </div>
+
+
+    <!-- Challenge Area -->
+
+    <div class="designArea">
+
+        <h2>
+            👵 Accessibility Challenge
+        </h2>
+
+        <p id="challengeText">
+
+            You are designing a mobile application
+            for users with different abilities.
+
+            Which approach is the most accessible?
+
+        </p>
+
+
+        <!-- Options -->
+
+        <div id="options">
+
+
+            <button
+                class="option"
+                data-answer="inclusive">
+
+                ♿ Use readable text, sufficient contrast,
+                clear labels, large touch targets,
+                and support for assistive technologies.
+
+            </button>
+
+
+            <button
+                class="option"
+                data-answer="tiny">
+
+                🔍 Use very small text so more
+                information fits on the screen.
+
+            </button>
+
+
+            <button
+                class="option"
+                data-answer="color">
+
+                🎨 Communicate important information
+                using color alone.
+
+            </button>
+
+
+            <button
+                class="option"
+                data-answer="complex">
+
+                ⚡ Add complex gestures and interactions
+                that require precise movements.
+
+            </button>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- Status -->
+
+    <div class="statusBox">
+
+        <h3>
+            Accessibility Report
+        </h3>
+
+        <p id="statusText">
+
+            Select the most accessible design.
+
+        </p>
+
+    </div>
+
+
+    <!-- Progress -->
+
+    <div class="progress">
+
+        <div class="fill"></div>
+
+    </div>
+
+
+    <!-- Continue -->
+
+    <div class="controls">
+
+        <button
+            id="nextBtn"
+            disabled>
+
+            CONTINUE TO MISSION 4 →
+
+        </button>
+
+    </div>
+
 
 </div>
 
-<!-- AI Mentor -->
 
-<div class="briefing">
+<script
+    type="module"
+    src="Ui3.js">
+</script>
 
-<h2>
-
-🤖 AI Design Mentor
-
-</h2>
-
-<p>
-
-Today's challenge is different.
-
-A beautiful app is useless if some people cannot use it.
-
-Your client wants an app that everyone can use—
-
-children,
-
-adults,
-
-and elderly people.
-
-Choose the best design for accessibility.
-
-</p>
-
-</div>
-
-<!-- Challenge Area -->
-
-<div class="designArea">
-
-<h2>
-
-👵 Accessibility Challenge
-
-</h2>
-
-<p id="challengeText">
-
-Preparing user profiles...
-
-</p>
-
-</div>
-
-<!-- Status -->
-
-<div class="statusBox">
-
-<h3>
-
-Accessibility Report
-
-</h3>
-
-<p id="statusText">
-
-Waiting to begin...
-
-</p>
-
-</div>
-
-<!-- Controls -->
-
-<div class="controls">
-
-<button id="startChallenge">
-
-🚀 START CHALLENGE
-
-</button>
-
-</div>
-
-</div>
-
-<script type="module" src="Ui3.js"></script>
 
 </body>
 
