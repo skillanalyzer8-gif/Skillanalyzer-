@@ -2,6 +2,7 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
+    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -11,75 +12,480 @@ import {
 
 
 // ===============================
+// MISSION CONFIG
+// ===============================
+
+const category = "uiux";
+const questionNumber = 13;
+const questionId = "uiux_q13";
+
+const correctAnswer = "readable";
+
+
+// ===============================
 // DOM ELEMENTS
 // ===============================
 
-const startBtn = document.getElementById("startChallenge");
-const designArea = document.querySelector(".designArea");
-const status = document.getElementById("statusText");
+const options =
+    document.querySelectorAll(".option");
+
+const statusText =
+    document.getElementById("statusText");
+
+const fill =
+    document.getElementById("fill");
+
+const nextBtn =
+    document.getElementById("nextBtn");
+
+
+// ===============================
+// SCORES
+// ===============================
+
+const scores = {
+
+    readable: 5,
+
+    decorative: 2,
+
+    tiny: 1,
+
+    mixed: 3
+
+};
+
+
+// ===============================
+// VARIABLES
+// ===============================
 
 let currentUser = null;
+
+let selectedAnswer = "";
+
+let selectedScore = 0;
+
 let missionCompleted = false;
+
+let answerSaved = false;
+
+
+// ===============================
+// INITIAL BUTTON STATE
+// ===============================
+
+nextBtn.disabled = true;
+nextBtn.style.opacity = "0.5";
+
+
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
+
+async function checkPreviousAnswer() {
+
+    if (!currentUser) return;
+
+
+    try {
+
+        const answerRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
+
+
+        const answerSnap =
+            await getDoc(answerRef);
+
+
+        if (
+            answerSnap.exists() &&
+            answerSnap.data().completed === true
+        ) {
+
+            const data =
+                answerSnap.data();
+
+
+            selectedAnswer =
+                data.answer || "";
+
+
+            selectedScore =
+                data.score || 0;
+
+
+            missionCompleted = true;
+
+            answerSaved = true;
+
+
+            // Restore selected option
+
+            options.forEach(function (option) {
+
+                if (
+                    option.dataset.answer ===
+                    selectedAnswer
+                ) {
+
+                    option.classList.add("active");
+
+                } else {
+
+                    option.style.opacity = "0.6";
+
+                }
+
+
+                option.style.pointerEvents =
+                    "none";
+
+            });
+
+
+            // Restore progress
+
+            if (fill) {
+
+                fill.style.width =
+                    `${selectedScore * 20}%`;
+
+            }
+
+
+            // Restore status
+
+            if (
+                selectedAnswer ===
+                correctAnswer
+            ) {
+
+                statusText.textContent =
+                    "✅ Excellent! Clear and readable typography provides the best experience for long news articles.";
+
+            } else {
+
+                statusText.textContent =
+                    "⚠ You already completed Mission 13.";
+
+            }
+
+
+            nextBtn.disabled = false;
+            nextBtn.style.opacity = "1";
+
+
+            console.log(
+                "UI/UX Mission 13 previous answer restored."
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Error checking Mission 13:",
+            error
+        );
+
+    }
+
+}
+
+
+// ===============================
+// SAVE MISSION
+// ===============================
+
+async function saveMission() {
+
+    if (!currentUser) {
+
+        statusText.textContent =
+            "❌ Please login again.";
+
+        return;
+
+    }
+
+
+    const isCorrect =
+        selectedAnswer === correctAnswer;
+
+
+    try {
+
+        await setDoc(
+
+            doc(
+                db,
+                "users",
+                currentUser.uid,
+                "missions",
+                questionId
+            ),
+
+            {
+
+                category:
+                    category,
+
+                questionNumber:
+                    questionNumber,
+
+                answer:
+                    selectedAnswer,
+
+                score:
+                    selectedScore,
+
+                correct:
+                    isCorrect,
+
+                completed:
+                    true,
+
+                completedAt:
+                    new Date().toISOString()
+
+            }
+
+        );
+
+
+        missionCompleted = true;
+
+        answerSaved = true;
+
+
+        if (isCorrect) {
+
+            statusText.textContent =
+                "✅ Excellent! Readable typography with appropriate size, spacing, and line height improves news reading.";
+
+        } else {
+
+            statusText.textContent =
+                "⚠ Review the choice. News applications should prioritize readability and comfortable long-form reading.";
+
+        }
+
+
+        nextBtn.disabled = false;
+        nextBtn.style.opacity = "1";
+
+
+        console.log(
+            "UI/UX Mission 13 saved successfully."
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Error saving Mission 13:",
+            error
+        );
+
+
+        answerSaved = false;
+
+
+        statusText.textContent =
+            "❌ Could not save your decision. Please try again.";
+
+
+        nextBtn.disabled = true;
+        nextBtn.style.opacity = "0.5";
+
+    }
+
+}
+
+
+// ===============================
+// OPTION CLICK
+// ===============================
+
+options.forEach(function (option) {
+
+    option.addEventListener(
+        "click",
+        async function () {
+
+            if (missionCompleted) return;
+
+
+            if (!currentUser) {
+
+                alert("Please login first.");
+
+                window.location.href =
+                    "Login.html";
+
+                return;
+
+            }
+
+
+            selectedAnswer =
+                option.dataset.answer;
+
+
+            selectedScore =
+                Number(option.dataset.score);
+
+
+            // Lock all options
+
+            options.forEach(function (item) {
+
+                item.style.pointerEvents =
+                    "none";
+
+            });
+
+
+            // Highlight selected option
+
+            options.forEach(function (item) {
+
+                if (
+                    item.dataset.answer ===
+                    selectedAnswer
+                ) {
+
+                    item.classList.add("active");
+
+                } else {
+
+                    item.style.opacity = "0.6";
+
+                }
+
+            });
+
+
+            // Update progress
+
+            if (fill) {
+
+                fill.style.width =
+                    `${selectedScore * 20}%`;
+
+            }
+
+
+            statusText.textContent =
+                "🔤 Analyzing your typography decision...";
+
+
+            // Small assessment delay
+
+            await new Promise(function (resolve) {
+
+                setTimeout(resolve, 700);
+
+            });
+
+
+            await saveMission();
+
+        }
+    );
+
+});
 
 
 // ===============================
 // AUTHENTICATION
 // ===============================
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(
 
-    if (user) {
+    auth,
 
-        currentUser = user;
+    async function (user) {
 
-    } else {
+        if (user) {
 
-        alert("Please login first.");
-        window.location.href = "Login.html";
+            currentUser = user;
+
+
+            console.log(
+                "Logged in:",
+                currentUser.uid
+            );
+
+
+            await checkPreviousAnswer();
+
+        } else {
+
+            currentUser = null;
+
+
+            statusText.textContent =
+                "❌ Please login to continue.";
+
+
+            nextBtn.disabled = true;
+            nextBtn.style.opacity = "0.5";
+
+
+            alert(
+                "Please login first."
+            );
+
+
+            window.location.href =
+                "Login.html";
+
+        }
 
     }
 
-});
+);
 
 
 // ===============================
-// START CHALLENGE
+// CONTINUE TO MISSION 14
 // ===============================
 
-startBtn.addEventListener("click", () => {
+nextBtn.addEventListener(
+    "click",
+    function () {
 
-    startBtn.style.display = "none";
+        if (!selectedAnswer) {
 
-    status.innerHTML = "Loading typography styles...";
+            alert(
+                "Please select an option first."
+            );
 
-    navigator.vibrate?.([100, 80, 100]);
+            return;
 
-    setTimeout(showTypographyStyles, 1800);
-
-});
-
-
-// ===============================
-// SHOW TYPOGRAPHY OPTIONS
-// ===============================
-
-function showTypographyStyles() {
-
-    designArea.innerHTML = `
-
-        <h2>📰 Choose The Best Typography</h2>
-
-        <p>
-            Which typography style provides the best
-            reading experience for a news application?
-        </p>
+        }
 
 
-        <div class="typographyCard">
+        if (!answerSaved) {
 
-            <h3>Typography A</h3>
+            alert(
+                "Please wait until your answer is saved."
+            );
 
-            <p>
-                🎨 Decorative typeface<br>
-                ❌ Difficult to read in long articles<br>
-                ❌
+            return;
+
+        }
+
+
+        window.location.href =
+            "Ui14.html";
+
+    }
+);
