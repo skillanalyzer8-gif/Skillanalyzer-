@@ -10,7 +10,8 @@
 
 <link rel="stylesheet" href="Lead4.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -61,9 +62,7 @@ During the meeting, he says...
 
 <div class="bubble">
 
-"I don't think I'm good enough anymore.
-
-Maybe this project would be better without me..."
+"I don't feel confident about my work anymore. I think I need some help to get back on track."
 
 </div>
 
@@ -75,29 +74,37 @@ How will you respond?
 
 </h2>
 
-<div class="options">
+<div class="options" id="options">
 
-<div class="option">
+<!-- A -->
+
+<div class="option" data-answer="work">
+
+📋 Tell him to finish his work first and discuss it later
+
+</div>
+
+<!-- B — CORRECT -->
+
+<div class="option" data-answer="support">
 
 ❤️ Listen carefully, encourage him and offer support
 
 </div>
 
-<div class="option">
+<!-- C -->
 
-📋 Tell him to finish his work first
+<div class="option" data-answer="warn">
 
-</div>
-
-<div class="option">
-
-😠 Warn him that he'll lose his job
+😠 Warn him that poor performance will lead to serious consequences
 
 </div>
 
-<div class="option">
+<!-- D -->
 
-🙄 Ignore his feelings and change the topic
+<div class="option" data-answer="ignore">
+
+🙄 Ignore his concerns and change the topic
 
 </div>
 
@@ -111,13 +118,13 @@ How will you respond?
 
 </div>
 
-<p>
+<p id="statusText">
 
 🤖 AI Emotional Intelligence Analyzer is waiting...
 
 </p>
 
-<button id="nextBtn">
+<button id="nextBtn" disabled>
 
 Continue →
 
