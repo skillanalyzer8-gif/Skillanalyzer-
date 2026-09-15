@@ -1,108 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Lead13 - Shadow Leader</title>
+<title>Lead13 - Shadow Leader</title><link rel="stylesheet" href="Lead13.css"><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+rel="stylesheet"><link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"></head><body><!-- Animated Background --><div class="background"><div class="grid"></div><div class="particles"></div></div><div class="container"><!-- Header --><div class="header"><h1>👤 SHADOW LEADER</h1><p>Leadership Mission 13 / 20</p></div><!-- AI Briefing --><div class="briefing"><h2>🤖 AI Observation Mode</h2><p>Four digital agents have entered the simulation.
 
-<link rel="stylesheet" href="Lead13.css">
+Each agent is showing different leadership behaviour.
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
-rel="stylesheet">
+Your task is to identify the behaviour that represents a strong leader.
 
-</head>
+Observe the situation carefully before making your decision.
 
-<body>
+</p></div><!-- Arena --><div class="arena"><div class="agent" id="agent1"></div><div class="agent" id="agent2"></div><div class="agent" id="agent3"></div><div class="agent" id="agent4"></div></div><!-- Leadership Question --><div class="questionBox"><h2>Which behaviour best represents a strong leader?
 
-<!-- Animated Background -->
+</h2><div id="options"><button class="option"
+data-answer="command">
 
-<div class="background">
+A. Give orders immediately without listening to the team.
 
-<div class="grid"></div>
+</button><button class="option"
+data-answer="avoid">
 
-<div class="particles"></div>
+B. Avoid difficult decisions and let others handle everything.
 
-</div>
+</button><button class="option"
+data-answer="control">
 
-<div class="container">
+C. Keep all important decisions to yourself and control every task.
 
-<!-- Header -->
+</button><button class="option"
+data-answer="observe">
 
-<div class="header">
+D. Observe the situation, listen to the team, and make informed decisions.
 
-<h1>👤 SHADOW LEADER</h1>
+</button></div></div><!-- AI Status --><div class="status"><h3>AI Analysis</h3><p id="statusText">Choose the leadership behaviour that best fits the situation.
 
-<p>Leadership Mission 13 / 20</p>
+</p><div class="progress"><div class="fill"></div></div></div><!-- Continue --><button id="nextBtn" disabled>CONTINUE TO MISSION 14 →
 
-</div>
-
-<!-- AI Briefing -->
-
-<div class="briefing">
-
-<h2>🤖 AI Observation Mode</h2>
-
-<p>
-
-Four digital agents have entered the simulation.
-
-Only one is the real leader.
-
-The others unknowingly imitate the leader's behaviour.
-
-Watch carefully.
-
-Choose only after observing.
-
-</p>
-
-</div>
-
-<!-- Arena -->
-
-<div class="arena">
-
-<div class="agent" id="agent1"></div>
-
-<div class="agent" id="agent2"></div>
-
-<div class="agent" id="agent3"></div>
-
-<div class="agent" id="agent4"></div>
-
-</div>
-
-<!-- AI Status -->
-
-<div class="status">
-
-<h3>AI Analysis</h3>
-
-<p id="statusText">
-
-Scanning movement patterns..
-
-</p>
-
-</div>
-
-<!-- Decision -->
-
-<button id="observeBtn">
-
-START OBSERVATION
-
-</button>
-
-</div>
-
-<script type="module" src="Lead13.js"></script>
-
-</body>
-
-</html>
+</button></div><script type="module" src="Lead13.js"></script></body></html>
