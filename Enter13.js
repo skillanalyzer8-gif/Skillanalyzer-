@@ -1,48 +1,178 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc
+doc,
+setDoc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 
 // ===============================
 // GET HTML ELEMENTS
 // ===============================
 
-const startDay = document.getElementById("startDay");
-const dashboardText = document.getElementById("dashboardText");
+const options = document.querySelectorAll(".option");
 const statusText = document.getElementById("statusText");
-
+const nextBtn = document.getElementById("nextBtn");
 
 // ===============================
 // VARIABLES
 // ===============================
 
 let currentUser = null;
-let missionCompleted = false;
-let started = false;
+let selectedAnswer = null;
+let selectedScore = 0;
+let answerLocked = false;
+let answerSaved = false;
 
+// ===============================
+// MISSION DETAILS
+// ===============================
+
+const category = "entrepreneurship";
+const questionNumber = 13;
+const questionId = "entrepreneurship_q13";
+
+// ===============================
+// SCORES
+// ===============================
+
+const scores = {
+prioritize: 5,
+all: 2,
+ignore: 1,
+panic: 3
+};
+
+// ===============================
+// CORRECT ANSWER
+// ===============================
+
+const correctAnswer = "prioritize";
 
 // ===============================
 // CHECK LOGIN
 // ===============================
 
-onAuthStateChanged(auth, function (user) {
+onAuthStateChanged(auth, async function (user) {
 
-  if (user) {
+if (user) {
 
-    currentUser = user;
+currentUser = user;
 
-  } else {
+await checkPreviousAnswer();
 
-    alert("Please login first.");
+} else {
 
-    window.location.href = "Login.html";
+alert("Please login first.");
+
+window.location.href = "Login.html";
+
+}
+
+});
+
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
+
+async function checkPreviousAnswer() {
+
+try {
+
+const missionRef = doc(
+  db,
+  "users",
+  currentUser.uid,
+  "missions",
+  questionId
+);
+
+const missionSnap = await getDoc(missionRef);
+
+if (missionSnap.exists()) {
+
+  const data = missionSnap.data();
+
+  if (data.completed === true) {
+
+    selectedAnswer = data.answer;
+    selectedScore = data.score || 0;
+
+    answerLocked = true;
+    answerSaved = true;
+
+    options.forEach(function (option) {
+
+      option.disabled = true;
+
+      if (option.dataset.answer === selectedAnswer) {
+
+        option.style.border = "2px solid #00ff88";
+
+      } else {
+
+        option.style.opacity = "0.45";
+
+      }
+
+    });
+
+    statusText.textContent =
+      "✅ Mission 13 already completed. You can continue.";
+
+    nextBtn.disabled = false;
+
+  }
+
+}
+
+} catch (error) {
+
+console.error(
+  "Error checking previous answer:",
+  error
+);
+
+}
+
+}
+
+// ===============================
+// OPTION CLICK
+// ===============================
+
+options.forEach(function (option) {
+
+option.addEventListener("click", async function () {
+
+if (answerLocked) {
+
+  return;
+
+}
+
+selectedAnswer = option.dataset.answer;
+
+selectedScore = scores[selectedAnswer] || 0;
+
+answerLocked = true;
+
+
+// ===============================
+// LOCK ALL OPTIONS
+// ===============================
+
+options.forEach(function (item) {
+
+  item.disabled = true;
+
+  if (item !== option) {
+
+    item.style.opacity = "0.45";
 
   }
 
@@ -50,138 +180,137 @@ onAuthStateChanged(auth, function (user) {
 
 
 // ===============================
-// START BUSINESS DAY
+// SHOW RESULT
 // ===============================
 
-startDay.addEventListener("click", function () {
+if (selectedAnswer === correctAnswer) {
 
-  // If already completed,
-  // continue to Mission 14
-
-  if (missionCompleted) {
-
-    window.location.href = "Enter14.html";
-
-    return;
-
-  }
-
-
-  // Prevent double click
-
-  if (started) {
-
-    return;
-
-  }
-
-  started = true;
-
-  startDay.disabled = true;
-
-  startDay.style.opacity = "0.5";
-
-
-  // ===============================
-  // STEP 1
-  // ===============================
-
-  dashboardText.textContent =
-    "📊 Loading today's company reports...";
+  option.style.border =
+    "2px solid #00ff88";
 
   statusText.textContent =
-    "🔄 Collecting department updates...";
+    "✅ Excellent CEO decision! You correctly prioritized the most critical issue.";
+
+} else {
+
+  option.style.border =
+    "2px solid #ff5555";
+
+  statusText.textContent =
+    "⚠️ Not the best CEO decision. A strong CEO should prioritize problems based on their impact.";
+
+}
 
 
-  setTimeout(function () {
+// ===============================
+// SAVE ANSWER
+// ===============================
 
-    // ===============================
-    // STEP 2
-    // ===============================
+await saveAnswer();
 
-    dashboardText.textContent =
-      "🤖 AI is analyzing four emergency reports...";
+});
 
-    statusText.textContent =
-      "⚠ Multiple business issues detected...";
+});
 
+// ===============================
+// SAVE ANSWER TO FIRESTORE
+// ===============================
 
-    setTimeout(async function () {
+async function saveAnswer() {
 
-      // ===============================
-      // CHECK LOGIN
-      // ===============================
+if (!currentUser) {
 
-      if (!currentUser) {
+alert("Please login again.");
 
-        dashboardText.textContent =
-          "❌ Login session not found.";
+window.location.href = "Login.html";
 
-        statusText.textContent =
-          "Please login again.";
+return;
 
-        alert("Please login again.");
+}
 
-        window.location.href = "Login.html";
+try {
 
-        return;
-
-      }
-
-
-      // ===============================
-      // SAVE MISSION 13
-      // ===============================
-
-      try {
-
-        await setDoc(
-
-          doc(
-            db,
-            "users",
-            currentUser.uid,
-            "missions",
-            "mission13"
-          ),
-
-          {
-
-            missionNumber: 13,
-
-            answer: "CEO Business Day Completed",
-
-            completed: true,
-
-            completedAt: new Date().toISOString()
-
-          }
-
-        );
+const missionRef = doc(
+  db,
+  "users",
+  currentUser.uid,
+  "missions",
+  questionId
+);
 
 
-        // ===============================
-        // SUCCESS
-        // ===============================
+await setDoc(
 
-        missionCompleted = true;
+  missionRef,
 
-        dashboardText.textContent =
-          "✅ Today's company reports analyzed successfully.";
+  {
 
-        statusText.textContent =
-          "👨‍💼 CEO Status: Business Day Completed";
+    category: category,
+
+    questionNumber: questionNumber,
+
+    answer: selectedAnswer,
+
+    score: selectedScore,
+
+    correct:
+      selectedAnswer === correctAnswer,
+
+    completed: true,
+
+    completedAt:
+      new Date().toISOString()
+
+  }
+
+);
 
 
-        startDay.disabled = false;
+// ===============================
+// ANSWER SAVED
+// ===============================
 
-        startDay.style.opacity = "1";
+answerSaved = true;
 
-        startDay.textContent =
-          "➡ CONTINUE TO MISSION 14";
+nextBtn.disabled = false;
 
+statusText.textContent =
+  "✅ Answer saved. Continue to Mission 14.";
 
-      } catch (error) {
+} catch (error) {
 
-        console.error(
-         
+console.error(
+  "Error saving Mission 13:",
+  error
+);
+
+statusText.textContent =
+  "❌ Could not save your answer. Please try again.";
+
+answerLocked = false;
+
+options.forEach(function (option) {
+
+  option.disabled = false;
+
+});
+
+}
+
+}
+
+// ===============================
+// CONTINUE TO MISSION 14
+// ===============================
+
+nextBtn.addEventListener("click", function () {
+
+if (!answerSaved) {
+
+return;
+
+}
+
+window.location.href = "Enter14.html";
+
+});
