@@ -2,6 +2,7 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
+    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -14,27 +15,69 @@ import {
 // DOM ELEMENTS
 // ===============================
 
-const startBtn = document.getElementById("startChallenge");
-const designArea = document.querySelector(".designArea");
-const status = document.getElementById("statusText");
+const options = document.getElementById("options");
+const statusText = document.getElementById("statusText");
+const fill = document.getElementById("fill");
+const nextBtn = document.getElementById("nextBtn");
+
+
+// ===============================
+// MISSION DETAILS
+// ===============================
+
+const category = "uiux";
+const questionNumber = 8;
+const questionId = "uiux_q8";
+
+const correctAnswer = "balanced";
+
+
+// ===============================
+// SCORES
+// ===============================
+
+const scores = {
+    crowded: 2,
+    uneven: 3,
+    balanced: 5,
+    minimal: 1
+};
+
+
+// ===============================
+// STATE
+// ===============================
 
 let currentUser = null;
+let selectedAnswer = null;
+let selectedScore = 0;
 let missionCompleted = false;
+let answerSaved = false;
+
+
+// ===============================
+// CONTINUE BUTTON
+// ===============================
+
+nextBtn.disabled = true;
 
 
 // ===============================
 // AUTHENTICATION
 // ===============================
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
 
     if (user) {
 
         currentUser = user;
 
+        await checkPreviousAnswer();
+
     } else {
 
         alert("Please login first.");
+
         window.location.href = "Login.html";
 
     }
@@ -43,110 +86,72 @@ onAuthStateChanged(auth, (user) => {
 
 
 // ===============================
-// START CHALLENGE
+// CHECK PREVIOUS ANSWER
 // ===============================
 
-startBtn.addEventListener("click", () => {
+async function checkPreviousAnswer() {
 
-    startBtn.style.display = "none";
+    try {
 
-    status.innerHTML = "Loading layout comparison...";
+        const missionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
 
-    navigator.vibrate?.([100, 80, 100]);
-
-    setTimeout(showLayouts, 1800);
-
-});
-
-
-// ===============================
-// SHOW LAYOUT OPTIONS
-// ===============================
-
-function showLayouts() {
-
-    designArea.innerHTML = `
-
-        <h2>✈️ Choose The Best Layout</h2>
-
-        <p>
-            Which layout has the best spacing and visual hierarchy
-            for a premium travel booking app?
-        </p>
+        const missionSnap = await getDoc(missionRef);
 
 
-        <div class="layoutCard">
+        if (missionSnap.exists()) {
 
-            <h3>Layout A</h3>
-
-            <p>
-                📦 Elements packed together<br>
-                ❌ Very little spacing<br>
-                ❌ Difficult to scan
-            </p>
-
-        </div>
+            const data = missionSnap.data();
 
 
-        <div class="layoutCard">
+            if (data.completed === true) {
 
-            <h3>Layout B</h3>
+                selectedAnswer = data.answer;
+                selectedScore = data.score || 0;
 
-            <p>
-                📐 Balanced spacing<br>
-                ✅ Clear visual hierarchy<br>
-                ✅ Comfortable content separation
-            </p>
+                missionCompleted = true;
+                answerSaved = true;
 
-        </div>
+                lockOptions();
 
+                fill.style.width = "100%";
 
-        <div class="layoutCard">
+                statusText.innerHTML =
+                    "✅ Mission 8 already completed. Your previous answer has been restored.";
 
-            <h3>Layout C</h3>
+                nextBtn.disabled = false;
 
-            <p>
-                🌌 Excessive empty space<br>
-                ❌ Content feels disconnected<br>
-                ❌ Poor use of screen space
-            </p>
+            }
 
-        </div>
+        }
 
+    } catch (error) {
 
-        <div class="layoutCard">
+        console.error(
+            "Error checking previous Ui8 answer:",
+            error
+        );
 
-            <h3>Layout D</h3>
-
-            <p>
-                ⚡ Random spacing<br>
-                ❌ Inconsistent alignment<br>
-                ❌ Weak visual structure
-            </p>
-
-        </div>
-
-    `;
-
-
-    document.querySelectorAll(".layoutCard").forEach((card, index) => {
-
-        card.addEventListener("click", () => {
-
-            reviewLayout(index);
-
-        });
-
-    });
+    }
 
 }
 
 
 // ===============================
-// REVIEW LAYOUT
+// OPTION CLICK
 // ===============================
 
-async function reviewLayout(choice) {
+options.addEventListener("click", async (event) => {
+
+    const option = event.target.closest(".option");
+
+
+    if (!option) return;
 
     if (missionCompleted) return;
 
@@ -154,6 +159,7 @@ async function reviewLayout(choice) {
     if (!currentUser) {
 
         alert("Please login first.");
+
         window.location.href = "Login.html";
 
         return;
@@ -161,122 +167,129 @@ async function reviewLayout(choice) {
     }
 
 
-    let title = "";
-    let message = "";
-    let hierarchy = "";
-    let usability = "";
-    let rating = "";
-    let score = 0;
+    selectedAnswer = option.dataset.answer;
+
+    selectedScore =
+        Number(option.dataset.score);
 
 
-    // Layout B = Correct answer
-    if (choice === 1) {
+    const isCorrect =
+        selectedAnswer === correctAnswer;
 
-        title = "🏆 Perfect Layout Choice";
 
-        message =
-            "Excellent! Balanced spacing creates clear visual hierarchy and makes the interface easier to scan.";
+    // ===============================
+    // LOCK OPTIONS
+    // ===============================
 
-        hierarchy = "99 / 100";
+    lockOptions();
 
-        usability = "97%";
 
-        rating = "★★★★★";
+    // ===============================
+    // FEEDBACK
+    // ===============================
 
-        score = 100;
+    if (isCorrect) {
+
+        statusText.innerHTML =
+            "🏆 Excellent! Consistent spacing, white space, grouping and hierarchy create a clean premium experience.";
 
     } else {
 
-        title = "⚠ Layout Needs Improvement";
-
-        message =
-            "Good layouts use consistent spacing, alignment, and hierarchy to guide the user's attention.";
-
-        hierarchy = "73 / 100";
-
-        usability = "79%";
-
-        rating = "★★★☆☆";
-
-        score = 70;
+        statusText.innerHTML =
+            "⚠ Good try. Premium interfaces need consistent spacing, clear grouping and strong visual hierarchy.";
 
     }
 
 
     // ===============================
-    // SHOW RESULT
+    // PROGRESS
     // ===============================
 
-    designArea.innerHTML = `
-
-        <h2>${title}</h2>
-
-        <br>
-
-        <p>${message}</p>
-
-        <br>
-
-        <h3>
-            📐 Visual Hierarchy : ${hierarchy}
-        </h3>
-
-        <h3>
-            😊 User Experience : ${usability}
-        </h3>
-
-        <h3>
-            ⭐ Design Rating : ${rating}
-        </h3>
-
-        <h3>
-            🎯 Mission Score : ${score}%
-        </h3>
-
-    `;
-
-
-    status.innerHTML = "Saving your layout decision...";
+    fill.style.width = "100%";
 
 
     // ===============================
-    // SAVE TO FIRESTORE
+    // SAVE
     // ===============================
+
+    await saveMission(isCorrect);
+
+});
+
+
+// ===============================
+// LOCK OPTIONS
+// ===============================
+
+function lockOptions() {
+
+    const allOptions =
+        document.querySelectorAll(".option");
+
+
+    allOptions.forEach((option) => {
+
+        option.disabled = true;
+
+
+        if (
+            option.dataset.answer === selectedAnswer
+        ) {
+
+            option.classList.add("selected");
+
+        } else {
+
+            option.style.opacity = "0.55";
+
+        }
+
+    });
+
+}
+
+
+// ===============================
+// SAVE MISSION
+// ===============================
+
+async function saveMission(isCorrect) {
 
     try {
 
+        statusText.innerHTML =
+            "💾 Saving your layout decision...";
+
+
+        const missionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
+
+
         await setDoc(
 
-            doc(
-                db,
-                "users",
-                currentUser.uid,
-                "missions",
-                "mission8"
-            ),
+            missionRef,
 
             {
 
-                missionNumber: 8,
+                category: category,
 
-                answer:
-                    choice === 1
-                        ? "Layout B"
-                        : `Layout ${String.fromCharCode(65 + choice)}`,
+                questionNumber: questionNumber,
 
-                score: score,
+                answer: selectedAnswer,
 
-                visualHierarchy: hierarchy,
+                score: selectedScore,
 
-                usability: usability,
-
-                designRating: rating,
-
-                category: "Spacing & Layout",
+                correct: isCorrect,
 
                 completed: true,
 
-                completedAt: new Date().toISOString()
+                completedAt:
+                    new Date().toISOString()
 
             }
 
@@ -284,19 +297,48 @@ async function reviewLayout(choice) {
 
 
         missionCompleted = true;
+        answerSaved = true;
+
+        nextBtn.disabled = false;
 
 
-        status.innerHTML =
-            "✅ Mission 8 completed! Your layout decision has been saved.";
-
+        statusText.innerHTML =
+            isCorrect
+                ? "✅ Correct! Mission 8 completed and saved."
+                : "✅ Mission 8 completed and saved. Keep improving your UI/UX decisions.";
 
     } catch (error) {
 
-        console.error("UI8 Firebase Error:", error);
+        console.error(
+            "Ui8 Firebase Error:",
+            error
+        );
 
-        status.innerHTML =
-            "❌ Could not save your result. Please try again.";
+
+        statusText.innerHTML =
+            "❌ Could not save your answer. Please try again.";
 
     }
 
 }
+
+
+// ===============================
+// CONTINUE TO MISSION 9
+// ===============================
+
+nextBtn.addEventListener("click", () => {
+
+    if (!answerSaved) {
+
+        statusText.innerHTML =
+            "⚠ Please select an answer first.";
+
+        return;
+
+    }
+
+
+    window.location.href = "Ui9.html";
+
+});
