@@ -3,135 +3,211 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Mission 16 - Binary Decoder</title>
+    <title>Mission 16 - Binary Decoder</title>
 
-<link rel="stylesheet" href="Mission16.css">
+    <link rel="stylesheet" href="Mission16.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
 
 </head>
 
+
 <body>
 
-<div class="container">
+    <div class="container">
 
-<div class="header">
 
-<h1>💻 Binary Decoder</h1>
+        <!-- ===============================
+             HEADER
+        ================================ -->
 
-<p>Mission 16 of 20</p>
+        <div class="header">
 
-<span>Decode Like a Computer Scientist</span>
+            <h1>💻 Binary Decoder</h1>
 
-</div>
+            <p>Mission 16 of 20</p>
 
-<div class="challenge">
+            <span>Decode Like a Computer Scientist</span>
 
-<h2>🛡 AI Security Terminal</h2>
+        </div>
 
-<p>
 
-A secure server has sent a binary code.
+        <!-- ===============================
+             CHALLENGE
+        ================================ -->
 
-Decode it correctly to unlock the encrypted system.
+        <div class="challenge">
 
-</p>
+            <h2>🛡 AI Security Terminal</h2>
 
-</div>
+            <p>
 
-<div class="terminal">
+                A secure server has sent a binary code.
 
-<div class="terminal-header">
+                Decode it correctly to unlock the encrypted system.
 
-<span class="red"></span>
+            </p>
 
-<span class="yellow"></span>
+        </div>
 
-<span class="green"></span>
 
-<p>AI SECURITY TERMINAL</p>
+        <!-- ===============================
+             TERMINAL
+        ================================ -->
 
-</div>
+        <div class="terminal">
 
-<div class="binary">
+            <div class="terminal-header">
 
-101010
+                <span class="red"></span>
 
-</div>
+                <span class="yellow"></span>
 
-</div>
+                <span class="green"></span>
 
-<div class="hint">
+                <p>AI SECURITY TERMINAL</p>
 
-💡 Hint: Convert the binary number into decimal.
+            </div>
 
-</div>
 
-<h2 class="question">
+            <div class="binary">
 
-What is the decimal value?
+                101010
 
-</h2>
+            </div>
 
-<div class="options">
+        </div>
 
-<div class="option">
 
-42
+        <!-- ===============================
+             HINT
+        ================================ -->
 
-</div>
+        <div class="hint">
 
-<div class="option">
+            💡 Hint: Convert the binary number into decimal.
 
-36
+        </div>
 
-</div>
 
-<div class="option">
+        <!-- ===============================
+             QUESTION
+        ================================ -->
 
-38
+        <h2 class="question">
 
-</div>
+            What is the decimal value?
 
-<div class="option">
+        </h2>
 
-40
 
-</div>
+        <!-- ===============================
+             OPTIONS
+        ================================ -->
 
-</div>
+        <div class="options" id="options">
 
-<div class="analysis">
 
-<div class="progress">
+            <div
+                class="option"
+                data-answer="42"
+            >
 
-<div class="fill"></div>
+                42
 
-</div>
+            </div>
 
-<p>
 
-🤖 Waiting for binary analysis...
+            <div
+                class="option"
+                data-answer="36"
+            >
 
-</p>
+                36
 
-<button id="nextBtn">
+            </div>
 
-Continue →
 
-</button>
+            <div
+                class="option"
+                data-answer="38"
+            >
 
-</div>
+                38
 
-</div>
+            </div>
 
-<script type="module" src="Mission16.js"></script>
+
+            <div
+                class="option"
+                data-answer="40"
+            >
+
+                40
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ===============================
+             ANALYSIS
+        ================================ -->
+
+        <div class="analysis">
+
+
+            <div class="progress">
+
+                <div class="fill"></div>
+
+            </div>
+
+
+            <p id="statusText">
+
+                🤖 Waiting for binary analysis...
+
+            </p>
+
+
+            <button
+                id="nextBtn"
+                disabled
+            >
+
+                Continue →
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ===============================
+         JAVASCRIPT
+    ================================ -->
+
+    <script
+        type="module"
+        src="Mission16.js"
+    ></script>
+
 
 </body>
 
