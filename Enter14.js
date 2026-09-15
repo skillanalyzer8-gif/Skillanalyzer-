@@ -1,49 +1,180 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc
+doc,
+setDoc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 
 // ===============================
 // GET HTML ELEMENTS
 // ===============================
 
-const startTrading = document.getElementById("startTrading");
-const stockPrice = document.getElementById("stockPrice");
-const marketText = document.getElementById("marketText");
+const options = document.querySelectorAll(".option");
 const statusText = document.getElementById("statusText");
-
+const nextBtn = document.getElementById("nextBtn");
 
 // ===============================
 // VARIABLES
 // ===============================
 
 let currentUser = null;
-let missionCompleted = false;
-let started = false;
+let selectedAnswer = null;
+let selectedScore = 0;
+let answerLocked = false;
+let answerSaved = false;
 
+// ===============================
+// MISSION DETAILS
+// ===============================
+
+const category = "entrepreneurship";
+const questionNumber = 14;
+const questionId = "entrepreneurship_q14";
+
+// ===============================
+// SCORES
+// ===============================
+
+const scores = {
+analyze: 5,
+panic: 2,
+hide: 1,
+hype: 3
+};
+
+// ===============================
+// CORRECT ANSWER
+// ===============================
+
+const correctAnswer = "analyze";
 
 // ===============================
 // CHECK LOGIN
 // ===============================
 
-onAuthStateChanged(auth, function (user) {
+onAuthStateChanged(auth, async function (user) {
 
-  if (user) {
+if (user) {
 
-    currentUser = user;
+currentUser = user;
 
-  } else {
+await checkPreviousAnswer();
 
-    alert("Please login first.");
+} else {
 
-    window.location.href = "Login.html";
+alert("Please login first.");
+
+window.location.href = "Login.html";
+
+}
+
+});
+
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
+
+async function checkPreviousAnswer() {
+
+try {
+
+const missionRef = doc(
+  db,
+  "users",
+  currentUser.uid,
+  "missions",
+  questionId
+);
+
+const missionSnap = await getDoc(missionRef);
+
+if (missionSnap.exists()) {
+
+  const data = missionSnap.data();
+
+  if (data.completed === true) {
+
+    selectedAnswer = data.answer;
+    selectedScore = data.score || 0;
+
+    answerLocked = true;
+    answerSaved = true;
+
+    options.forEach(function (option) {
+
+      option.disabled = true;
+
+      if (option.dataset.answer === selectedAnswer) {
+
+        option.style.border =
+          "2px solid #00ff88";
+
+      } else {
+
+        option.style.opacity = "0.45";
+
+      }
+
+    });
+
+    statusText.textContent =
+      "✅ Mission 14 already completed. You can continue.";
+
+    nextBtn.disabled = false;
+
+  }
+
+}
+
+} catch (error) {
+
+console.error(
+  "Error checking previous answer:",
+  error
+);
+
+}
+
+}
+
+// ===============================
+// OPTION CLICK
+// ===============================
+
+options.forEach(function (option) {
+
+option.addEventListener("click", async function () {
+
+if (answerLocked) {
+
+  return;
+
+}
+
+selectedAnswer = option.dataset.answer;
+
+selectedScore =
+  scores[selectedAnswer] || 0;
+
+answerLocked = true;
+
+
+// ===============================
+// LOCK ALL OPTIONS
+// ===============================
+
+options.forEach(function (item) {
+
+  item.disabled = true;
+
+  if (item !== option) {
+
+    item.style.opacity = "0.45";
 
   }
 
@@ -51,163 +182,137 @@ onAuthStateChanged(auth, function (user) {
 
 
 // ===============================
-// OPEN MARKET
+// SHOW RESULT
 // ===============================
 
-startTrading.addEventListener("click", function () {
+if (selectedAnswer === correctAnswer) {
 
-  // If Mission 14 is already completed,
-  // continue to Mission 15
-
-  if (missionCompleted) {
-
-    window.location.href = "Enter15.html";
-
-    return;
-
-  }
-
-
-  // Prevent double clicks
-
-  if (started) {
-
-    return;
-
-  }
-
-  started = true;
-
-  startTrading.disabled = true;
-
-  startTrading.style.opacity = "0.5";
-
-
-  // ===============================
-  // STEP 1 — OPENING MARKET
-  // ===============================
-
-  marketText.textContent =
-    "📊 Connecting to live market...";
+  option.style.border =
+    "2px solid #00ff88";
 
   statusText.textContent =
-    "🔄 Preparing trading session...";
+    "✅ Excellent decision! A responsible CEO should analyze the situation, communicate clearly, and take corrective action.";
+
+} else {
+
+  option.style.border =
+    "2px solid #ff5555";
+
+  statusText.textContent =
+    "⚠️ Not the best decision. A strong CEO should analyze the problem before taking action.";
+
+}
 
 
-  setTimeout(function () {
+// ===============================
+// SAVE ANSWER
+// ===============================
 
-    // ===============================
-    // STEP 2 — MARKET OPENS
-    // ===============================
+await saveAnswer();
 
-    stockPrice.textContent = "₹105";
+});
 
-    marketText.textContent =
-      "📈 Market is now open. Investors are watching.";
+});
 
-    statusText.textContent =
-      "🟢 Trading Active";
+// ===============================
+// SAVE ANSWER TO FIRESTORE
+// ===============================
 
+async function saveAnswer() {
 
-    setTimeout(async function () {
+if (!currentUser) {
 
-      // ===============================
-      // CHECK LOGIN
-      // ===============================
+alert("Please login again.");
 
-      if (!currentUser) {
+window.location.href = "Login.html";
 
-        marketText.textContent =
-          "❌ Login session not found.";
+return;
 
-        statusText.textContent =
-          "Please login again.";
+}
 
-        alert("Please login again.");
+try {
 
-        window.location.href = "Login.html";
-
-        return;
-
-      }
-
-
-      // ===============================
-      // SAVE MISSION 14
-      // ===============================
-
-      try {
-
-        await setDoc(
-
-          doc(
-            db,
-            "users",
-            currentUser.uid,
-            "missions",
-            "mission14"
-          ),
-
-          {
-
-            missionNumber: 14,
-
-            answer: "Stock Market Trading Session Completed",
-
-            completed: true,
-
-            completedAt: new Date().toISOString()
-
-          }
-
-        );
+const missionRef = doc(
+  db,
+  "users",
+  currentUser.uid,
+  "missions",
+  questionId
+);
 
 
-        // ===============================
-        // SUCCESS
-        // ===============================
+await setDoc(
 
-        missionCompleted = true;
+  missionRef,
 
-        marketText.textContent =
-          "✅ Trading session completed successfully.";
+  {
 
-        statusText.textContent =
-          "🟢 Market Session Recorded";
+    category: category,
 
+    questionNumber: questionNumber,
 
-        startTrading.disabled = false;
+    answer: selectedAnswer,
 
-        startTrading.style.opacity = "1";
+    score: selectedScore,
 
-        startTrading.textContent =
-          "➡ CONTINUE TO MISSION 15";
+    correct:
+      selectedAnswer === correctAnswer,
 
+    completed: true,
 
-      } catch (error) {
+    completedAt:
+      new Date().toISOString()
 
-        console.error(
-          "Mission 14 Firebase Error:",
-          error
-        );
+  }
 
-        marketText.textContent =
-          "❌ Unable to save mission.";
-
-        statusText.textContent =
-          "Please check your internet connection and try again.";
+);
 
 
-        startTrading.disabled = false;
+// ===============================
+// ANSWER SAVED
+// ===============================
 
-        startTrading.style.opacity = "1";
+answerSaved = true;
 
-        started = false;
+nextBtn.disabled = false;
 
-      }
+statusText.textContent =
+  "✅ Answer saved. Continue to Mission 15.";
 
-    }, 1200);
+} catch (error) {
 
-  }, 1000);
+console.error(
+  "Error saving Mission 14:",
+  error
+);
+
+statusText.textContent =
+  "❌ Could not save your answer. Please try again.";
+
+answerLocked = false;
+
+options.forEach(function (option) {
+
+  option.disabled = false;
+
+});
+
+}
+
+}
+
+// ===============================
+// CONTINUE TO MISSION 15
+// ===============================
+
+nextBtn.addEventListener("click", function () {
+
+if (!answerSaved) {
+
+return;
+
+}
+
+window.location.href = "Enter15.html";
 
 });
