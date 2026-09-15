@@ -2,7 +2,8 @@ import { auth, db } from "./firebase.js";
 
 import {
   doc,
-  setDoc
+  setDoc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
@@ -10,48 +11,60 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-// DOM elements
-const healthFill = document.getElementById("healthFill");
-const healthText = document.getElementById("healthText");
+// ===============================
+// DOM ELEMENTS
+// ===============================
 
-const natureValue = document.getElementById("natureValue");
-const economyValue = document.getElementById("economyValue");
-const happyValue = document.getElementById("happyValue");
-const waterValue = document.getElementById("waterValue");
-
-const turns = document.getElementById("turns");
+const options = document.querySelectorAll(".option");
+const fill = document.querySelector(".fill");
 const statusText = document.getElementById("statusText");
+const nextBtn = document.getElementById("nextBtn");
 
-const forestBtn = document.getElementById("forestBtn");
-const riverBtn = document.getElementById("riverBtn");
-const pollinatorBtn = document.getElementById("pollinatorBtn");
-const wildlifeBtn = document.getElementById("wildlifeBtn");
-const industryBtn = document.getElementById("industryBtn");
 
+// ===============================
+// MISSION SETTINGS
+// ===============================
+
+const category = "leadership";
+const questionNumber = 17;
+const questionId = "leadership_q17";
+
+const correctAnswer = "balance";
+
+const scores = {
+  profit: 1,
+  speed: 2,
+  balance: 5,
+  popular: 3
+};
+
+
+// ===============================
+// STATE
+// ===============================
 
 let currentUser = null;
-let missionCompleted = false;
-
-let turnCount = 5;
-
-let nature = 50;
-let economy = 50;
-let happiness = 50;
-let water = 50;
-
-let decisions = [];
+let selectedAnswer = null;
+let selectedScore = 0;
+let answerSaved = false;
 
 
-// Authentication
-onAuthStateChanged(auth, (user) => {
+// ===============================
+// AUTHENTICATION
+// ===============================
+
+onAuthStateChanged(auth, async (user) => {
 
   if (user) {
 
     currentUser = user;
 
+    await checkPreviousAnswer();
+
   } else {
 
     alert("Please login first.");
+
     window.location.href = "Login.html";
 
   }
@@ -59,294 +72,243 @@ onAuthStateChanged(auth, (user) => {
 });
 
 
-// Update the UI
-function updateUI() {
-
-  nature = Math.max(0, Math.min(100, nature));
-  economy = Math.max(0, Math.min(100, economy));
-  happiness = Math.max(0, Math.min(100, happiness));
-  water = Math.max(0, Math.min(100, water));
-
-  const ecosystemHealth =
-    Math.round(
-      (nature + economy + happiness + water) / 4
-    );
-
-  natureValue.textContent = nature;
-  economyValue.textContent = economy;
-  happyValue.textContent = happiness;
-  waterValue.textContent = water;
-
-  turns.textContent = turnCount;
-
-  healthText.textContent =
-    ecosystemHealth + "%";
-
-  healthFill.style.width =
-    ecosystemHealth + "%";
-}
-
-
-// Disable all action buttons
-function disableButtons() {
-
-  forestBtn.disabled = true;
-  riverBtn.disabled = true;
-  pollinatorBtn.disabled = true;
-  wildlifeBtn.disabled = true;
-  industryBtn.disabled = true;
-
-}
-
-
-// Apply a leadership decision
-async function makeDecision(decision) {
-
-  if (!currentUser) {
-
-    alert("Please login first.");
-    window.location.href = "Login.html";
-
-    return;
-
-  }
-
-  if (missionCompleted || turnCount <= 0) {
-
-    return;
-
-  }
-
-
-  decisions.push(decision);
-
-
-  // Apply decision effects
-  switch (decision) {
-
-    case "Plant Forest":
-
-      nature += 12;
-      happiness += 5;
-      water += 6;
-      economy -= 2;
-
-      statusText.textContent =
-        "🌳 Forest expanded. Nature and water resources improved.";
-
-      break;
-
-
-    case "Clean River":
-
-      water += 15;
-      nature += 8;
-      happiness += 6;
-      economy -= 3;
-
-      statusText.textContent =
-        "🌊 River restored. Water quality and public happiness improved.";
-
-      break;
-
-
-    case "Protect Pollinators":
-
-      nature += 8;
-      happiness += 4;
-      economy += 3;
-
-      statusText.textContent =
-        "🐝 Pollinators protected. The ecosystem is becoming more stable.";
-
-      break;
-
-
-    case "Protect Wildlife":
-
-      nature += 10;
-      happiness += 7;
-      economy -= 2;
-
-      statusText.textContent =
-        "🦌 Wildlife protection strengthened the ecosystem.";
-
-      break;
-
-
-    case "Expand Industry":
-
-      economy += 15;
-      happiness += 3;
-      nature -= 10;
-      water -= 7;
-
-      statusText.textContent =
-        "🏭 Industry expanded. Economy improved, but environmental pressure increased.";
-
-      break;
-
-  }
-
-
-  turnCount--;
-
-  updateUI();
-
-
-  if (turnCount === 0) {
-
-    disableButtons();
-
-    statusText.textContent =
-      "🤖 Five decisions completed. AI is analyzing your leadership choices...";
-
-    await completeMission();
-
-    return;
-
-  }
-
-
-  statusText.textContent +=
-    ` | ${turnCount} turns remaining.`;
-
-}
-
-
-// Firebase completion
-async function completeMission() {
-
-  if (missionCompleted) {
-
-    return;
-
-  }
-
-  missionCompleted = true;
-
-
-  if (!currentUser) {
-
-    return;
-
-  }
-
-
-  const ecosystemHealth =
-    Math.round(
-      (nature + economy + happiness + water) / 4
-    );
-
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
+
+async function checkPreviousAnswer() {
 
   try {
 
+    const missionRef = doc(
+      db,
+      "users",
+      currentUser.uid,
+      "missions",
+      questionId
+    );
+
+    const missionSnap = await getDoc(missionRef);
+
+
+    if (missionSnap.exists()) {
+
+      const data = missionSnap.data();
+
+
+      if (data.completed === true) {
+
+        selectedAnswer = data.answer;
+        selectedScore = data.score;
+
+        answerSaved = true;
+
+
+        options.forEach((option) => {
+
+          option.disabled = true;
+          option.style.pointerEvents = "none";
+
+          if (option.dataset.answer === selectedAnswer) {
+
+            option.style.border =
+              "2px solid #00ff88";
+
+            option.style.opacity = "1";
+
+          } else {
+
+            option.style.opacity = "0.6";
+
+          }
+
+        });
+
+
+        if (fill) {
+
+          fill.style.width = "100%";
+
+        }
+
+
+        statusText.textContent =
+          "✅ Mission 17 already completed.";
+
+        nextBtn.disabled = false;
+
+      }
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Lead17 Previous Answer Error:",
+      error
+    );
+
+  }
+
+}
+
+
+// ===============================
+// OPTION SELECTION
+// ===============================
+
+options.forEach((option) => {
+
+  option.addEventListener("click", async () => {
+
+    if (!currentUser) {
+
+      alert("Please login first.");
+
+      return;
+
+    }
+
+
+    if (answerSaved) {
+
+      return;
+
+    }
+
+
+    selectedAnswer =
+      option.dataset.answer;
+
+    selectedScore =
+      scores[selectedAnswer];
+
+
+    const isCorrect =
+      selectedAnswer === correctAnswer;
+
+
+    // Lock all options
+
+    options.forEach((item) => {
+
+      item.disabled = true;
+
+      item.style.pointerEvents = "none";
+      item.style.opacity = "0.6";
+
+    });
+
+
+    option.style.opacity = "1";
+
+
+    // Feedback
+
+    if (isCorrect) {
+
+      option.style.border =
+        "2px solid #00ff88";
+
+      statusText.textContent =
+        "🦋 Excellent leadership. You considered the long-term impact on people, the environment, and the economy.";
+
+    } else {
+
+      option.style.border =
+        "2px solid #ff4d4d";
+
+      statusText.textContent =
+        "⚠️ Good attempt. Strong leaders consider multiple stakeholders and long-term consequences before deciding.";
+
+    }
+
+
+    // Complete progress
+
+    if (fill) {
+
+      fill.style.width = "100%";
+
+    }
+
+
+    await saveAnswer();
+
+  });
+
+});
+
+
+// ===============================
+// SAVE ANSWER TO FIREBASE
+// ===============================
+
+async function saveAnswer() {
+
+  try {
+
+    const missionRef = doc(
+      db,
+      "users",
+      currentUser.uid,
+      "missions",
+      questionId
+    );
+
+
     await setDoc(
-      doc(
-        db,
-        "users",
-        currentUser.uid,
-        "missions",
-        "mission17"
-      ),
+      missionRef,
       {
-        missionNumber: 17,
-
-        answer: "Butterfly Effect Mission Completed",
-
-        decisions: decisions,
-
-        finalNature: nature,
-
-        finalEconomy: economy,
-
-        finalHappiness: happiness,
-
-        finalWater: water,
-
-        finalEcosystemHealth: ecosystemHealth,
-
+        category: category,
+        questionNumber: questionNumber,
+        answer: selectedAnswer,
+        score: selectedScore,
+        correct: selectedAnswer === correctAnswer,
         completed: true,
-
         completedAt: new Date().toISOString()
       }
     );
 
 
-    statusText.textContent =
-      `✅ Mission 17 completed! Final ecosystem health: ${ecosystemHealth}%.`;
+    answerSaved = true;
 
-    setTimeout(() => {
-
-      window.location.href = "Lead18.html";
-
-    }, 1200);
+    nextBtn.disabled = false;
 
 
   } catch (error) {
 
     console.error(
-      "Lead17 Firebase Error:",
+      "Lead17 Firebase Save Error:",
       error
     );
 
-    missionCompleted = false;
 
-    turnCount++;
+    answerSaved = false;
 
-    decisions.pop();
-
-    updateUI();
-
-    forestBtn.disabled = false;
-    riverBtn.disabled = false;
-    pollinatorBtn.disabled = false;
-    wildlifeBtn.disabled = false;
-    industryBtn.disabled = false;
 
     statusText.textContent =
-      "❌ Could not save mission progress. Please try again.";
+      "❌ Could not save your answer. Please try again.";
 
   }
 
 }
 
 
-// Button events
-forestBtn.addEventListener("click", () => {
+// ===============================
+// CONTINUE TO MISSION 18
+// ===============================
 
-  makeDecision("Plant Forest");
+nextBtn.addEventListener("click", () => {
 
-});
+  if (!answerSaved) {
 
+    return;
 
-riverBtn.addEventListener("click", () => {
-
-  makeDecision("Clean River");
-
-});
+  }
 
 
-pollinatorBtn.addEventListener("click", () => {
-
-  makeDecision("Protect Pollinators");
+  window.location.href =
+    "Lead18.html";
 
 });
-
-
-wildlifeBtn.addEventListener("click", () => {
-
-  makeDecision("Protect Wildlife");
-
-});
-
-
-industryBtn.addEventListener("click", () => {
-
-  makeDecision("Expand Industry");
-
-});
-
-
-// Initial UI
-updateUI();
