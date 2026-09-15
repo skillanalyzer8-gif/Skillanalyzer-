@@ -1,113 +1,401 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc
+doc,
+setDoc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+// ===============================
+// ELEMENTS
+// ===============================
 
-const observeBtn = document.getElementById("observeBtn");
+const options = document.getElementById("options");
 const statusText = document.getElementById("statusText");
+const nextBtn = document.getElementById("nextBtn");
+const progressFill = document.querySelector(".fill");
+
+// ===============================
+// MISSION SETTINGS
+// ===============================
+
+const category = "leadership";
+const questionNumber = 13;
+const questionId = "leadership_q13";
+
+const correctAnswer = "observe";
+
+const scores = {
+command: 2,
+avoid: 1,
+control: 3,
+observe: 5
+};
+
+// ===============================
+// STATE
+// ===============================
 
 let currentUser = null;
+let selectedAnswer = null;
+let selectedScore = null;
 let missionCompleted = false;
+let answerSaved = false;
+
+// Continue disabled initially
+
+if (nextBtn) {
+nextBtn.disabled = true;
+}
+
+// ===============================
+// AUTHENTICATION
+// ===============================
+
+onAuthStateChanged(auth, async (user) => {
+
+if (user) {
+
+currentUser = user;
+
+await checkPreviousAnswer();
+
+} else {
+
+alert("Please login first.");
+window.location.href = "Login.html";
+
+}
+
+});
+
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
+
+async function checkPreviousAnswer() {
+
+if (!currentUser) return;
+
+try {
+
+const missionRef = doc(
+  db,
+  "users",
+  currentUser.uid,
+  "missions",
+  questionId
+);
+
+const missionSnap = await getDoc(missionRef);
+
+if (missionSnap.exists()) {
+
+  const data = missionSnap.data();
+
+  if (data.completed === true) {
+
+    selectedAnswer = data.answer;
+    selectedScore = data.score;
+
+    missionCompleted = true;
+    answerSaved = true;
+
+    lockOptions();
+
+    if (progressFill) {
+      progressFill.style.width = "100%";
+    }
+
+    if (statusText) {
+      statusText.textContent =
+        "Mission 13 already completed. You can continue.";
+    }
+
+    if (nextBtn) {
+      nextBtn.disabled = false;
+    }
+
+  }
+
+}
+
+} catch (error) {
+
+console.error(
+  "Lead Mission 13 restore error:",
+  error
+);
+
+}
+
+}
+
+// ===============================
+// OPTION SELECTION
+// ===============================
+
+if (options) {
+
+options.addEventListener("click", async (event) => {
+
+const option = event.target.closest(".option");
+
+if (!option) return;
+
+if (missionCompleted || answerSaved) {
+  return;
+}
 
 
-// Check authentication
-onAuthStateChanged(auth, (user) => {
+selectedAnswer = option.dataset.answer;
 
-  if (user) {
+selectedScore = scores[selectedAnswer] || 0;
 
-    currentUser = user;
+const isCorrect =
+  selectedAnswer === correctAnswer;
+
+
+// ===============================
+// LOCK OPTIONS
+// ===============================
+
+const allOptions =
+  options.querySelectorAll(".option");
+
+allOptions.forEach((item) => {
+
+  item.style.pointerEvents = "none";
+  item.style.opacity = "0.6";
+
+});
+
+option.style.opacity = "1";
+
+
+// ===============================
+// SHOW RESULT
+// ===============================
+
+if (isCorrect) {
+
+  option.style.border =
+    "2px solid #00ff88";
+
+  if (statusText) {
+
+    statusText.textContent =
+      "Correct! Strong leaders observe carefully, listen to their team, and make informed decisions.";
+
+  }
+
+} else {
+
+  option.style.border =
+    "2px solid #ff5555";
+
+
+  const correctOption =
+    options.querySelector(
+      `[data-answer="${correctAnswer}"]`
+    );
+
+  if (correctOption) {
+
+    correctOption.style.opacity = "1";
+    correctOption.style.border =
+      "2px solid #00ff88";
+
+  }
+
+
+  if (statusText) {
+
+    statusText.textContent =
+      "Not the best choice. Good leadership requires observing the situation and making informed decisions.";
+
+  }
+
+}
+
+
+// ===============================
+// PROGRESS
+// ===============================
+
+if (progressFill) {
+
+  progressFill.style.width = "100%";
+
+}
+
+
+// ===============================
+// SAVE ANSWER
+// ===============================
+
+await saveAnswer();
+
+});
+
+}
+
+// ===============================
+// SAVE ANSWER TO FIRESTORE
+// ===============================
+
+async function saveAnswer() {
+
+if (!currentUser) return;
+
+if (!selectedAnswer) return;
+
+if (answerSaved) return;
+
+try {
+
+const missionRef = doc(
+  db,
+  "users",
+  currentUser.uid,
+  "missions",
+  questionId
+);
+
+
+await setDoc(
+  missionRef,
+  {
+    category: category,
+    questionNumber: questionNumber,
+    answer: selectedAnswer,
+    score: selectedScore,
+    correct: selectedAnswer === correctAnswer,
+    completed: true,
+    completedAt: new Date().toISOString()
+  }
+);
+
+
+answerSaved = true;
+missionCompleted = true;
+
+
+if (nextBtn) {
+  nextBtn.disabled = false;
+}
+
+} catch (error) {
+
+console.error(
+  "Lead Mission 13 Firebase Error:",
+  error
+);
+
+
+answerSaved = false;
+missionCompleted = false;
+
+
+if (statusText) {
+
+  statusText.textContent =
+    "❌ Unable to save your answer. Please try again.";
+
+}
+
+}
+
+}
+
+// ===============================
+// LOCK PREVIOUSLY ANSWERED OPTIONS
+// ===============================
+
+function lockOptions() {
+
+if (!options) return;
+
+const allOptions =
+options.querySelectorAll(".option");
+
+allOptions.forEach((option) => {
+
+option.style.pointerEvents = "none";
+
+
+if (
+  option.dataset.answer === selectedAnswer
+) {
+
+  option.style.opacity = "1";
+
+
+  if (selectedAnswer === correctAnswer) {
+
+    option.style.border =
+      "2px solid #00ff88";
 
   } else {
 
-    alert("Please login first.");
-    window.location.href = "Login.html";
+    option.style.border =
+      "2px solid #ff5555";
+
+
+    const correctOption =
+      options.querySelector(
+        `[data-answer="${correctAnswer}"]`
+      );
+
+
+    if (correctOption) {
+
+      correctOption.style.opacity = "1";
+      correctOption.style.border =
+        "2px solid #00ff88";
+
+    }
 
   }
+
+} else {
+
+  option.style.opacity = "0.6";
+
+}
 
 });
 
+}
 
-// Start observation
-observeBtn.addEventListener("click", async () => {
+// ===============================
+// CONTINUE TO MISSION 14
+// ===============================
 
-  if (!currentUser) {
+if (nextBtn) {
 
-    alert("Please login first.");
-    window.location.href = "Login.html";
+nextBtn.addEventListener("click", () => {
 
-    return;
+if (!answerSaved) {
 
-  }
-
-
-  if (missionCompleted) {
-
-    return;
-
-  }
-
-
-  // Prevent multiple clicks
-  observeBtn.disabled = true;
-  observeBtn.style.opacity = "0.6";
-
-  statusText.textContent =
-    "🤖 AI is recording your observation session...";
-
-
-  try {
-
-    await setDoc(
-      doc(
-        db,
-        "users",
-        currentUser.uid,
-        "missions",
-        "mission13"
-      ),
-      {
-        missionNumber: 13,
-        answer: "Shadow Leader Observation Started",
-        completed: true,
-        completedAt: new Date().toISOString()
-      }
-    );
-
-
-    missionCompleted = true;
+  if (statusText) {
 
     statusText.textContent =
-      "✅ Observation recorded. Proceeding to the next mission...";
-
-
-    // Continue only after Firebase successfully saves
-    setTimeout(() => {
-
-      window.location.href = "Lead14.html";
-
-    }, 1000);
-
-
-  } catch (error) {
-
-    console.error(
-      "Lead Mission 13 Firebase Error:",
-      error
-    );
-
-    statusText.textContent =
-      "❌ Unable to record your mission progress. Please try again.";
-
-    observeBtn.disabled = false;
-    observeBtn.style.opacity = "1";
+      "Please select an answer first.";
 
   }
+
+  return;
+
+}
+
+
+window.location.href = "Lead14.html";
 
 });
+
+}
