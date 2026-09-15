@@ -2,6 +2,7 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
+    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -14,284 +15,306 @@ import {
 // DOM ELEMENTS
 // ========================================
 
-const startBtn =
-    document.getElementById("startChallenge");
+const options =
+    document.querySelectorAll(".option");
 
-const designArea =
-    document.querySelector(".designArea");
-
-const status =
+const statusText =
     document.getElementById("statusText");
 
+const fill =
+    document.querySelector(".fill");
+
+const nextBtn =
+    document.getElementById("nextBtn");
+
+
+// ========================================
+// MISSION DATA
+// ========================================
+
+const category = "uiux";
+
+const questionNumber = 6;
+
+const questionId = "uiux_q6";
+
+
+// ========================================
+// CORRECT ANSWER
+// ========================================
+
+const correctAnswer = "simple";
+
+
+// ========================================
+// OPTION SCORES
+// ========================================
+
+const scores = {
+
+    simple: 5,
+
+    complex: 2,
+
+    random: 3,
+
+    text: 1
+
+};
+
+
+// ========================================
+// STATE
+// ========================================
 
 let currentUser = null;
+
+let selectedAnswer = null;
+
+let selectedScore = 0;
+
 let missionCompleted = false;
+
+let answerSaved = false;
+
+
+// ========================================
+// CONTINUE BUTTON
+// ========================================
+
+nextBtn.disabled = true;
 
 
 // ========================================
 // AUTHENTICATION
 // ========================================
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
 
-    if (user) {
-
-        currentUser = user;
-
-    } else {
+    if (!user) {
 
         alert("Please login first.");
 
         window.location.href = "Login.html";
 
+        return;
+
     }
 
-});
+    currentUser = user;
 
-
-// ========================================
-// START ICON CHALLENGE
-// ========================================
-
-startBtn.addEventListener("click", () => {
-
-    startBtn.style.display = "none";
-
-    status.innerHTML =
-        "Loading icon comparison...";
-
-    navigator.vibrate?.([100, 80, 100]);
-
-    setTimeout(showIcons, 1800);
+    await checkPreviousAnswer();
 
 });
 
 
 // ========================================
-// SHOW ICON CHOICES
+// CHECK PREVIOUS ANSWER
 // ========================================
 
-function showIcons() {
+async function checkPreviousAnswer() {
 
-    designArea.innerHTML = `
+    try {
 
-        <h2>
-            🍔 Choose The Best Icon
-        </h2>
-
-        <p>
-            Which icon style is easiest for food delivery users to recognize?
-        </p>
-
-
-        <div class="iconCard">
-
-            <h3>
-                Icon A
-            </h3>
-
-            <p>
-                🎨 Highly detailed<br>
-                ❌ Too complicated<br>
-                ❌ Difficult to recognize quickly
-            </p>
-
-        </div>
+        const missionRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
 
 
-        <div class="iconCard">
-
-            <h3>
-                Icon B
-            </h3>
-
-            <p>
-                🍔 Simple design<br>
-                ✅ Clear meaning<br>
-                ✅ Easy to recognize
-            </p>
-
-        </div>
+        const missionSnap =
+            await getDoc(missionRef);
 
 
-        <div class="iconCard">
+        if (missionSnap.exists()) {
 
-            <h3>
-                Icon C
-            </h3>
-
-            <p>
-                ✨ Decorative style<br>
-                ❌ Too many elements<br>
-                ❌ Poor scalability
-            </p>
-
-        </div>
+            const data =
+                missionSnap.data();
 
 
-        <div class="iconCard">
+            if (data.completed === true) {
 
-            <h3>
-                Icon D
-            </h3>
+                selectedAnswer =
+                    data.answer;
 
-            <p>
-                ⚡ Very abstract<br>
-                ❌ Difficult to understand<br>
-                ❌ Weak visual meaning
-            </p>
+                selectedScore =
+                    data.score || 0;
 
-        </div>
+                missionCompleted = true;
 
-    `;
+                answerSaved = true;
 
 
-    // ========================================
-    // ICON CARD EVENTS
-    // ========================================
+                lockOptions();
 
-    document
-        .querySelectorAll(".iconCard")
-        .forEach((card, index) => {
 
-            card.addEventListener("click", () => {
+                nextBtn.disabled = false;
 
-                reviewIcon(index);
 
-            });
+                if (fill) {
 
-        });
+                    fill.style.width = "100%";
+
+                }
+
+
+                statusText.textContent =
+                    "✅ Mission 6 already completed. You can continue.";
+
+            }
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Ui6 Restore Error:",
+            error
+        );
+
+    }
 
 }
 
 
 // ========================================
-// REVIEW ICON
+// OPTION CLICK
 // ========================================
 
-async function reviewIcon(choice) {
+options.forEach((option) => {
 
-    // Prevent multiple submissions
-    if (missionCompleted) {
-
-        return;
-
-    }
+    option.addEventListener("click", async () => {
 
 
-    // ========================================
-    // CHECK AUTHENTICATION
-    // ========================================
+        // ========================================
+        // CHECK LOGIN
+        // ========================================
 
-    if (!currentUser) {
+        if (!currentUser) {
 
-        alert("Please login first.");
+            alert("Please login first.");
 
-        window.location.href = "Login.html";
+            window.location.href =
+                "Login.html";
 
-        return;
+            return;
 
-    }
-
-
-    let title = "";
-    let message = "";
-    let clarity = "";
-    let usability = "";
-    let rating = "";
-    let score = 0;
+        }
 
 
-    // ========================================
-    // CORRECT ANSWER = ICON B
-    // ========================================
+        // ========================================
+        // PREVENT MULTIPLE ANSWERS
+        // ========================================
 
-    if (choice === 1) {
+        if (missionCompleted) {
 
-        title =
-            "🏆 Perfect Icon Choice";
+            return;
 
-        message =
-            "Excellent! Simple and recognizable icons help users understand actions quickly.";
+        }
 
-        clarity =
-            "99 / 100";
+        if (answerSaved) {
 
-        usability =
-            "97%";
+            return;
 
-        rating =
-            "★★★★★";
-
-        score = 100;
+        }
 
 
-    } else {
+        // ========================================
+        // GET SELECTED ANSWER
+        // ========================================
 
-        title =
-            "⚠ Icon Needs Improvement";
-
-        message =
-            "Good icons should be simple, meaningful, recognizable, and easy to understand.";
-
-        clarity =
-            "73 / 100";
-
-        usability =
-            "79%";
-
-        rating =
-            "★★★☆☆";
-
-        score = 70;
-
-    }
+        selectedAnswer =
+            option.dataset.answer;
 
 
-    // ========================================
-    // SHOW RESULT
-    // ========================================
-
-    designArea.innerHTML = `
-
-        <h2>
-            ${title}
-        </h2>
-
-        <br>
-
-        <p>
-            ${message}
-        </p>
-
-        <br>
-
-        <h3>
-            👁 Icon Clarity : ${clarity}
-        </h3>
-
-        <h3>
-            😊 User Experience : ${usability}
-        </h3>
-
-        <h3>
-            ⭐ Design Rating : ${rating}
-        </h3>
-
-        <h3>
-            🎯 Mission Score : ${score}%
-        </h3>
-
-    `;
+        selectedScore =
+            scores[selectedAnswer] || 0;
 
 
-    status.innerHTML =
-        "Saving your icon design decision...";
+        // ========================================
+        // LOCK OPTIONS
+        // ========================================
+
+        lockOptions(option);
 
 
-    // ========================================
-    // SAVE MISSION 6
-    // ========================================
+        // ========================================
+        // SHOW FEEDBACK
+        // ========================================
+
+        if (
+            selectedAnswer ===
+            correctAnswer
+        ) {
+
+            statusText.textContent =
+                "✅ Excellent! Simple, meaningful and recognizable icons help users understand actions quickly.";
+
+        } else {
+
+            statusText.textContent =
+                "💡 Good attempt. Effective icons should be simple, meaningful, recognizable and easy to understand.";
+
+        }
+
+
+        // ========================================
+        // UPDATE PROGRESS
+        // ========================================
+
+        if (fill) {
+
+            fill.style.width = "100%";
+
+        }
+
+
+        // ========================================
+        // SAVE MISSION
+        // ========================================
+
+        await saveMission();
+
+    });
+
+});
+
+
+// ========================================
+// LOCK OPTIONS
+// ========================================
+
+function lockOptions(selectedOption = null) {
+
+    options.forEach((option) => {
+
+        option.style.pointerEvents =
+            "none";
+
+
+        if (
+            selectedOption &&
+            option !== selectedOption
+        ) {
+
+            option.style.opacity =
+                "0.55";
+
+        }
+
+    });
+
+}
+
+
+// ========================================
+// SAVE MISSION
+// ========================================
+
+async function saveMission() {
 
     try {
 
@@ -301,30 +324,25 @@ async function reviewIcon(choice) {
                 "users",
                 currentUser.uid,
                 "missions",
-                "mission6"
+                questionId
             ),
             {
 
-                missionNumber: 6,
+                category:
+                    category,
+
+                questionNumber:
+                    questionNumber,
 
                 answer:
-                    choice === 1
-                        ? "Icon B"
-                        : `Icon ${String.fromCharCode(65 + choice)}`,
+                    selectedAnswer,
 
-                score: score,
+                score:
+                    selectedScore,
 
-                clarity:
-                    clarity,
-
-                usability:
-                    usability,
-
-                designRating:
-                    rating,
-
-                category:
-                    "Icon Design",
+                correct:
+                    selectedAnswer ===
+                    correctAnswer,
 
                 completed:
                     true,
@@ -337,31 +355,56 @@ async function reviewIcon(choice) {
 
 
         // ========================================
-        // MISSION COMPLETED
+        // UPDATE STATE
         // ========================================
+
+        answerSaved = true;
 
         missionCompleted = true;
 
+        nextBtn.disabled = false;
 
-        status.innerHTML =
-            "✅ Mission 6 completed! Your icon design decision has been saved.";
 
+        statusText.textContent +=
+            " Mission 6 completed!";
 
     } catch (error) {
 
-        // ========================================
-        // FIREBASE ERROR
-        // ========================================
-
         console.error(
-            "UI6 Firebase Error:",
+            "Ui6 Firebase Error:",
             error
         );
 
 
-        status.innerHTML =
-            "❌ Could not save your result. Please try again.";
+        answerSaved = false;
+
+        missionCompleted = false;
+
+        nextBtn.disabled = true;
+
+
+        statusText.textContent =
+            "❌ Could not save your answer. Please try again.";
 
     }
 
 }
+
+
+// ========================================
+// CONTINUE TO MISSION 7
+// ========================================
+
+nextBtn.addEventListener("click", () => {
+
+    if (!answerSaved) {
+
+        return;
+
+    }
+
+
+    window.location.href =
+        "Ui7.html";
+
+});
