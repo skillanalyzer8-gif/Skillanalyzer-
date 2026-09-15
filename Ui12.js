@@ -2,6 +2,7 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
+    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -11,274 +12,268 @@ import {
 
 
 // ===============================
+// MISSION CONFIG
+// ===============================
+
+const category = "uiux";
+const questionNumber = 12;
+const questionId = "uiux_q12";
+
+const correctAnswer = "blue";
+
+
+// ===============================
 // DOM ELEMENTS
 // ===============================
 
-const startBtn = document.getElementById("startChallenge");
-const designArea = document.querySelector(".designArea");
-const status = document.getElementById("statusText");
+const options =
+    document.querySelectorAll(".option");
+
+const statusText =
+    document.getElementById("statusText");
+
+const fill =
+    document.getElementById("fill");
+
+const nextBtn =
+    document.getElementById("nextBtn");
+
+
+// ===============================
+// SCORES
+// ===============================
+
+const scores = {
+
+    red: 2,
+
+    yellow: 1,
+
+    blue: 5,
+
+    random: 3
+
+};
+
+
+// ===============================
+// VARIABLES
+// ===============================
 
 let currentUser = null;
+
+let selectedAnswer = "";
+
+let selectedScore = 0;
+
 let missionCompleted = false;
 
+let answerSaved = false;
+
 
 // ===============================
-// AUTHENTICATION
+// INITIAL BUTTON STATE
 // ===============================
 
-onAuthStateChanged(auth, (user) => {
+nextBtn.disabled = true;
 
-    if (user) {
+nextBtn.style.opacity = "0.5";
 
-        currentUser = user;
 
-    } else {
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
 
-        alert("Please login first.");
-        window.location.href = "Login.html";
+async function checkPreviousAnswer() {
+
+    if (!currentUser) return;
+
+
+    try {
+
+        const answerRef = doc(
+
+            db,
+
+            "users",
+
+            currentUser.uid,
+
+            "missions",
+
+            questionId
+
+        );
+
+
+        const answerSnap =
+            await getDoc(answerRef);
+
+
+        if (answerSnap.exists()) {
+
+            const data =
+                answerSnap.data();
+
+
+            if (data.completed === true) {
+
+                selectedAnswer =
+                    data.answer || "";
+
+                selectedScore =
+                    data.score || 0;
+
+                missionCompleted = true;
+
+                answerSaved = true;
+
+
+                // Restore selected option
+
+                options.forEach(function (option) {
+
+                    const optionAnswer =
+                        option.dataset.answer;
+
+                    if (
+                        optionAnswer ===
+                        selectedAnswer
+                    ) {
+
+                        option.classList.add("active");
+
+                    } else {
+
+                        option.style.opacity =
+                            "0.6";
+
+                    }
+
+
+                    option.style.pointerEvents =
+                        "none";
+
+                });
+
+
+                // Restore progress
+
+                if (fill) {
+
+                    fill.style.width =
+                        `${selectedScore * 20}%`;
+
+                }
+
+
+                // Restore status
+
+                if (
+                    selectedAnswer ===
+                    correctAnswer
+                ) {
+
+                    statusText.textContent =
+                        "✅ Excellent! You selected a professional blue-based palette for trust and confidence.";
+
+                } else {
+
+                    statusText.textContent =
+                        "⚠ You already completed Mission 12.";
+
+                }
+
+
+                nextBtn.disabled = false;
+
+                nextBtn.style.opacity = "1";
+
+
+                console.log(
+                    "UI/UX Mission 12 previous answer restored."
+                );
+
+
+                return;
+
+            }
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Error checking Mission 12:",
+            error
+        );
 
     }
-
-});
-
-
-// ===============================
-// START CHALLENGE
-// ===============================
-
-startBtn.addEventListener("click", () => {
-
-    startBtn.style.display = "none";
-
-    status.innerHTML = "Loading color palettes...";
-
-    navigator.vibrate?.([100, 80, 100]);
-
-    setTimeout(showColorPalettes, 1800);
-
-});
-
-
-// ===============================
-// SHOW COLOR PALETTES
-// ===============================
-
-function showColorPalettes() {
-
-    designArea.innerHTML = `
-
-        <h2>🏦 Choose The Best Color Palette</h2>
-
-        <p>
-            Which palette creates the strongest feeling
-            of trust and confidence for a banking application?
-        </p>
-
-
-        <div class="colorCard">
-
-            <h3>Palette A</h3>
-
-            <p>
-                🔴 Bright red dominant<br>
-                ❌ Feels urgent and alarming<br>
-                ❌ Not ideal for building financial trust
-            </p>
-
-        </div>
-
-
-        <div class="colorCard">
-
-            <h3>Palette B</h3>
-
-            <p>
-                🔵 Blue-based palette<br>
-                ✅ Communicates trust and stability<br>
-                ✅ Professional and calming
-            </p>
-
-        </div>
-
-
-        <div class="colorCard">
-
-            <h3>Palette C</h3>
-
-            <p>
-                🟡 Bright yellow dominant<br>
-                ❌ Can feel overly energetic<br>
-                ❌ Weak professional banking impression
-            </p>
-
-        </div>
-
-
-        <div class="colorCard">
-
-            <h3>Palette D</h3>
-
-            <p>
-                🟣 Highly saturated mixed colors<br>
-                ❌ Visually distracting<br>
-                ❌ Weak visual consistency
-            </p>
-
-        </div>
-
-    `;
-
-
-    document
-        .querySelectorAll(".colorCard")
-        .forEach((card, index) => {
-
-            card.addEventListener("click", () => {
-
-                reviewColorPalette(index);
-
-            });
-
-        });
 
 }
 
 
 // ===============================
-// REVIEW COLOR PALETTE
+// SAVE MISSION
 // ===============================
 
-async function reviewColorPalette(choice) {
-
-    if (missionCompleted) return;
-
+async function saveMission() {
 
     if (!currentUser) {
 
-        alert("Please login first.");
-        window.location.href = "Login.html";
+        statusText.textContent =
+            "❌ Please login again.";
 
         return;
 
     }
 
 
-    let title = "";
-    let message = "";
-    let trust = "";
-    let consistency = "";
-    let rating = "";
-    let score = 0;
+    const isCorrect =
+        selectedAnswer === correctAnswer;
 
-
-    // Palette B = Correct answer
-    if (choice === 1) {
-
-        title = "🏆 Excellent Color Choice";
-
-        message =
-            "Excellent! A well-balanced blue-based palette can communicate trust, stability, and professionalism in a banking interface.";
-
-        trust = "99 / 100";
-
-        consistency = "97%";
-
-        rating = "★★★★★";
-
-        score = 100;
-
-    } else {
-
-        title = "⚠ Color Palette Needs Improvement";
-
-        message =
-            "Good color choices should support the product's purpose, create an appropriate emotional response, and maintain visual consistency.";
-
-        trust = "73 / 100";
-
-        consistency = "79%";
-
-        rating = "★★★☆☆";
-
-        score = 70;
-
-    }
-
-
-    // ===============================
-    // SHOW RESULT
-    // ===============================
-
-    designArea.innerHTML = `
-
-        <h2>${title}</h2>
-
-        <br>
-
-        <p>${message}</p>
-
-        <br>
-
-        <h3>
-            🤝 Trust & Confidence : ${trust}
-        </h3>
-
-        <h3>
-            🎨 Visual Consistency : ${consistency}
-        </h3>
-
-        <h3>
-            ⭐ Color Design Rating : ${rating}
-        </h3>
-
-        <h3>
-            🎯 Mission Score : ${score}%
-        </h3>
-
-    `;
-
-
-    status.innerHTML = "Saving your color decision...";
-
-
-    // ===============================
-    // SAVE TO FIRESTORE
-    // ===============================
 
     try {
 
         await setDoc(
 
             doc(
+
                 db,
+
                 "users",
+
                 currentUser.uid,
+
                 "missions",
-                "mission12"
+
+                questionId
+
             ),
 
             {
 
-                missionNumber: 12,
+                category:
+                    category,
+
+                questionNumber:
+                    questionNumber,
 
                 answer:
-                    choice === 1
-                        ? "Palette B"
-                        : `Palette ${String.fromCharCode(65 + choice)}`,
+                    selectedAnswer,
 
-                score: score,
+                score:
+                    selectedScore,
 
-                trust: trust,
+                correct:
+                    isCorrect,
 
-                visualConsistency: consistency,
+                completed:
+                    true,
 
-                colorRating: rating,
-
-                category: "Color Psychology",
-
-                completed: true,
-
-                completedAt: new Date().toISOString()
+                completedAt:
+                    new Date().toISOString()
 
             }
 
@@ -287,18 +282,237 @@ async function reviewColorPalette(choice) {
 
         missionCompleted = true;
 
+        answerSaved = true;
 
-        status.innerHTML =
-            "✅ Mission 12 completed! Your color decision has been saved.";
+
+        if (isCorrect) {
+
+            statusText.textContent =
+                "✅ Excellent! Blue communicates trust, reliability, and security effectively for banking.";
+
+        } else {
+
+            statusText.textContent =
+                "⚠ Review the choice. A professional blue-based palette is the strongest option for banking trust.";
+
+        }
+
+
+        nextBtn.disabled = false;
+
+        nextBtn.style.opacity = "1";
+
+
+        console.log(
+            "UI/UX Mission 12 saved successfully."
+        );
 
 
     } catch (error) {
 
-        console.error("UI12 Firebase Error:", error);
+        console.error(
+            "Error saving Mission 12:",
+            error
+        );
 
-        status.innerHTML =
-            "❌ Could not save your result. Please try again.";
+
+        answerSaved = false;
+
+
+        statusText.textContent =
+            "❌ Could not save your decision. Please try again.";
+
+        nextBtn.disabled = true;
+
+        nextBtn.style.opacity = "0.5";
 
     }
 
 }
+
+
+// ===============================
+// OPTION CLICK
+// ===============================
+
+options.forEach(function (option) {
+
+    option.addEventListener("click", async function () {
+
+        if (missionCompleted) return;
+
+
+        if (!currentUser) {
+
+            alert("Please login first.");
+
+            window.location.href =
+                "Login.html";
+
+            return;
+
+        }
+
+
+        selectedAnswer =
+            option.dataset.answer;
+
+        selectedScore =
+            Number(option.dataset.score);
+
+
+        // Lock all options
+
+        options.forEach(function (item) {
+
+            item.style.pointerEvents =
+                "none";
+
+        });
+
+
+        // Highlight selected option
+
+        options.forEach(function (item) {
+
+            if (
+                item.dataset.answer ===
+                selectedAnswer
+            ) {
+
+                item.classList.add("active");
+
+            } else {
+
+                item.style.opacity =
+                    "0.6";
+
+            }
+
+        });
+
+
+        // Progress
+
+        if (fill) {
+
+            fill.style.width =
+                `${selectedScore * 20}%`;
+
+        }
+
+
+        // Temporary status
+
+        statusText.textContent =
+            "🎨 Analyzing your color psychology decision...";
+
+
+        // Small delay for assessment feeling
+
+        await new Promise(function (resolve) {
+
+            setTimeout(resolve, 700);
+
+        });
+
+
+        await saveMission();
+
+    });
+
+});
+
+
+// ===============================
+// AUTHENTICATION
+// ===============================
+
+onAuthStateChanged(
+
+    auth,
+
+    async function (user) {
+
+        if (user) {
+
+            currentUser = user;
+
+
+            console.log(
+                "Logged in:",
+                currentUser.uid
+            );
+
+
+            await checkPreviousAnswer();
+
+
+        } else {
+
+            currentUser = null;
+
+
+            statusText.textContent =
+                "❌ Please login to continue.";
+
+
+            nextBtn.disabled = true;
+
+            nextBtn.style.opacity =
+                "0.5";
+
+
+            alert(
+                "Please login first."
+            );
+
+
+            window.location.href =
+                "Login.html";
+
+        }
+
+    }
+
+);
+
+
+// ===============================
+// CONTINUE TO MISSION 13
+// ===============================
+
+nextBtn.addEventListener(
+
+    "click",
+
+    function () {
+
+        if (!selectedAnswer) {
+
+            alert(
+                "Please select an option first."
+            );
+
+            return;
+
+        }
+
+
+        if (!answerSaved) {
+
+            alert(
+                "Please wait until your answer is saved."
+            );
+
+            return;
+
+        }
+
+
+        window.location.href =
+            "Ui13.html";
+
+    }
+
+);
