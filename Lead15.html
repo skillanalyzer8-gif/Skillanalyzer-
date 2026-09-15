@@ -1,156 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Lead15 - Time Fracture</title>
+<title>Lead15 - Time Fracture</title><link rel="stylesheet" href="Lead15.css"><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+rel="stylesheet"><link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"></head><body><!-- Time Background --><div class="background"><div class="clockRing"></div><div class="particles"></div><div class="timeLines"></div></div><div class="container"><!-- Header --><div class="header"><h1>⏳ TIME FRACTURE</h1><p>Leadership Mission 15 / 20</p></div><!-- AI Brief --><div class="brief"><h2>⚠ Emergency Timeline</h2><p>A city-wide reactor failure is about to occur.
 
-<link rel="stylesheet" href="Lead15.css">
+Your team has limited time to respond.
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
-rel="stylesheet">
+Several problems require attention, but not every problem has the same level of impact.
 
-</head>
+As the leader, you must decide how to use the team's limited time.
 
-<body>
-
-<!-- Time Background -->
-
-<div class="background">
-
-<div class="clockRing"></div>
-
-<div class="particles"></div>
-
-<div class="timeLines"></div>
-
-</div>
-
-<div class="container">
-
-<!-- Header -->
-
-<div class="header">
-
-<h1>⏳ TIME FRACTURE</h1>
-
-<p>Leadership Mission 15 / 20</p>
-
-</div>
-
-<!-- AI Brief -->
-
-<div class="brief">
-
-<h2>⚠ Emergency Timeline</h2>
-
-<p>
-
-A city-wide reactor failure is about to occur.
-
-Time can only be reversed by five seconds.
-
-Use your rewind wisely.
-
-Every second you wait changes the future.
-
-</p>
-
-</div>
-
-<!-- Timeline Arena -->
-
-<div class="arena">
-
-<div class="city">
-
+</p></div><!-- Timeline Arena --><div class="arena"><div class="city">
 🏙️
-
-</div>
-
-<div class="meteor">
-
+</div><div class="meteor">
 ☄️
+</div><div class="timeline"><div class="progress"></div></div></div><!-- Leadership Question --><div class="questionBox"><h2>What is the best way to use the team's limited time?
 
-</div>
+</h2><div id="options"><button class="option"
+data-answer="prioritize">
 
-<div class="timeline">
+A. Prioritize the most critical problems and assign team members based on their strengths.
 
-<div class="progress"></div>
+</button><button class="option"
+data-answer="rush">
 
-</div>
+B. Tell everyone to work as fast as possible without deciding priorities.
 
-</div>
+</button><button class="option"
+data-answer="alone">
 
-<!-- AI Status -->
+C. Handle every important task yourself so the team does not make mistakes.
 
-<div class="status">
+</button><button class="option"
+data-answer="equal">
 
-<h3>AI Timeline Monitor</h3>
+D. Spend equal time on every problem regardless of its impact.
 
-<p id="statusText">
+</button></div></div><!-- AI Status --><div class="status"><h3>AI Timeline Monitor</h3><p id="statusText">Choose the best leadership response.
 
-Future is unstable...
+</p><div class="progress"><div class="fill"></div></div></div><!-- Continue --><button id="nextBtn" disabled>CONTINUE TO MISSION 16 →
 
-</p>
-
-</div>
-
-<!-- Controls -->
-
-<div class="controls"><div class="monitor">
-
-    <p>Time Remaining:
-    <span id="timer">20</span>s
-    </p>
-
-    <div class="timelineBar">
-
-    <div id="timelineFill"></div>
-
-    </div>
-
-    </div>
-
-    <div class="reactor">
-
-    ☢️
-
-    </div>
-
-    <div class="controls">
-
-    <button id="startBtn">
-
-    ▶ START MISSION
-
-    </button>
-
-    <button id="rewindBtn">
-
-    ⏪ REWIND 5 SECONDS
-
-    </button>
-
-    </div>
-
-<button id="rewindBtn">
-
-⏪ REWIND 5 SECONDS
-
-</button>
-
-</div>
-
-</div>
-
-<script type="module" src="Lead15.js"></script>
-
-</body>
-
-</html>
+</button></div><script type="module" src="Lead15.js"></script></body></html>
