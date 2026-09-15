@@ -1,207 +1,434 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc
+    doc,
+    getDoc,
+    setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-const startMeeting = document.getElementById("startMeeting");
-const meetingText = document.getElementById("meetingText");
+// ===============================
+// MISSION CONFIG
+// ===============================
+
+const category = "entrepreneurship";
+
+const questionNumber = 9;
+
+const questionId = "entrepreneurship_q9";
+
+
+// ===============================
+// ANSWER SCORES
+// ===============================
+
+const scores = {
+
+    negotiate: 5,
+
+    accept: 2,
+
+    reject: 1,
+
+    discount: 3
+
+};
+
+
+// Correct answer
+
+const correctAnswer = "negotiate";
+
+
+// ===============================
+// ELEMENTS
+// ===============================
+
+const options = document.querySelectorAll(".option");
+
+const nextBtn = document.getElementById("nextBtn");
+
 const statusText = document.getElementById("statusText");
 
+const meetingText = document.getElementById("meetingText");
+
+const progressFill = document.querySelector(".fill");
+
+
+// ===============================
+// STATE
+// ===============================
+
 let currentUser = null;
-let meetingStarted = false;
-let missionCompleted = false;
+
+let selectedAnswer = null;
+
+let selectedScore = 0;
+
+let answerLocked = false;
+
+let answerSaved = false;
 
 
 // ===============================
-// CHECK LOGIN
+// INITIAL STATE
 // ===============================
 
-onAuthStateChanged(auth, function (user) {
+nextBtn.disabled = true;
 
-  if (user) {
+if (progressFill) {
 
-    currentUser = user;
+    progressFill.style.width = "0%";
 
-  } else {
+}
 
-    alert("Please login first.");
 
-    window.location.href = "Login.html";
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
 
-  }
+async function checkPreviousAnswer() {
+
+    if (!currentUser) return;
+
+    try {
+
+        const answerRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
+
+        const answerSnap = await getDoc(answerRef);
+
+
+        if (!answerSnap.exists()) {
+
+            return;
+
+        }
+
+
+        const data = answerSnap.data();
+
+
+        if (!data.completed) {
+
+            return;
+
+        }
+
+
+        // Restore previous answer
+
+        selectedAnswer = data.answer;
+
+        selectedScore = data.score || 0;
+
+        answerLocked = true;
+
+        answerSaved = true;
+
+
+        // Restore visual state
+
+        options.forEach(option => {
+
+            const answer = option.dataset.answer;
+
+
+            if (answer === selectedAnswer) {
+
+                option.classList.add("selected");
+
+            } else {
+
+                option.style.opacity = "0.45";
+
+            }
+
+        });
+
+
+        if (meetingText) {
+
+            meetingText.textContent =
+                "🤝 Your client negotiation decision has already been completed.";
+
+        }
+
+
+        if (statusText) {
+
+            if (data.correct) {
+
+                statusText.textContent =
+                    "✅ Good negotiation strategy! You balanced client needs with realistic expectations.";
+
+            } else {
+
+                statusText.textContent =
+                    "📊 Your previous negotiation decision has been restored.";
+
+            }
+
+        }
+
+
+        if (progressFill) {
+
+            progressFill.style.width = "100%";
+
+        }
+
+
+        nextBtn.disabled = false;
+
+
+    } catch (error) {
+
+        console.error(
+            "Error checking previous answer:",
+            error
+        );
+
+    }
+
+}
+
+
+// ===============================
+// SAVE ANSWER
+// ===============================
+
+async function saveAnswer() {
+
+    if (!currentUser || !selectedAnswer) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const answerRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "missions",
+            questionId
+        );
+
+
+        await setDoc(answerRef, {
+
+            category: category,
+
+            questionNumber: questionNumber,
+
+            answer: selectedAnswer,
+
+            score: selectedScore,
+
+            correct: selectedAnswer === correctAnswer,
+
+            completed: true,
+
+            completedAt: new Date()
+
+        });
+
+
+        answerSaved = true;
+
+        nextBtn.disabled = false;
+
+
+        if (statusText) {
+
+            if (selectedAnswer === correctAnswer) {
+
+                statusText.textContent =
+                    "✅ Excellent! You negotiated a realistic agreement based on value and requirements.";
+
+            } else {
+
+                statusText.textContent =
+                    "📊 Your negotiation decision has been recorded.";
+
+            }
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Error saving answer:",
+            error
+        );
+
+
+        if (statusText) {
+
+            statusText.textContent =
+                "⚠️ Could not save your answer. Please try again.";
+
+        }
+
+    }
+
+}
+
+
+// ===============================
+// OPTION CLICK
+// ===============================
+
+options.forEach(option => {
+
+    option.addEventListener("click", async () => {
+
+
+        // Prevent changing answer
+
+        if (answerLocked) {
+
+            return;
+
+        }
+
+
+        selectedAnswer =
+            option.dataset.answer;
+
+
+        selectedScore =
+            scores[selectedAnswer] || 0;
+
+
+        answerLocked = true;
+
+
+        // Dim other options
+
+        options.forEach(otherOption => {
+
+            if (otherOption !== option) {
+
+                otherOption.style.opacity = "0.45";
+
+            }
+
+        });
+
+
+        // Highlight selected option
+
+        option.classList.add("selected");
+
+
+        // Update meeting
+
+        if (meetingText) {
+
+            meetingText.textContent =
+                "🤖 AI Business Mentor is evaluating your negotiation strategy...";
+
+        }
+
+
+        // Update status
+
+        if (statusText) {
+
+            statusText.textContent =
+                "🔍 Analyzing communication, value assessment, and negotiation skills...";
+
+        }
+
+
+        // Progress
+
+        if (progressFill) {
+
+            progressFill.style.width = "100%";
+
+        }
+
+
+        // Analysis delay
+
+        await new Promise(resolve => {
+
+            setTimeout(resolve, 1200);
+
+        });
+
+
+        // Save answer
+
+        await saveAnswer();
+
+    });
 
 });
 
 
 // ===============================
-// START CLIENT MEETING
+// CONTINUE
 // ===============================
 
-startMeeting.addEventListener("click", function () {
-
-  // ===============================
-  // CONTINUE TO MISSION 10
-  // ===============================
-
-  if (startMeeting.textContent.includes("Continue")) {
-
-    if (!missionCompleted) {
-
-      alert("Please wait until Mission 9 is saved.");
-
-      return;
-
-    }
-
-    window.location.href = "Enter10.html";
-
-    return;
-
-  }
+nextBtn.addEventListener("click", () => {
 
 
-  if (meetingStarted) {
-    return;
-  }
+    if (!selectedAnswer) {
 
-  meetingStarted = true;
-
-  startMeeting.disabled = true;
-  startMeeting.style.opacity = "0.6";
-
-
-  // ===============================
-  // MEETING STAGE 1
-  // ===============================
-
-  statusText.textContent =
-    "🤝 Client meeting started.";
-
-  meetingText.textContent =
-    "The client is explaining their software requirements...";
-
-
-  // ===============================
-  // MEETING STAGE 2
-  // ===============================
-
-  setTimeout(function () {
-
-    statusText.textContent =
-      "💬 Discussing requirements and expectations...";
-
-    meetingText.textContent =
-      "The client has a limited budget but high expectations.";
-
-  }, 1500);
-
-
-  // ===============================
-  // MEETING STAGE 3
-  // ===============================
-
-  setTimeout(function () {
-
-    statusText.textContent =
-      "🧠 Negotiating a balanced solution...";
-
-    meetingText.textContent =
-      "Finding a solution that provides value for both sides...";
-
-  }, 3000);
-
-
-  // ===============================
-  // MEETING COMPLETE
-  // ===============================
-
-  setTimeout(async function () {
-
-    meetingText.textContent =
-      "🚀 Client negotiation completed.";
-
-    statusText.textContent =
-      "🤖 AI has evaluated your negotiation approach.";
-
-
-    // ===============================
-    // CHECK USER SESSION
-    // ===============================
-
-    if (!currentUser) {
-
-      statusText.textContent =
-        "❌ Login session not found.";
-
-      alert("Please login again.");
-
-      return;
+        return;
 
     }
 
 
-    // ===============================
-    // SAVE MISSION 9 TO FIREBASE
-    // ===============================
+    if (!answerSaved) {
 
-    try {
-
-      await setDoc(
-        doc(
-          db,
-          "users",
-          currentUser.uid,
-          "missions",
-          "mission9"
-        ),
-        {
-          missionNumber: 9,
-          answer: "Client Negotiation Completed",
-          completed: true,
-          completedAt: new Date().toISOString()
-        }
-      );
-
-
-      missionCompleted = true;
-
-
-      statusText.textContent =
-        "✅ Mission 9 Completed & Saved Successfully";
-
-
-      // ===============================
-      // ENABLE CONTINUE
-      // ===============================
-
-      startMeeting.textContent =
-        "Continue to Mission 10 →";
-
-      startMeeting.disabled = false;
-      startMeeting.style.opacity = "1";
-
-
-    } catch (error) {
-
-      console.error("Firebase Error:", error);
-
-      statusText.textContent =
-        "❌ Could not save mission. Please try again.";
-
-      startMeeting.disabled = false;
-      startMeeting.style.opacity = "1";
-
-      meetingStarted = false;
+        return;
 
     }
 
-  }, 4500);
+
+    window.location.href =
+        "Enter10.html";
+
+});
+
+
+// ===============================
+// FIREBASE AUTH
+// ===============================
+
+onAuthStateChanged(auth, async user => {
+
+
+    if (!user) {
+
+        window.location.href =
+            "Login.html";
+
+        return;
+
+    }
+
+
+    currentUser = user;
+
+
+    await checkPreviousAnswer();
 
 });
