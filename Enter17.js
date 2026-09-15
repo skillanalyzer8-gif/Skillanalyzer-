@@ -1,48 +1,180 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc
+doc,
+setDoc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 
 // ===============================
 // GET HTML ELEMENTS
 // ===============================
 
-const startHiring = document.getElementById("startHiring");
-const interviewText = document.getElementById("interviewText");
+const options = document.querySelectorAll(".option");
 const statusText = document.getElementById("statusText");
-
+const nextBtn = document.getElementById("nextBtn");
 
 // ===============================
 // VARIABLES
 // ===============================
 
 let currentUser = null;
-let missionCompleted = false;
-let started = false;
+let selectedAnswer = null;
+let selectedScore = 0;
+let answerLocked = false;
+let answerSaved = false;
 
+// ===============================
+// MISSION DETAILS
+// ===============================
+
+const category = "entrepreneurship";
+const questionNumber = 17;
+const questionId = "entrepreneurship_q17";
+
+// ===============================
+// SCORES
+// ===============================
+
+const scores = {
+skills: 5,
+friend: 2,
+famous: 1,
+salary: 3
+};
+
+// ===============================
+// CORRECT ANSWER
+// ===============================
+
+const correctAnswer = "skills";
 
 // ===============================
 // CHECK LOGIN
 // ===============================
 
-onAuthStateChanged(auth, function (user) {
+onAuthStateChanged(auth, async function (user) {
 
-  if (user) {
+if (user) {
 
-    currentUser = user;
+currentUser = user;
 
-  } else {
+await checkPreviousAnswer();
 
-    alert("Please login first.");
+} else {
 
-    window.location.href = "Login.html";
+alert("Please login first.");
+
+window.location.href = "Login.html";
+
+}
+
+});
+
+// ===============================
+// CHECK PREVIOUS ANSWER
+// ===============================
+
+async function checkPreviousAnswer() {
+
+try {
+
+const missionRef = doc(
+  db,
+  "users",
+  currentUser.uid,
+  "missions",
+  questionId
+);
+
+const missionSnap = await getDoc(missionRef);
+
+if (missionSnap.exists()) {
+
+  const data = missionSnap.data();
+
+  if (data.completed === true) {
+
+    selectedAnswer = data.answer;
+    selectedScore = data.score || 0;
+
+    answerLocked = true;
+    answerSaved = true;
+
+    options.forEach(function (option) {
+
+      option.disabled = true;
+
+      if (option.dataset.answer === selectedAnswer) {
+
+        option.style.border =
+          "2px solid #00ff88";
+
+      } else {
+
+        option.style.opacity = "0.45";
+
+      }
+
+    });
+
+    statusText.textContent =
+      "✅ Mission 17 already completed. You can continue.";
+
+    nextBtn.disabled = false;
+
+  }
+
+}
+
+} catch (error) {
+
+console.error(
+  "Error checking previous answer:",
+  error
+);
+
+}
+
+}
+
+// ===============================
+// OPTION CLICK
+// ===============================
+
+options.forEach(function (option) {
+
+option.addEventListener("click", async function () {
+
+if (answerLocked) {
+
+  return;
+
+}
+
+selectedAnswer = option.dataset.answer;
+
+selectedScore =
+  scores[selectedAnswer] || 0;
+
+answerLocked = true;
+
+
+// ===============================
+// LOCK ALL OPTIONS
+// ===============================
+
+options.forEach(function (item) {
+
+  item.disabled = true;
+
+  if (item !== option) {
+
+    item.style.opacity = "0.45";
 
   }
 
@@ -50,161 +182,137 @@ onAuthStateChanged(auth, function (user) {
 
 
 // ===============================
-// START INTERVIEWS
+// SHOW RESULT
 // ===============================
 
-startHiring.addEventListener("click", function () {
+if (selectedAnswer === correctAnswer) {
 
-  // If Mission 17 is already completed,
-  // continue to Mission 18
-
-  if (missionCompleted) {
-
-    window.location.href = "Enter18.html";
-
-    return;
-
-  }
-
-
-  // Prevent double clicks
-
-  if (started) {
-
-    return;
-
-  }
-
-  started = true;
-
-  startHiring.disabled = true;
-
-  startHiring.style.opacity = "0.5";
-
-
-  // ===============================
-  // STEP 1 — APPLICATIONS
-  // ===============================
-
-  interviewText.textContent =
-    "📂 Reviewing hundreds of executive applications...";
+  option.style.border =
+    "2px solid #00ff88";
 
   statusText.textContent =
-    "🔍 Shortlisting the strongest candidates...";
+    "✅ Excellent hiring decision! The best candidate should match the company's needs with the right skills, experience, and leadership ability.";
+
+} else {
+
+  option.style.border =
+    "2px solid #ff5555";
+
+  statusText.textContent =
+    "⚠️ Not the strongest choice. A good entrepreneur should evaluate candidates objectively based on the needs of the company.";
+
+}
 
 
-  setTimeout(function () {
+// ===============================
+// SAVE ANSWER
+// ===============================
 
-    // ===============================
-    // STEP 2 — INTERVIEWS
-    // ===============================
+await saveAnswer();
 
-    interviewText.textContent =
-      "👔 AI is preparing interviews for three exceptional candidates...";
+});
 
-    statusText.textContent =
-      "🤖 Evaluating leadership skills, experience and vision...";
+});
 
+// ===============================
+// SAVE ANSWER TO FIRESTORE
+// ===============================
 
-    setTimeout(async function () {
+async function saveAnswer() {
 
-      // ===============================
-      // CHECK LOGIN
-      // ===============================
+if (!currentUser) {
 
-      if (!currentUser) {
+alert("Please login again.");
 
-        interviewText.textContent =
-          "❌ Login session not found.";
+window.location.href = "Login.html";
 
-        statusText.textContent =
-          "Please login again.";
+return;
 
-        alert("Please login again.");
+}
 
-        window.location.href = "Login.html";
+try {
 
-        return;
-
-      }
-
-
-      // ===============================
-      // SAVE MISSION 17
-      // ===============================
-
-      try {
-
-        await setDoc(
-
-          doc(
-            db,
-            "users",
-            currentUser.uid,
-            "missions",
-            "mission17"
-          ),
-
-          {
-
-            missionNumber: 17,
-
-            answer: "Executive Hiring Decision Completed",
-
-            completed: true,
-
-            completedAt: new Date().toISOString()
-
-          }
-
-        );
+const missionRef = doc(
+  db,
+  "users",
+  currentUser.uid,
+  "missions",
+  questionId
+);
 
 
-        // ===============================
-        // SUCCESS
-        // ===============================
+await setDoc(
 
-        missionCompleted = true;
+  missionRef,
 
-        interviewText.textContent =
-          "✅ Executive recruitment process completed successfully.";
+  {
 
-        statusText.textContent =
-          "👔 Recruitment Status: Hiring Mission Completed";
+    category: category,
 
+    questionNumber: questionNumber,
 
-        startHiring.disabled = false;
+    answer: selectedAnswer,
 
-        startHiring.style.opacity = "1";
+    score: selectedScore,
 
-        startHiring.textContent =
-          "➡ CONTINUE TO MISSION 18";
+    correct:
+      selectedAnswer === correctAnswer,
 
+    completed: true,
 
-      } catch (error) {
+    completedAt:
+      new Date().toISOString()
 
-        console.error(
-          "Mission 17 Firebase Error:",
-          error
-        );
+  }
 
-        interviewText.textContent =
-          "❌ Unable to save mission.";
-
-        statusText.textContent =
-          "Please check your internet connection and try again.";
+);
 
 
-        startHiring.disabled = false;
+// ===============================
+// ANSWER SAVED
+// ===============================
 
-        startHiring.style.opacity = "1";
+answerSaved = true;
 
-        started = false;
+nextBtn.disabled = false;
 
-      }
+statusText.textContent =
+  "✅ Answer saved. Continue to Mission 18.";
 
-    }, 1200);
+} catch (error) {
 
-  }, 1000);
+console.error(
+  "Error saving Mission 17:",
+  error
+);
+
+statusText.textContent =
+  "❌ Could not save your answer. Please try again.";
+
+answerLocked = false;
+
+options.forEach(function (option) {
+
+  option.disabled = false;
+
+});
+
+}
+
+}
+
+// ===============================
+// CONTINUE TO MISSION 18
+// ===============================
+
+nextBtn.addEventListener("click", function () {
+
+if (!answerSaved) {
+
+return;
+
+}
+
+window.location.href = "Enter18.html";
 
 });
