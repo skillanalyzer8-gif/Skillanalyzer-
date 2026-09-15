@@ -1,207 +1,372 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc
+doc,
+getDoc,
+setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+// =====================================
+// MISSION CONFIGURATION
+// =====================================
 
-const startAnalysis = document.getElementById("startAnalysis");
-const marketText = document.getElementById("marketText");
-const statusText = document.getElementById("statusText");
+const category = "entrepreneurship";
+
+const questionNumber = 5;
+
+const questionId = "entrepreneurship_q5";
+
+// =====================================
+// SCORE SYSTEM
+// =====================================
+
+const scores = {
+
+customerProblem: 5,
+
+addFeatures: 3,
+
+changeLogo: 2,
+
+increasePrice: 1
+
+};
+
+// =====================================
+// HTML ELEMENTS
+// =====================================
+
+const options =
+document.querySelectorAll(".option");
+
+const nextBtn =
+document.getElementById("nextBtn");
+
+const statusText =
+document.getElementById("statusText");
+
+const progressFill =
+document.querySelector(".fill");
+
+// =====================================
+// STATE
+// =====================================
 
 let currentUser = null;
-let analysisStarted = false;
-let missionCompleted = false;
+
+let selectedAnswer = null;
+
+let selectedScore = 0;
+
+let answerLocked = false;
+
+let answerSaved = false;
+
+// =====================================
+// INITIAL STATE
+// =====================================
+
+nextBtn.disabled = true;
+
+// =====================================
+// CHECK PREVIOUS ANSWER
+// =====================================
+
+async function checkPreviousAnswer() {
+
+if (!currentUser) return;
 
 
-// ===============================
-// CHECK LOGIN
-// ===============================
+try {
 
-onAuthStateChanged(auth, function (user) {
+    const missionRef = doc(
+        db,
+        "users",
+        currentUser.uid,
+        "missions",
+        questionId
+    );
 
-  if (user) {
+
+    const missionSnap =
+        await getDoc(missionRef);
+
+
+    if (missionSnap.exists()) {
+
+        const data =
+            missionSnap.data();
+
+
+        selectedAnswer =
+            data.answer;
+
+        selectedScore =
+            data.score || 0;
+
+        answerLocked = true;
+
+        answerSaved = true;
+
+
+        options.forEach(option => {
+
+            if (
+                option.dataset.answer ===
+                selectedAnswer
+            ) {
+
+                option.classList.add(
+                    "selected"
+                );
+
+            } else {
+
+                option.style.opacity =
+                    "0.5";
+
+            }
+
+        });
+
+
+        progressFill.style.width =
+            "100%";
+
+
+        statusText.textContent =
+            "✅ Your previous answer was already saved.";
+
+
+        nextBtn.disabled = false;
+
+    }
+
+} catch (error) {
+
+    console.error(
+        "Error checking Entrepreneurship Mission 5:",
+        error
+    );
+
+}
+
+}
+
+// =====================================
+// SAVE ANSWER
+// =====================================
+
+async function saveAnswer() {
+
+if (
+    !currentUser ||
+    !selectedAnswer
+) {
+
+    return false;
+
+}
+
+
+try {
+
+    const missionRef = doc(
+        db,
+        "users",
+        currentUser.uid,
+        "missions",
+        questionId
+    );
+
+
+    await setDoc(
+
+        missionRef,
+
+        {
+
+            category: category,
+
+            questionNumber:
+                questionNumber,
+
+            answer:
+                selectedAnswer,
+
+            score:
+                selectedScore,
+
+            correct:
+                selectedAnswer ===
+                "customerProblem",
+
+            completed: true,
+
+            completedAt:
+                new Date()
+
+        },
+
+        {
+            merge: true
+        }
+
+    );
+
+
+    answerSaved = true;
+
+    nextBtn.disabled = false;
+
+
+    statusText.textContent =
+        "✅ Decision saved successfully!";
+
+
+    return true;
+
+} catch (error) {
+
+    console.error(
+        "Error saving Entrepreneurship Mission 5:",
+        error
+    );
+
+
+    statusText.textContent =
+        "❌ Unable to save your decision. Please try again.";
+
+
+    return false;
+
+}
+
+}
+
+// =====================================
+// OPTION SELECTION
+// =====================================
+
+options.forEach(option => {
+
+option.addEventListener(
+    "click",
+    async () => {
+
+        if (answerLocked) return;
+
+
+        selectedAnswer =
+            option.dataset.answer;
+
+
+        selectedScore =
+            scores[selectedAnswer] || 0;
+
+
+        answerLocked = true;
+
+
+        options.forEach(item => {
+
+            if (item === option) {
+
+                item.classList.add(
+                    "selected"
+                );
+
+            } else {
+
+                item.style.opacity =
+                    "0.5";
+
+            }
+
+        });
+
+
+        progressFill.style.width =
+            "100%";
+
+
+        statusText.textContent =
+            "🤖 AI is analyzing your product decision...";
+
+
+        await new Promise(resolve =>
+            setTimeout(
+                resolve,
+                1200
+            )
+        );
+
+
+        await saveAnswer();
+
+    }
+);
+
+});
+
+// =====================================
+// CONTINUE
+// =====================================
+
+nextBtn.addEventListener(
+"click",
+() => {
+
+    if (
+        !selectedAnswer ||
+        !answerSaved
+    ) {
+
+        return;
+
+    }
+
+
+    window.location.href =
+        "Enter6.html";
+
+}
+
+);
+
+// =====================================
+// AUTHENTICATION
+// =====================================
+
+onAuthStateChanged(
+auth,
+async user => {
+
+    if (!user) {
+
+        window.location.href =
+            "Login.html";
+
+        return;
+
+    }
+
 
     currentUser = user;
 
-  } else {
 
-    alert("Please login first.");
+    console.log(
+        "Entrepreneurship Mission 5 user:",
+        currentUser.uid
+    );
 
-    window.location.href = "Login.html";
 
-  }
+    await checkPreviousAnswer();
 
-});
+}
 
-
-// ===============================
-// START MARKET ANALYSIS
-// ===============================
-
-startAnalysis.addEventListener("click", function () {
-
-  // ===============================
-  // CONTINUE TO MISSION 6
-  // ===============================
-
-  if (startAnalysis.textContent.includes("Continue")) {
-
-    if (!missionCompleted) {
-
-      alert("Please wait until Mission 5 is saved.");
-
-      return;
-
-    }
-
-    window.location.href = "Enter6.html";
-
-    return;
-
-  }
-
-
-  if (analysisStarted) {
-    return;
-  }
-
-  analysisStarted = true;
-
-  startAnalysis.disabled = true;
-  startAnalysis.style.opacity = "0.6";
-
-
-  // ===============================
-  // ANALYSIS STAGE 1
-  // ===============================
-
-  statusText.textContent =
-    "📊 AI is analysing customer behaviour...";
-
-  marketText.textContent =
-    "Collecting market data...";
-
-
-  // ===============================
-  // ANALYSIS STAGE 2
-  // ===============================
-
-  setTimeout(function () {
-
-    statusText.textContent =
-      "🔎 Identifying customer pain points...";
-
-    marketText.textContent =
-      "Finding the improvements customers value most...";
-
-  }, 1500);
-
-
-  // ===============================
-  // ANALYSIS STAGE 3
-  // ===============================
-
-  setTimeout(function () {
-
-    statusText.textContent =
-      "📈 High-impact improvement detected!";
-
-    marketText.textContent =
-      "The simulator has identified the strongest product improvement.";
-
-  }, 3000);
-
-
-  // ===============================
-  // ANALYSIS COMPLETE
-  // ===============================
-
-  setTimeout(async function () {
-
-    marketText.textContent =
-      "🚀 Product–Market Fit analysis completed.";
-
-    statusText.textContent =
-      "🤖 AI has completed the market analysis.";
-
-
-    // ===============================
-    // CHECK USER SESSION
-    // ===============================
-
-    if (!currentUser) {
-
-      statusText.textContent =
-        "❌ Login session not found.";
-
-      alert("Please login again.");
-
-      return;
-
-    }
-
-
-    // ===============================
-    // SAVE MISSION 5 TO FIREBASE
-    // ===============================
-
-    try {
-
-      await setDoc(
-        doc(
-          db,
-          "users",
-          currentUser.uid,
-          "missions",
-          "mission5"
-        ),
-        {
-          missionNumber: 5,
-          answer: "Product–Market Fit Analysis Completed",
-          completed: true,
-          completedAt: new Date().toISOString()
-        }
-      );
-
-
-      missionCompleted = true;
-
-
-      statusText.textContent =
-        "✅ Mission 5 Completed & Saved Successfully";
-
-
-      // ===============================
-      // ENABLE CONTINUE
-      // ===============================
-
-      startAnalysis.textContent =
-        "Continue to Mission 6 →";
-
-      startAnalysis.disabled = false;
-      startAnalysis.style.opacity = "1";
-
-
-    } catch (error) {
-
-      console.error("Firebase Error:", error);
-
-      statusText.textContent =
-        "❌ Could not save mission. Please try again.";
-
-      startAnalysis.disabled = false;
-      startAnalysis.style.opacity = "1";
-
-      analysisStarted = false;
-
-    }
-
-  }, 4500);
-
-});
+);
