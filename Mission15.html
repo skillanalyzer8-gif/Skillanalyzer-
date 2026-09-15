@@ -3,54 +3,74 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Mission 15 - Code Review</title>
+    <title>Mission 15 - Code Review</title>
 
-<link rel="stylesheet" href="Mission15.css">
+    <link rel="stylesheet" href="Mission15.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
 
 </head>
 
+
 <body>
 
-<div class="container">
+    <div class="container">
 
-<div class="header">
 
-<h1>🔍 Spot the Difference</h1>
+        <!-- ===============================
+             HEADER
+        ================================ -->
 
-<p>Mission 15 of 20</p>
+        <div class="header">
 
-<span>Review Like a Senior Developer</span>
+            <h1>🔍 Spot the Difference</h1>
 
-</div>
+            <p>Mission 15 of 20</p>
 
-<div class="challenge">
+            <span>Review Like a Senior Developer</span>
 
-<h2>💻 AI Code Review</h2>
+        </div>
 
-<p>
 
-Two developers submitted almost identical Python code.
+        <!-- ===============================
+             CHALLENGE
+        ================================ -->
 
-Only ONE line contains a mistake.
+        <div class="challenge">
 
-Review the code and identify the incorrect line.
+            <h2>💻 AI Code Review</h2>
 
-</p>
+            <p>
 
-</div>
+                Two developers submitted almost identical Python code.
 
-<div class="codeBox">
+                Only ONE line contains a mistake.
+
+                Review the code and identify the incorrect line.
+
+            </p>
+
+        </div>
+
+
+        <!-- ===============================
+             CODE
+        ================================ -->
+
+        <div class="codeBox">
 
 <pre>
-
 1. total = 0
 
 2. for i in range(1,6):
@@ -58,76 +78,129 @@ Review the code and identify the incorrect line.
 3.     total += i
 
 4. print(totall)
-
 </pre>
 
-</div>
+        </div>
 
-<div class="hint">
 
-💡 Senior developers carefully review every variable name.
+        <!-- ===============================
+             HINT
+        ================================ -->
 
-</div>
+        <div class="hint">
 
-<h2 class="question">
+            💡 Senior developers carefully review every variable name.
 
-Which line contains the bug?
+        </div>
 
-</h2>
 
-<div class="options">
+        <!-- ===============================
+             QUESTION
+        ================================ -->
 
-<div class="option">
+        <h2 class="question">
 
-<h3>Line 1</h3>
+            Which line contains the bug?
 
-</div>
+        </h2>
 
-<div class="option">
 
-<h3>Line 2</h3>
+        <!-- ===============================
+             OPTIONS
+        ================================ -->
 
-</div>
+        <div class="options" id="options">
 
-<div class="option">
 
-<h3>Line 3</h3>
+            <div
+                class="option"
+                data-answer="line1"
+            >
 
-</div>
+                <h3>Line 1</h3>
 
-<div class="option">
+            </div>
 
-<h3>Line 4</h3>
 
-</div>
+            <div
+                class="option"
+                data-answer="line2"
+            >
 
-</div>
+                <h3>Line 2</h3>
 
-<div class="analysis">
+            </div>
 
-<div class="progress">
 
-<div class="fill"></div>
+            <div
+                class="option"
+                data-answer="line3"
+            >
 
-</div>
+                <h3>Line 3</h3>
 
-<p>
+            </div>
 
-🤖 Waiting for your code review...
 
-</p>
+            <div
+                class="option"
+                data-answer="line4"
+            >
 
-<button id="nextBtn">
+                <h3>Line 4</h3>
 
-Continue →
+            </div>
 
-</button>
 
-</div>
+        </div>
 
-</div>
 
-<script type="module" src="Mission15.js"></script>
+        <!-- ===============================
+             ANALYSIS
+        ================================ -->
+
+        <div class="analysis">
+
+
+            <div class="progress">
+
+                <div class="fill"></div>
+
+            </div>
+
+
+            <p id="statusText">
+
+                🤖 Waiting for your code review...
+
+            </p>
+
+
+            <button
+                id="nextBtn"
+                disabled
+            >
+
+                Continue →
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ===============================
+         JAVASCRIPT
+    ================================ -->
+
+    <script
+        type="module"
+        src="Mission15.js"
+    ></script>
+
 
 </body>
 
