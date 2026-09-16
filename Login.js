@@ -1,20 +1,123 @@
-console.log("LOGIN.JS LOADED");
+import { auth } from "./firebase.js";
+
+import {
+    signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+// ===============================
+// PASSWORD TOGGLE
+// ===============================
+
+function togglePassword() {
+
+    const password = document.getElementById("password");
+
+    if (password.type === "password") {
+
+        password.type = "text";
+
+    } else {
+
+        password.type = "password";
+
+    }
+
+}
+
+window.togglePassword = togglePassword;
+
+
+// ===============================
+// LOGIN
+// ===============================
 
 const loginBtn = document.getElementById("loginBtn");
 
-console.log("LOGIN BUTTON:", loginBtn);
+loginBtn.addEventListener("click", async function () {
 
-if (!loginBtn) {
+    console.log("LOGIN BUTTON CLICKED");
 
-    console.error("ERROR: loginBtn was not found.");
+    const email =
+        document.getElementById("email").value.trim();
 
-} else {
+    const password =
+        document.getElementById("password").value;
 
-    loginBtn.addEventListener("click", function () {
 
-        console.log("LOGIN BUTTON CLICKED");
+    if (email === "" || password === "") {
 
-        alert("LOGIN BUTTON IS WORKING!");
+        alert("Please enter Email and Password.");
+
+        return;
+
+    }
+
+
+    try {
+
+        console.log("Starting Firebase login...");
+        console.log("Email:", email);
+
+        const userCredential =
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+
+        console.log(
+            "Firebase login successful:",
+            userCredential.user.uid
+        );
+
+
+        alert("Login Successful!");
+
+
+        window.location.href =
+            "Dashboard.html";
+
+
+    } catch (error) {
+
+        console.error(
+            "Firebase Login Error:",
+            error
+        );
+
+
+        alert(
+            "Login failed.\n\n" +
+            "Error code: " +
+            error.code +
+            "\n\n" +
+            error.message
+        );
+
+    }
+
+});
+
+
+// ===============================
+// FORGOT PASSWORD
+// ===============================
+
+const forgotLink =
+    document.querySelector(".forgot");
+
+
+if (forgotLink) {
+
+    forgotLink.addEventListener("click", function (e) {
+
+        e.preventDefault();
+
+        alert(
+            "Forgot Password page will be added soon."
+        );
 
     });
 
