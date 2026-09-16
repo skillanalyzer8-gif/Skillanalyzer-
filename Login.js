@@ -1,124 +1,44 @@
-import { auth } from "./firebase.js";
-
-import {
-    signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-
-// ===============================
-// PASSWORD TOGGLE
-// ===============================
-
-function togglePassword() {
-
-    const password = document.getElementById("password");
-
-    if (password.type === "password") {
-
-        password.type = "text";
-
-    } else {
-
-        password.type = "password";
-
-    }
-
-}
-
-window.togglePassword = togglePassword;
-
-
-// ===============================
-// LOGIN
-// ===============================
+console.log("LOGIN.JS STARTED");
 
 const loginBtn = document.getElementById("loginBtn");
 
 loginBtn.addEventListener("click", async function () {
 
-    console.log("LOGIN BUTTON CLICKED");
+    console.log("BUTTON CLICKED");
 
-    const email =
-        document.getElementById("email").value.trim();
-
-    const password =
-        document.getElementById("password").value;
-
-
-    if (email === "" || password === "") {
-
-        alert("Please enter Email and Password.");
-
-        return;
-
-    }
-
+    alert("Step 1: Login button works.");
 
     try {
 
-        console.log("Starting Firebase login...");
-        console.log("Email:", email);
+        console.log("Step 2: Loading firebase.js...");
 
-        const userCredential =
-            await signInWithEmailAndPassword(
-                auth,
-                email,
-                password
-            );
+        const firebaseModule = await import("./firebase.js");
 
+        console.log("Step 3: firebase.js loaded.");
+        console.log("Firebase module:", firebaseModule);
 
-        console.log(
-            "Firebase login successful:",
-            userCredential.user.uid
-        );
+        alert("Step 3: Firebase.js loaded successfully.");
 
+        if (!firebaseModule.auth) {
 
-        alert("Login Successful!");
+            alert("ERROR: auth was not exported from firebase.js.");
 
+            return;
 
-        window.location.href =
-            "Dashboard.html";
+        }
 
+        alert("Step 4: Firebase Auth object exists.");
 
     } catch (error) {
 
-        console.error(
-            "Firebase Login Error:",
-            error
-        );
-
+        console.error("FIREBASE.JS ERROR:", error);
 
         alert(
-            "Login failed.\n\n" +
-            "Error code: " +
-            error.code +
-            "\n\n" +
+            "Firebase.js could not load.\n\n" +
+            "Error:\n" +
             error.message
         );
 
     }
 
 });
-
-
-// ===============================
-// FORGOT PASSWORD
-// ===============================
-
-const forgotLink =
-    document.querySelector(".forgot");
-
-
-if (forgotLink) {
-
-    forgotLink.addEventListener("click", function (e) {
-
-        e.preventDefault();
-
-        alert(
-            "Forgot Password page will be added soon."
-        );
-
-    });
-
-}
