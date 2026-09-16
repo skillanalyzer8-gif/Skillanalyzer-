@@ -2,6 +2,7 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
+    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -10,28 +11,107 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-const startBtn = document.getElementById("startChallenge");
-const designArea = document.querySelector(".designArea");
-const status = document.getElementById("statusText");
+// ===============================
+// MISSION CONFIG
+// ===============================
+
+const category = "uiux";
+const questionNumber = 19;
+const questionId = "uiux_q19";
+
+const correctAnswer = "relevant";
+
+
+// ===============================
+// SCORES
+// ===============================
+
+const scores = {
+
+    random: 2,
+
+    relevant: 5,
+
+    same: 1,
+
+    excessive: 3
+
+};
+
+
+// ===============================
+// DOM ELEMENTS
+// ===============================
+
+const options =
+    document.querySelectorAll(".option");
+
+const statusText =
+    document.getElementById("statusText");
+
+const fill =
+    document.getElementById("fill");
+
+const nextBtn =
+    document.getElementById("nextBtn");
+
+
+// ===============================
+// VARIABLES
+// ===============================
 
 let currentUser = null;
+
+let selectedAnswer = "";
+
+let selectedScore = 0;
+
 let missionCompleted = false;
+
+let answerSaved = false;
+
+
+// ===============================
+// INITIAL BUTTON STATE
+// ===============================
+
+nextBtn.disabled = true;
+
+nextBtn.style.opacity = "0.5";
 
 
 // ===============================
 // AUTHENTICATION
 // ===============================
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
 
     if (user) {
 
         currentUser = user;
 
+        console.log(
+            "Logged in:",
+            currentUser.uid
+        );
+
+        await checkPreviousAnswer();
+
     } else {
 
+        currentUser = null;
+
+        statusText.textContent =
+            "❌ Please login to continue.";
+
+        nextBtn.disabled = true;
+
+        nextBtn.style.opacity = "0.5";
+
         alert("Please login first.");
-        window.location.href = "Login.html";
+
+        window.location.href =
+            "Login.html";
 
     }
 
@@ -39,255 +119,282 @@ onAuthStateChanged(auth, (user) => {
 
 
 // ===============================
-// START CHALLENGE
+// CHECK PREVIOUS ANSWER
 // ===============================
 
-startBtn.addEventListener("click", () => {
+async function checkPreviousAnswer() {
 
-    startBtn.style.display = "none";
-
-    status.innerHTML =
-        "Analyzing personalization systems...";
-
-    navigator.vibrate?.([100, 80, 100]);
-
-    setTimeout(showPersonalizationSystems, 1800);
-
-});
+    if (!currentUser) return;
 
 
-// ===============================
-// SHOW PERSONALIZATION OPTIONS
-// ===============================
+    try {
 
-function showPersonalizationSystems() {
+        const answerRef = doc(
 
-    designArea.innerHTML = `
+            db,
 
-        <h2>🎵 Choose The Best Personalized Experience</h2>
+            "users",
 
-        <p>
-            Which experience provides the most useful
-            personalization for a music streaming application?
-        </p>
+            currentUser.uid,
 
+            "missions",
 
-        <div class="personalCard">
+            questionId
 
-            <h3>Personalization A</h3>
-
-            <p>
-                🎵 Shows the same songs to every user<br>
-                ❌ No user preferences<br>
-                ❌ No listening history
-            </p>
-
-        </div>
+        );
 
 
-        <div class="personalCard">
-
-            <h3>Personalization B</h3>
-
-            <p>
-                🎧 Recommends music based on listening history<br>
-                ✅ Learns user preferences<br>
-                ✅ Creates personalized playlists<br>
-                ✅ Shows relevant artists and songs
-            </p>
-
-        </div>
+        const answerSnap =
+            await getDoc(answerRef);
 
 
-        <div class="personalCard">
+        if (answerSnap.exists()) {
 
-            <h3>Personalization C</h3>
-
-            <p>
-                🌈 Random recommendations<br>
-                ❌ Unrelated content<br>
-                ❌ Does not consider user interests
-            </p>
-
-        </div>
+            const data =
+                answerSnap.data();
 
 
-        <div class="personalCard">
+            if (data.completed === true) {
 
-            <h3>Personalization D</h3>
+                selectedAnswer =
+                    data.answer || "";
 
-            <p>
-                📋 Shows every available feature equally<br>
-                ❌ Too much irrelevant content<br>
-                ❌ No adaptation to user behavior
-            </p>
+                selectedScore =
+                    data.score || 0;
 
-        </div>
+                missionCompleted = true;
 
-    `;
+                answerSaved = true;
 
 
-    document
-        .querySelectorAll(".personalCard")
-        .forEach((card, index) => {
+                // Restore selected option
 
-            card.addEventListener("click", () => {
+                options.forEach((option) => {
 
-                reviewPersonalization(index);
+                    if (
+                        option.dataset.answer ===
+                        selectedAnswer
+                    ) {
 
-            });
+                        option.classList.add("active");
 
-        });
+                    } else {
+
+                        option.style.opacity =
+                            "0.6";
+
+                    }
+
+                    option.style.pointerEvents =
+                        "none";
+
+                });
+
+
+                // Restore progress
+
+                fill.style.width =
+                    `${selectedScore * 20}%`;
+
+
+                if (data.correct === true) {
+
+                    statusText.textContent =
+                        "✅ Excellent! Personalizing recommendations using user interests and behavior creates a more relevant experience.";
+
+                } else {
+
+                    statusText.textContent =
+                        "⚠ You already completed Mission 19. Your previous decision has been restored.";
+
+                }
+
+
+                nextBtn.disabled = false;
+
+                nextBtn.style.opacity = "1";
+
+
+                console.log(
+                    "Ui19 previous answer restored."
+                );
+
+
+                return;
+
+            }
+
+        }
+
+
+        console.log(
+            "No previous Ui19 answer found."
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Error checking Ui19:",
+            error
+        );
+
+    }
 
 }
 
 
 // ===============================
-// REVIEW USER CHOICE
+// OPTION CLICK
 // ===============================
 
-async function reviewPersonalization(choice) {
+options.forEach((option) => {
 
-    if (missionCompleted) return;
+    option.addEventListener("click", async () => {
 
-
-    if (!currentUser) {
-
-        alert("Please login first.");
-        window.location.href = "Login.html";
-
-        return;
-
-    }
+        if (missionCompleted) return;
 
 
-    let title = "";
-    let message = "";
-    let relevance = "";
-    let satisfaction = "";
-    let rating = "";
-    let score = 0;
+        if (!currentUser) {
+
+            alert("Please login first.");
+
+            window.location.href =
+                "Login.html";
+
+            return;
+
+        }
 
 
-    // ===============================
-    // CORRECT ANSWER → B
-    // ===============================
+        // Get selected answer
 
-    if (choice === 1) {
-
-        title = "🏆 Excellent Personalization";
-
-        message =
-            "Excellent! Using listening history and user preferences helps the app provide relevant music recommendations and a more useful experience.";
-
-        relevance = "99 / 100";
-
-        satisfaction = "98%";
-
-        rating = "★★★★★";
-
-        score = 100;
-
-    }
+        selectedAnswer =
+            option.dataset.answer;
 
 
-    // ===============================
-    // WRONG ANSWER
-    // ===============================
-
-    else {
-
-        title = "⚠ Personalization Needs Improvement";
-
-        message =
-            "Effective personalization should consider user interests and behavior to provide relevant content instead of treating every user the same.";
-
-        relevance = "73 / 100";
-
-        satisfaction = "79%";
-
-        rating = "★★★☆☆";
-
-        score = 70;
-
-    }
+        selectedScore =
+            scores[selectedAnswer] || 0;
 
 
-    // ===============================
-    // DISPLAY RESULT
-    // ===============================
+        // Lock mission
 
-    designArea.innerHTML = `
-
-        <h2>${title}</h2>
-
-        <br>
-
-        <p>
-            ${message}
-        </p>
-
-        <br>
-
-        <h3>
-            🎯 Content Relevance : ${relevance}
-        </h3>
-
-        <h3>
-            😊 User Satisfaction : ${satisfaction}
-        </h3>
-
-        <h3>
-            ⭐ Personalization Rating : ${rating}
-        </h3>
-
-        <h3>
-            🎯 Mission Score : ${score}%
-        </h3>
-
-    `;
+        missionCompleted = true;
 
 
-    status.innerHTML =
-        "Saving your personalization decision...";
+        options.forEach((item) => {
+
+            item.style.pointerEvents =
+                "none";
+
+        });
 
 
-    // ===============================
-    // SAVE TO FIRESTORE
-    // ===============================
+        // Highlight selected option
+
+        option.classList.add("active");
+
+
+        // Dim other options
+
+        options.forEach((item) => {
+
+            if (item !== option) {
+
+                item.style.opacity =
+                    "0.6";
+
+            }
+
+        });
+
+
+        // Update progress
+
+        fill.style.width =
+            `${selectedScore * 20}%`;
+
+
+        // Feedback
+
+        if (selectedAnswer === correctAnswer) {
+
+            statusText.textContent =
+                "✅ Excellent! Using listening history and preferences helps users discover music that is relevant to them.";
+
+        } else {
+
+            statusText.textContent =
+                "⚠ Good attempt. Effective personalization should provide relevant content based on user interests and behavior.";
+
+        }
+
+
+        // Save answer
+
+        await saveMission();
+
+    });
+
+});
+
+
+// ===============================
+// SAVE MISSION
+// ===============================
+
+async function saveMission() {
+
+    if (!currentUser) return;
+
+
+    const isCorrect =
+        selectedAnswer === correctAnswer;
+
+
+    statusText.textContent =
+        "💾 Saving your personalization decision...";
+
 
     try {
 
+        const answerRef = doc(
+
+            db,
+
+            "users",
+
+            currentUser.uid,
+
+            "missions",
+
+            questionId
+
+        );
+
+
         await setDoc(
 
-            doc(
-                db,
-                "users",
-                currentUser.uid,
-                "missions",
-                "mission19"
-            ),
+            answerRef,
 
             {
 
-                missionNumber: 19,
+                category:
+                    category,
+
+                questionNumber:
+                    questionNumber,
 
                 answer:
-                    choice === 1
-                        ? "Personalization B"
-                        : `Personalization ${String.fromCharCode(65 + choice)}`,
+                    selectedAnswer,
 
-                score: score,
+                score:
+                    selectedScore,
 
-                relevance: relevance,
+                correct:
+                    isCorrect,
 
-                satisfaction: satisfaction,
-
-                personalizationRating: rating,
-
-                category: "Personalization",
-
-                completed: true,
+                completed:
+                    true,
 
                 completedAt:
                     new Date().toISOString()
@@ -297,25 +404,86 @@ async function reviewPersonalization(choice) {
         );
 
 
-        missionCompleted = true;
+        answerSaved = true;
 
 
-        status.innerHTML =
-            "✅ Mission 19 completed! Your personalization decision has been saved.";
+        if (isCorrect) {
 
-    }
+            statusText.textContent =
+                "✅ Excellent! Mission 19 completed successfully.";
+
+        } else {
+
+            statusText.textContent =
+                "⚠ Mission 19 completed. Remember to personalize content using meaningful user preferences and behavior.";
+
+        }
 
 
-    catch (error) {
+        nextBtn.disabled = false;
+
+        nextBtn.style.opacity = "1";
+
+
+        console.log(
+            "Ui19 saved successfully."
+        );
+
+
+    } catch (error) {
 
         console.error(
-            "UI19 Firebase Error:",
+            "Error saving Ui19:",
             error
         );
 
-        status.innerHTML =
-            "❌ Could not save your result. Please try again.";
+
+        answerSaved = false;
+
+        missionCompleted = false;
+
+
+        statusText.textContent =
+            "❌ Could not save your decision. Please try again.";
+
+        nextBtn.disabled = true;
+
+        nextBtn.style.opacity = "0.5";
 
     }
 
 }
+
+
+// ===============================
+// CONTINUE TO MISSION 20
+// ===============================
+
+nextBtn.addEventListener("click", () => {
+
+    if (!selectedAnswer) {
+
+        alert(
+            "Please select an option first."
+        );
+
+        return;
+
+    }
+
+
+    if (!answerSaved) {
+
+        alert(
+            "Please wait until your answer is saved."
+        );
+
+        return;
+
+    }
+
+
+    window.location.href =
+        "Ui20.html";
+
+});
