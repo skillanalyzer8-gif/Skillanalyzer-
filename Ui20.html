@@ -20,111 +20,215 @@ rel="stylesheet">
 
 <body>
 
+
 <!-- Background -->
 
 <div class="background">
 
-<div class="finalGrid"></div>
+    <div class="finalGrid"></div>
 
-<div class="finalGlow"></div>
+    <div class="finalGlow"></div>
 
-<div class="floatingStars"></div>
+    <div class="floatingStars"></div>
 
-<div class="confetti"></div>
+    <div class="confetti"></div>
 
 </div>
+
 
 <div class="container">
 
-<!-- Header -->
 
-<div class="header">
+    <!-- Header -->
 
-<h1>
+    <div class="header">
 
-🏆 UI/UX GRAND FINALE
+        <h1>
+            🏆 UI/UX GRAND FINALE
+        </h1>
 
-</h1>
+        <p>
+            Mission 20 / 20
+        </p>
 
-<p>
+    </div>
 
-Mission 20 / 20
 
-</p>
+    <!-- Congratulations -->
+
+    <div class="briefing">
+
+        <h2>
+            🎉 Congratulations!
+        </h2>
+
+        <p>
+
+            You have reached the final UI/UX mission.
+
+            Throughout this journey, you have practiced
+            usability, accessibility, visual design,
+            navigation, feedback, responsiveness,
+            microinteractions and personalization.
+
+            Now demonstrate how you would approach a
+            complete user-centered design decision.
+
+        </p>
+
+    </div>
+
+
+    <!-- Final Challenge -->
+
+    <div class="designArea">
+
+        <h2>
+            🌟 UX Master Challenge
+        </h2>
+
+        <p id="challengeText">
+
+            A new application is about to launch.
+            Which approach best represents strong
+            overall UX design?
+
+        </p>
+
+    </div>
+
+
+    <!-- Options -->
+
+    <div id="options">
+
+
+        <button class="option"
+                data-answer="visualOnly"
+                data-score="2">
+
+            <span class="optionTitle">
+                A
+            </span>
+
+            <span>
+
+                Focus mainly on attractive colors,
+                animations and visual effects, even if
+                usability and accessibility are limited.
+
+            </span>
+
+        </button>
+
+
+        <button class="option"
+                data-answer="features"
+                data-score="3">
+
+            <span class="optionTitle">
+                B
+            </span>
+
+            <span>
+
+                Add as many features as possible and
+                let users learn the interface on their own.
+
+            </span>
+
+        </button>
+
+
+        <button class="option"
+                data-answer="userCentered"
+                data-score="5">
+
+            <span class="optionTitle">
+                C
+            </span>
+
+            <span>
+
+                Understand user needs, create a clear and
+                accessible experience, test the design,
+                provide useful feedback, and continuously
+                improve the product based on user needs.
+
+            </span>
+
+        </button>
+
+
+        <button class="option"
+                data-answer="trend"
+                data-score="1">
+
+            <span class="optionTitle">
+                D
+            </span>
+
+            <span>
+
+                Copy current design trends without
+                researching users or testing the interface.
+
+            </span>
+
+        </button>
+
+
+    </div>
+
+
+    <!-- Status -->
+
+    <div class="statusBox">
+
+        <h3>
+            Final Evaluation
+        </h3>
+
+        <p id="statusText">
+
+            Select the approach that best represents
+            strong user-centered UX design.
+
+        </p>
+
+    </div>
+
+
+    <!-- Progress -->
+
+    <div class="progress">
+
+        <div class="fill"
+             id="fill">
+        </div>
+
+    </div>
+
+
+    <!-- Controls -->
+
+    <div class="controls">
+
+        <button id="nextBtn"
+                disabled>
+
+            🏆 FINISH UI/UX ASSESSMENT
+
+        </button>
+
+    </div>
+
 
 </div>
 
-<!-- Congratulations -->
 
-<div class="briefing">
-
-<h2>
-
-🎉 Congratulations!
-
-</h2>
-
-<p>
-
-You have successfully completed all 20 UI/UX learning missions.
-
-Now it's time to review your journey and receive your final UX mastery certificate.
-
-</p>
-
-</div>
-
-<!-- Final Area -->
-
-<div class="designArea">
-
-<h2>
-
-🌟 UX Master Challenge
-
-</h2>
-
-<p id="challengeText">
-
-Preparing your final evaluation...
-
-</p>
-
-</div>
-
-<!-- Status -->
-
-<div class="statusBox">
-
-<h3>
-
-Final Evaluation
-
-</h3>
-
-<p id="statusText">
-
-Ready to finish your journey...
-
-</p>
-
-</div>
-
-<!-- Button -->
-
-<div class="controls">
-
-<button id="startChallenge">
-
-🏆 COMPLETE JOURNEY
-
-</button>
-
-</div>
-
-</div>
-
-<script type="module" src="Ui20.js"></script>
+<script type="module"
+src="Ui20.js"></script>
 
 </body>
 
