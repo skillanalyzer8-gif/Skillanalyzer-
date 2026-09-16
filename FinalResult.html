@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Skill Analyzer - Final Result</title>
+
+    <link
+        rel="stylesheet"
+        href="FinalResult.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body>
+
+
+<div class="background">
+
+    <div class="grid"></div>
+
+    <div class="glow glowOne"></div>
+
+    <div class="glow glowTwo"></div>
+
+    <div class="glow glowThree"></div>
+
+    <div class="stars"></div>
+
+</div>
+
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <header class="header glass">
+
+        <div class="logoIcon">
+
+            <i class="fa-solid fa-brain"></i>
+
+        </div>
+
+
+        <div>
+
+            <div class="eyebrow">
+                SKILL ANALYZER
+            </div>
+
+            <h1>
+                Your Final Career Profile
+            </h1>
+
+            <p>
+                Your complete assessment across all four skill domains.
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- LOADING -->
+
+    <section
+        id="loadingSection"
+        class="loading glass"
+    >
+
+        <div class="loader"></div>
+
+        <h2>
+            Building Your Final Profile
+        </h2>
+
+        <p id="loadingText">
+            Reading your assessment results...
+        </p>
+
+    </section>
+
+
+    <!-- ERROR -->
+
+    <section
+        id="errorSection"
+        class="errorBox glass"
+    >
+
+        <div class="errorIcon">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+        </div>
+
+        <h2>
+            Final Result Not Available
+        </h2>
+
+        <p id="errorText">
+            Unable to load your final assessment.
+        </p>
+
+        <button
+            class="secondaryBtn"
+            onclick="window.location.href='Dashboard.html'"
+        >
+
+            <i class="fa-solid fa-house"></i>
+
+            Back to Dashboard
+
+        </button>
+
+    </section>
+
+
+    <!-- FINAL RESULT -->
+
+    <main
+        id="resultSection"
+        class="result"
+    >
+
+
+        <!-- HERO -->
+
+        <section class="hero glass">
+
+
+            <div class="heroText">
+
+                <div class="eyebrow">
+                    FINAL SKILL ANALYSIS
+                </div>
+
+                <h2 id="profileTitle">
+                    Career Profile
+                </h2>
+
+                <p id="profileDescription">
+                    Your complete skill profile is being generated.
+                </p>
+
+            </div>
+
+
+            <div class="scoreCircle">
+
+                <div class="scoreInner">
+
+                    <span id="scoreNumber">
+                        0
+                    </span>
+
+                    <small>
+                        OVERALL %
+                    </small>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- SUMMARY -->
+
+        <section class="summaryGrid">
+
+
+            <div class="summaryCard glass">
+
+                <div class="summaryIcon">
+
+                    <i class="fa-solid fa-star"></i>
+
+                </div>
+
+                <div>
+
+                    <span>
+                        Overall Score
+                    </span>
+
+                    <strong id="overallScore">
+                        0 / 100
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="summaryCard glass">
+
+                <div class="summaryIcon">
+
+                    <i class="fa-solid fa-layer-group"></i>
+
+                </div>
+
+                <div>
+
+                    <span>
+                        Categories
+                    </span>
+
+                    <strong>
+                        4 / 4
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="summaryCard glass">
+
+                <div class="summaryIcon">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                </div>
+
+                <div>
+
+                    <span>
+                        Average
+                    </span>
+
+                    <strong id="averageScore">
+                        0%
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- CATEGORY RESULTS -->
+
+        <section class="section glass">
+
+
+            <div class="sectionHeading">
+
+                <h2>
+                    <i class="fa-solid fa-chart-column"></i>
+
+                    Category Performance
+
+                </h2>
+
+            </div>
+
+
+            <div class="categoryGrid">
+
+
+                <!-- SOFTWARE -->
+
+                <div class="categoryCard">
+
+                    <div class="categoryIcon">
+
+                        <i class="fa-solid fa-code"></i>
+
+                    </div>
+
+
+                    <div class="categoryInfo">
+
+                        <h3>
+                            Software Development
+                        </h3>
+
+                        <p id="softwareProfile">
+                            Loading...
+                        </p>
+
+
+                        <div class="categoryBar">
+
+                            <div
+                                id="softwareBar"
+                                class="categoryFill"
+                            ></div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <strong id="softwareScore">
+                        0%
+                    </strong>
+
+                </div>
+
+
+                <!-- UIUX -->
+
+                <div class="categoryCard">
+
+                    <div class="categoryIcon">
+
+                        <i class="fa-solid fa-pen-ruler"></i>
+
+                    </div>
+
+
+                    <div class="categoryInfo">
+
+                        <h3>
+                            UI / UX Design
+                        </h3>
+
+                        <p id="uiuxProfile">
+                            Loading...
+                        </p>
+
+
+                        <div class="categoryBar">
+
+                            <div
+                                id="uiuxBar"
+                                class="categoryFill"
+                            ></div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <strong id="uiuxScore">
+                        0%
+                    </strong>
+
+                </div>
+
+
+                <!-- ENTREPRENEURSHIP -->
+
+                <div class="categoryCard">
+
+                    <div class="categoryIcon">
+
+                        <i class="fa-solid fa-rocket"></i>
+
+                    </div>
+
+
+                    <div class="categoryInfo">
+
+                        <h3>
+                            Entrepreneurship
+                        </h3>
+
+                        <p id="entrepreneurProfile">
+                            Loading...
+                        </p>
+
+
+                        <div class="categoryBar">
+
+                            <div
+                                id="entrepreneurBar"
+                                class="categoryFill"
+                            ></div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <strong id="entrepreneurScore">
+                        0%
+                    </strong>
+
+                </div>
+
+
+                <!-- LEADERSHIP -->
+
+                <div class="categoryCard">
+
+                    <div class="categoryIcon">
+
+                        <i class="fa-solid fa-crown"></i>
+
+                    </div>
+
+
+                    <div class="categoryInfo">
+
+                        <h3>
+                            Leadership
+                        </h3>
+
+                        <p id="leadershipProfile">
+                            Loading...
+                        </p>
+
+
+                        <div class="categoryBar">
+
+                            <div
+                                id="leadershipBar"
+                                class="categoryFill"
+                            ></div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <strong id="leadershipScore">
+                        0%
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+        <!-- CAREER INSIGHT -->
+
+        <section class="section glass">
+
+
+            <div class="sectionHeading">
+
+                <h2>
+
+                    <i class="fa-solid fa-compass"></i>
+
+                    Career Insight
+
+                </h2>
+
+            </div>
+
+
+            <div class="careerBox">
+
+
+                <div class="careerIcon">
+
+                    <i class="fa-solid fa-lightbulb"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h3 id="careerHeading">
+                        Your Skill Direction
+                    </h3>
+
+                    <p id="careerDescription">
+                        Analyzing your strongest skill areas...
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+        <!-- STRENGTHS -->
+
+        <section class="section glass">
+
+
+            <div class="sectionHeading">
+
+                <h2>
+
+                    <i class="fa-solid fa-bolt"></i>
+
+                    Overall Strengths
+
+                </h2>
+
+            </div>
+
+
+            <div
+                id="strengthList"
+                class="traitList"
+            ></div>
+
+
+        </section>
+
+
+        <!-- GROWTH -->
+
+        <section class="section glass">
+
+
+            <div class="sectionHeading">
+
+                <h2>
+
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+
+                    Growth Areas
+
+                </h2>
+
+            </div>
+
+
+            <div
+                id="improvementList"
+                class="traitList"
+            ></div>
+
+
+        </section>
+
+
+        <!-- FINAL MESSAGE -->
+
+        <section class="finalMessage glass">
+
+
+            <div class="finalIcon">
+
+                <i class="fa-solid fa-trophy"></i>
+
+            </div>
+
+
+            <div>
+
+                <div class="eyebrow">
+                    FINAL ASSESSMENT
+                </div>
+
+                <h2 id="finalHeading">
+                    Assessment Complete
+                </h2>
+
+                <p id="finalDescription">
+                    Your Skill Analyzer profile has been generated.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- ACTIONS -->
+
+        <div class="actions">
+
+
+            <button
+                id="backDashboardBtn"
+                class="secondaryBtn"
+            >
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Dashboard
+
+            </button>
+
+
+            <button
+                id="chatbotBtn"
+                class="primaryBtn"
+            >
+
+                <i class="fa-solid fa-robot"></i>
+
+                Talk to AI Career Mentor
+
+            </button>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+<script
+    type="module"
+    src="FinalResult.js"
+></script>
+
+
+</body>
+
+</html>
