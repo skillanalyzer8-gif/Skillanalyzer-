@@ -1,46 +1,120 @@
 import { auth } from "./firebase.js";
-import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+    signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+// ===============================
+// PASSWORD TOGGLE
+// ===============================
 
 function togglePassword() {
-    let password = document.getElementById("password");
+
+    const password =
+        document.getElementById("password");
 
     if (password.type === "password") {
+
         password.type = "text";
+
     } else {
+
         password.type = "password";
+
     }
+
 }
 
 window.togglePassword = togglePassword;
 
-document.getElementById("loginBtn").addEventListener("click", async function () {
-    alert("Login button clicked")
 
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
+// ===============================
+// LOGIN
+// ===============================
 
-    if (email === "" || password === "") {
-        alert("Please enter Email and Password.");
-        return;
-    }
+document
+    .getElementById("loginBtn")
+    .addEventListener("click", async function () {
 
-    try {
+        console.log("Login button clicked");
 
-        await signInWithEmailAndPassword(auth, email, password);
+        const email =
+            document.getElementById("email").value.trim();
 
-        alert("Login Successful!");
+        const password =
+            document.getElementById("password").value;
 
-        window.location.href = "Dashboard.html";
 
-    } catch (error) {
+        if (email === "" || password === "") {
 
-        alert(error.message);
+            alert("Please enter Email and Password.");
 
-    }
+            return;
 
-});
+        }
 
-document.querySelector(".forgot").addEventListener("click", function(e){
-    e.preventDefault();
-    alert("Forgot Password page will be added soon.");
-});
+
+        try {
+
+            console.log("Trying Firebase login...");
+            console.log("Email:", email);
+
+
+            const userCredential =
+                await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+
+
+            console.log(
+                "Firebase login successful:",
+                userCredential.user.uid
+            );
+
+
+            alert("Login Successful!");
+
+
+            window.location.href =
+                "Dashboard.html";
+
+
+        } catch (error) {
+
+            console.error(
+                "Firebase Login Error:",
+                error
+            );
+
+
+            alert(
+                "Login failed.\n\n" +
+                "Error code: " +
+                error.code +
+                "\n\n" +
+                error.message
+            );
+
+        }
+
+    });
+
+
+// ===============================
+// FORGOT PASSWORD
+// ===============================
+
+document
+    .querySelector(".forgot")
+    .addEventListener("click", function (e) {
+
+        e.preventDefault();
+
+        alert(
+            "Forgot Password page will be added soon."
+        );
+
+    });
