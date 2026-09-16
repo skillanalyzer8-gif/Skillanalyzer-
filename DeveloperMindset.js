@@ -542,6 +542,6 @@ nextBtn.addEventListener("click", () => {
 
 
     window.location.href =
-        "DeveloperMindset2.html";
+        "Mission2.html";
 
 });
