@@ -2,6 +2,7 @@ import { auth, db } from "./firebase.js";
 
 import {
     doc,
+    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -10,28 +11,107 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-const startBtn = document.getElementById("startChallenge");
-const designArea = document.querySelector(".designArea");
-const status = document.getElementById("statusText");
+// ===============================
+// MISSION CONFIG
+// ===============================
+
+const category = "uiux";
+const questionNumber = 18;
+const questionId = "uiux_q18";
+
+const correctAnswer = "subtle";
+
+
+// ===============================
+// SCORES
+// ===============================
+
+const scores = {
+
+    missing: 1,
+
+    excessive: 3,
+
+    confusing: 2,
+
+    subtle: 5
+
+};
+
+
+// ===============================
+// DOM ELEMENTS
+// ===============================
+
+const options =
+    document.querySelectorAll(".option");
+
+const statusText =
+    document.getElementById("statusText");
+
+const fill =
+    document.getElementById("fill");
+
+const nextBtn =
+    document.getElementById("nextBtn");
+
+
+// ===============================
+// VARIABLES
+// ===============================
 
 let currentUser = null;
+
+let selectedAnswer = "";
+
+let selectedScore = 0;
+
 let missionCompleted = false;
+
+let answerSaved = false;
+
+
+// ===============================
+// INITIAL BUTTON STATE
+// ===============================
+
+nextBtn.disabled = true;
+
+nextBtn.style.opacity = "0.5";
 
 
 // ===============================
 // AUTHENTICATION
 // ===============================
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
 
     if (user) {
 
         currentUser = user;
 
+        console.log(
+            "Logged in:",
+            currentUser.uid
+        );
+
+        await checkPreviousAnswer();
+
     } else {
 
+        currentUser = null;
+
+        statusText.textContent =
+            "❌ Please login to continue.";
+
+        nextBtn.disabled = true;
+
+        nextBtn.style.opacity = "0.5";
+
         alert("Please login first.");
-        window.location.href = "Login.html";
+
+        window.location.href =
+            "Login.html";
 
     }
 
@@ -39,255 +119,264 @@ onAuthStateChanged(auth, (user) => {
 
 
 // ===============================
-// START CHALLENGE
+// CHECK PREVIOUS ANSWER
 // ===============================
 
-startBtn.addEventListener("click", () => {
+async function checkPreviousAnswer() {
 
-    startBtn.style.display = "none";
-
-    status.innerHTML =
-        "Loading microinteraction examples...";
-
-    navigator.vibrate?.([100, 80, 100]);
-
-    setTimeout(showMicrointeractions, 1800);
-
-});
+    if (!currentUser) return;
 
 
-// ===============================
-// SHOW MICROINTERACTION OPTIONS
-// ===============================
+    try {
 
-function showMicrointeractions() {
+        const answerRef = doc(
 
-    designArea.innerHTML = `
+            db,
 
-        <h2>✨ Choose The Best Interaction Design</h2>
+            "users",
 
-        <p>
-            Which microinteraction provides the best
-            experience for a social media application?
-        </p>
+            currentUser.uid,
 
+            "missions",
 
-        <div class="microCard">
+            questionId
 
-            <h3>Interaction A</h3>
-
-            <p>
-                ❤️ Like button has no visual response<br>
-                ❌ User cannot tell if the action worked<br>
-                ❌ Interface feels unresponsive
-            </p>
-
-        </div>
+        );
 
 
-        <div class="microCard">
-
-            <h3>Interaction B</h3>
-
-            <p>
-                ❤️ Like button gives immediate visual feedback<br>
-                ✅ Smooth button animation<br>
-                ✅ Loading indicators appear when needed<br>
-                ✅ Feedback is quick and subtle
-            </p>
-
-        </div>
+        const answerSnap =
+            await getDoc(answerRef);
 
 
-        <div class="microCard">
+        if (answerSnap.exists()) {
 
-            <h3>Interaction C</h3>
-
-            <p>
-                🎆 Large animations after every action<br>
-                ❌ Distracting effects<br>
-                ❌ Slows down the experience
-            </p>
-
-        </div>
+            const data =
+                answerSnap.data();
 
 
-        <div class="microCard">
+            if (data.completed === true) {
 
-            <h3>Interaction D</h3>
+                selectedAnswer =
+                    data.answer || "";
 
-            <p>
-                🔔 Constant notifications and animations<br>
-                ❌ Too many interruptions<br>
-                ❌ Users lose focus
-            </p>
+                selectedScore =
+                    data.score || 0;
 
-        </div>
+                missionCompleted = true;
 
-    `;
+                answerSaved = true;
 
 
-    document
-        .querySelectorAll(".microCard")
-        .forEach((card, index) => {
+                options.forEach((option) => {
 
-            card.addEventListener("click", () => {
+                    if (
+                        option.dataset.answer ===
+                        selectedAnswer
+                    ) {
 
-                reviewMicrointeraction(index);
+                        option.classList.add("active");
 
-            });
+                    } else {
 
-        });
+                        option.style.opacity =
+                            "0.6";
+
+                    }
+
+                    option.style.pointerEvents =
+                        "none";
+
+                });
+
+
+                fill.style.width =
+                    `${selectedScore * 20}%`;
+
+
+                if (data.correct === true) {
+
+                    statusText.textContent =
+                        "✅ Excellent! Microinteractions should be useful, quick, and subtle.";
+
+                } else {
+
+                    statusText.textContent =
+                        "⚠ You already completed Mission 18. Your previous decision has been restored.";
+
+                }
+
+
+                nextBtn.disabled = false;
+
+                nextBtn.style.opacity = "1";
+
+
+                console.log(
+                    "Ui18 previous answer restored."
+                );
+
+
+                return;
+
+            }
+
+        }
+
+
+        console.log(
+            "No previous Ui18 answer found."
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Error checking Ui18:",
+            error
+        );
+
+    }
 
 }
 
 
 // ===============================
-// REVIEW USER CHOICE
+// OPTION CLICK
 // ===============================
 
-async function reviewMicrointeraction(choice) {
+options.forEach((option) => {
 
-    if (missionCompleted) return;
+    option.addEventListener("click", async () => {
 
-
-    if (!currentUser) {
-
-        alert("Please login first.");
-        window.location.href = "Login.html";
-
-        return;
-
-    }
+        if (missionCompleted) return;
 
 
-    let title = "";
-    let message = "";
-    let responsiveness = "";
-    let satisfaction = "";
-    let rating = "";
-    let score = 0;
+        if (!currentUser) {
+
+            alert("Please login first.");
+
+            window.location.href =
+                "Login.html";
+
+            return;
+
+        }
 
 
-    // ===============================
-    // CORRECT ANSWER → B
-    // ===============================
-
-    if (choice === 1) {
-
-        title = "🏆 Excellent Microinteraction Design";
-
-        message =
-            "Excellent! Small, fast and purposeful interactions make interfaces feel responsive without distracting users.";
-
-        responsiveness = "99 / 100";
-
-        satisfaction = "98%";
-
-        rating = "★★★★★";
-
-        score = 100;
-
-    }
+        selectedAnswer =
+            option.dataset.answer;
 
 
-    // ===============================
-    // WRONG ANSWER
-    // ===============================
-
-    else {
-
-        title = "⚠ Interaction Needs Improvement";
-
-        message =
-            "Good microinteractions should provide useful feedback while remaining subtle. Excessive or missing feedback can reduce usability.";
-
-        responsiveness = "73 / 100";
-
-        satisfaction = "79%";
-
-        rating = "★★★☆☆";
-
-        score = 70;
-
-    }
+        selectedScore =
+            scores[selectedAnswer] || 0;
 
 
-    // ===============================
-    // DISPLAY RESULT
-    // ===============================
-
-    designArea.innerHTML = `
-
-        <h2>${title}</h2>
-
-        <br>
-
-        <p>
-            ${message}
-        </p>
-
-        <br>
-
-        <h3>
-            ⚡ Interface Responsiveness : ${responsiveness}
-        </h3>
-
-        <h3>
-            😊 User Satisfaction : ${satisfaction}
-        </h3>
-
-        <h3>
-            ⭐ Interaction Rating : ${rating}
-        </h3>
-
-        <h3>
-            🎯 Mission Score : ${score}%
-        </h3>
-
-    `;
+        missionCompleted = true;
 
 
-    status.innerHTML =
-        "Saving your interaction decision...";
+        options.forEach((item) => {
+
+            item.style.pointerEvents =
+                "none";
+
+        });
 
 
-    // ===============================
-    // SAVE TO FIRESTORE
-    // ===============================
+        option.classList.add("active");
+
+
+        options.forEach((item) => {
+
+            if (item !== option) {
+
+                item.style.opacity =
+                    "0.6";
+
+            }
+
+        });
+
+
+        fill.style.width =
+            `${selectedScore * 20}%`;
+
+
+        if (selectedAnswer === correctAnswer) {
+
+            statusText.textContent =
+                "✅ Excellent! Small, purposeful and subtle feedback makes an interface feel responsive without distracting users.";
+
+        } else {
+
+            statusText.textContent =
+                "⚠ Good attempt. Effective microinteractions should provide useful feedback without overwhelming the user.";
+
+        }
+
+
+        await saveMission();
+
+    });
+
+});
+
+
+// ===============================
+// SAVE MISSION
+// ===============================
+
+async function saveMission() {
+
+    if (!currentUser) return;
+
+
+    const isCorrect =
+        selectedAnswer === correctAnswer;
+
+
+    statusText.textContent =
+        "💾 Saving your interaction decision...";
+
 
     try {
 
+        const answerRef = doc(
+
+            db,
+
+            "users",
+
+            currentUser.uid,
+
+            "missions",
+
+            questionId
+
+        );
+
+
         await setDoc(
 
-            doc(
-                db,
-                "users",
-                currentUser.uid,
-                "missions",
-                "mission18"
-            ),
+            answerRef,
 
             {
 
-                missionNumber: 18,
+                category:
+                    category,
+
+                questionNumber:
+                    questionNumber,
 
                 answer:
-                    choice === 1
-                        ? "Interaction B"
-                        : `Interaction ${String.fromCharCode(65 + choice)}`,
+                    selectedAnswer,
 
-                score: score,
+                score:
+                    selectedScore,
 
-                responsiveness: responsiveness,
+                correct:
+                    isCorrect,
 
-                satisfaction: satisfaction,
-
-                interactionRating: rating,
-
-                category: "Microinteractions",
-
-                completed: true,
+                completed:
+                    true,
 
                 completedAt:
                     new Date().toISOString()
@@ -297,25 +386,86 @@ async function reviewMicrointeraction(choice) {
         );
 
 
-        missionCompleted = true;
+        answerSaved = true;
 
 
-        status.innerHTML =
-            "✅ Mission 18 completed! Your interaction decision has been saved.";
+        if (isCorrect) {
 
-    }
+            statusText.textContent =
+                "✅ Excellent! Mission 18 completed successfully.";
+
+        } else {
+
+            statusText.textContent =
+                "⚠ Mission 18 completed. Remember: good microinteractions should be useful, quick and subtle.";
+
+        }
 
 
-    catch (error) {
+        nextBtn.disabled = false;
+
+        nextBtn.style.opacity = "1";
+
+
+        console.log(
+            "Ui18 saved successfully."
+        );
+
+
+    } catch (error) {
 
         console.error(
-            "UI18 Firebase Error:",
+            "Error saving Ui18:",
             error
         );
 
-        status.innerHTML =
-            "❌ Could not save your result. Please try again.";
+
+        answerSaved = false;
+
+        missionCompleted = false;
+
+
+        statusText.textContent =
+            "❌ Could not save your decision. Please try again.";
+
+        nextBtn.disabled = true;
+
+        nextBtn.style.opacity = "0.5";
 
     }
 
 }
+
+
+// ===============================
+// CONTINUE TO MISSION 19
+// ===============================
+
+nextBtn.addEventListener("click", () => {
+
+    if (!selectedAnswer) {
+
+        alert(
+            "Please select an option first."
+        );
+
+        return;
+
+    }
+
+
+    if (!answerSaved) {
+
+        alert(
+            "Please wait until your answer is saved."
+        );
+
+        return;
+
+    }
+
+
+    window.location.href =
+        "Ui19.html";
+
+});
