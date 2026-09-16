@@ -20,113 +20,216 @@ rel="stylesheet">
 
 <body>
 
+
 <!-- Background -->
 
 <div class="background">
 
-<div class="personalGrid"></div>
+    <div class="personalGrid"></div>
 
-<div class="personalGlow"></div>
+    <div class="personalGlow"></div>
 
-<div class="floatingStars"></div>
+    <div class="floatingStars"></div>
 
 </div>
+
 
 <div class="container">
 
-<!-- Header -->
 
-<div class="header">
+    <!-- Header -->
 
-<h1>
+    <div class="header">
 
-🧠 PERSONALIZATION
+        <h1>
+            🧠 PERSONALIZATION
+        </h1>
 
-</h1>
+        <p>
+            UI/UX Mission 19 / 20
+        </p>
 
-<p>
+    </div>
 
-UI/UX Mission 19 / 20
 
-</p>
+    <!-- AI Mentor -->
+
+    <div class="briefing">
+
+        <h2>
+            🤖 AI Design Mentor
+        </h2>
+
+        <p>
+
+            Personalized interfaces can help users
+            discover relevant content more easily.
+
+            A good personalized experience should respond
+            to user interests and behavior while keeping
+            the interface understandable.
+
+            Today's client is building a music streaming
+            application.
+
+            Choose the most suitable personalization
+            approach.
+
+        </p>
+
+    </div>
+
+
+    <!-- Challenge -->
+
+    <div class="designArea">
+
+        <h2>
+            🎵 Music Streaming App
+        </h2>
+
+        <p id="challengeText">
+
+            Which personalization approach should the
+            music application use?
+
+        </p>
+
+    </div>
+
+
+    <!-- Options -->
+
+    <div id="options">
+
+
+        <button class="option"
+                data-answer="random"
+                data-score="2">
+
+            <span class="optionTitle">
+                A
+            </span>
+
+            <span>
+
+                Show random songs to every user without
+                considering their listening preferences
+                or behavior.
+
+            </span>
+
+        </button>
+
+
+        <button class="option"
+                data-answer="relevant"
+                data-score="5">
+
+            <span class="optionTitle">
+                B
+            </span>
+
+            <span>
+
+                Recommend music based on the user's
+                listening history, favorite artists,
+                preferences and recent activity while
+                keeping controls understandable.
+
+            </span>
+
+        </button>
+
+
+        <button class="option"
+                data-answer="same"
+                data-score="1">
+
+            <span class="optionTitle">
+                C
+            </span>
+
+            <span>
+
+                Give every user exactly the same songs
+                and recommendations.
+
+            </span>
+
+        </button>
+
+
+        <button class="option"
+                data-answer="excessive"
+                data-score="3">
+
+            <span class="optionTitle">
+                D
+            </span>
+
+            <span>
+
+                Change the entire interface constantly
+                based on every small user action, making
+                navigation difficult to predict.
+
+            </span>
+
+        </button>
+
+
+    </div>
+
+
+    <!-- Status -->
+
+    <div class="statusBox">
+
+        <h3>
+            Personalization Analysis
+        </h3>
+
+        <p id="statusText">
+
+            Select the personalization approach that
+            provides the most relevant experience.
+
+        </p>
+
+    </div>
+
+
+    <!-- Progress -->
+
+    <div class="progress">
+
+        <div class="fill"
+             id="fill">
+        </div>
+
+    </div>
+
+
+    <!-- Controls -->
+
+    <div class="controls">
+
+        <button id="nextBtn"
+                disabled>
+
+            CONTINUE MISSION 20 →
+
+        </button>
+
+    </div>
+
 
 </div>
 
-<!-- AI Mentor -->
 
-<div class="briefing">
-
-<h2>
-
-🤖 AI Design Mentor
-
-</h2>
-
-<p>
-
-Personalized interfaces improve user satisfaction by showing relevant content.
-
-Apps should adapt to user interests, preferences and behavior.
-
-Today's client is building a music streaming application.
-
-Choose the most personalized experience.
-
-</p>
-
-</div>
-
-<!-- Challenge -->
-
-<div class="designArea">
-
-<h2>
-
-🎵 Music Streaming App
-
-</h2>
-
-<p id="challengeText">
-
-Preparing personalized experiences...
-
-</p>
-
-</div>
-
-<!-- Status -->
-
-<div class="statusBox">
-
-<h3>
-
-Personalization Analysis
-
-</h3>
-
-<p id="statusText">
-
-Waiting to begin...
-
-</p>
-
-</div>
-
-<!-- Controls -->
-
-<div class="controls">
-
-<button id="startChallenge">
-
-🧠 START CHALLENGE
-
-</button>
-
-</div>
-
-</div>
-
-<script type="module" src="Ui19.js"></script>
+<script type="module"
+src="Ui19.js"></script>
 
 </body>
 
