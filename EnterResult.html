@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Entrepreneurship Result</title>
+
+    <link
+        rel="stylesheet"
+        href="EnterResult.css"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================
+         BACKGROUND
+    ====================================== -->
+
+    <div class="background">
+
+        <div class="grid"></div>
+
+        <div class="glow glowOne"></div>
+
+        <div class="glow glowTwo"></div>
+
+        <div class="stars"></div>
+
+    </div>
+
+
+
+    <!-- =====================================
+         MAIN CONTAINER
+    ====================================== -->
+
+    <main class="container">
+
+
+        <!-- =================================
+             HEADER
+        ================================== -->
+
+        <header class="header glass">
+
+
+            <div class="headerIcon">
+
+                <i class="fa-solid fa-lightbulb"></i>
+
+            </div>
+
+
+            <div>
+
+                <p class="eyebrow">
+                    SKILL ANALYZER
+                </p>
+
+
+                <h1>
+                    Entrepreneurship
+                </h1>
+
+
+                <p class="subtitle">
+                    Entrepreneurial Intelligence Report
+                </p>
+
+            </div>
+
+
+        </header>
+
+
+
+        <!-- =================================
+             LOADING
+        ================================== -->
+
+        <section
+            class="loading glass"
+            id="loadingSection"
+        >
+
+
+            <div class="loader"></div>
+
+
+            <h2>
+                Analyzing Your Entrepreneurial Profile
+            </h2>
+
+
+            <p id="loadingText">
+                Reading your 20 entrepreneurship missions...
+            </p>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             ERROR
+        ================================== -->
+
+        <section
+            class="errorBox glass"
+            id="errorSection"
+        >
+
+
+            <div class="errorIcon">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+            </div>
+
+
+            <h2>
+                Result Cannot Be Generated
+            </h2>
+
+
+            <p id="errorText">
+                Something went wrong.
+            </p>
+
+
+            <button
+                id="backDashboardBtn"
+                class="primaryBtn"
+            >
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to Dashboard
+
+            </button>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             RESULT
+        ================================== -->
+
+        <section
+            class="result"
+            id="resultSection"
+        >
+
+
+
+            <!-- =================================
+                 HERO RESULT
+            ================================== -->
+
+            <div class="hero glass">
+
+
+                <div class="heroText">
+
+
+                    <p class="eyebrow">
+                        YOUR ENTREPRENEUR DNA
+                    </p>
+
+
+                    <h2 id="profileTitle">
+                        Entrepreneur Profile
+                    </h2>
+
+
+                    <p id="profileDescription">
+                        Analyzing your entrepreneurial decisions...
+                    </p>
+
+
+                </div>
+
+
+
+                <!-- SCORE CIRCLE -->
+
+                <div class="scoreCircle">
+
+
+                    <div class="scoreInner">
+
+
+                        <span id="scoreNumber">
+                            0
+                        </span>
+
+
+                        <small>
+                            / 100
+                        </small>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 SUMMARY
+            ================================== -->
+
+            <div class="summaryGrid">
+
+
+
+                <div class="summaryCard glass">
+
+
+                    <div class="summaryIcon">
+
+                        <i class="fa-solid fa-trophy"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Total Score
+                        </span>
+
+
+                        <strong id="totalScore">
+                            0 / 100
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="summaryCard glass">
+
+
+                    <div class="summaryIcon">
+
+                        <i class="fa-solid fa-list-check"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Missions Completed
+                        </span>
+
+
+                        <strong id="missionsCompleted">
+                            0 / 20
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="summaryCard glass">
+
+
+                    <div class="summaryIcon">
+
+                        <i class="fa-solid fa-chart-line"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Average Decision
+                        </span>
+
+
+                        <strong id="averageScore">
+                            0 / 5
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 ENTREPRENEUR SKILLS
+            ================================== -->
+
+            <div class="section glass">
+
+
+                <div class="sectionHeading">
+
+
+                    <div>
+
+
+                        <p class="eyebrow">
+                            PERFORMANCE
+                        </p>
+
+
+                        <h2>
+                            Entrepreneurial Skill Analysis
+                        </h2>
+
+
+                    </div>
+
+
+                    <i class="fa-solid fa-chart-simple"></i>
+
+
+                </div>
+
+
+
+                <div class="skills">
+
+
+
+                    <!-- OPPORTUNITY -->
+
+                    <div class="skill">
+
+
+                        <div class="skillTop">
+
+
+                            <span>
+                                Opportunity Recognition
+                            </span>
+
+
+                            <strong id="opportunityValue">
+                                0%
+                            </strong>
+
+
+                        </div>
+
+
+                        <div class="bar">
+
+
+                            <div
+                                class="barFill"
+                                id="opportunityBar"
+                            ></div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- PROBLEM SOLVING -->
+
+                    <div class="skill">
+
+
+                        <div class="skillTop">
+
+
+                            <span>
+                                Business Problem Solving
+                            </span>
+
+
+                            <strong id="businessProblemValue">
+                                0%
+                            </strong>
+
+
+                        </div>
+
+
+                        <div class="bar">
+
+
+                            <div
+                                class="barFill"
+                                id="businessProblemBar"
+                            ></div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- INNOVATION -->
+
+                    <div class="skill">
+
+
+                        <div class="skillTop">
+
+
+                            <span>
+                                Innovation
+                            </span>
+
+
+                            <strong id="innovationValue">
+                                0%
+                            </strong>
+
+
+                        </div>
+
+
+                        <div class="bar">
+
+
+                            <div
+                                class="barFill"
+                                id="innovationBar"
+                            ></div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- DECISION -->
+
+                    <div class="skill">
+
+
+                        <div class="skillTop">
+
+
+                            <span>
+                                Entrepreneurial Decision Making
+                            </span>
+
+
+                            <strong id="entrepreneurDecisionValue">
+                                0%
+                            </strong>
+
+
+                        </div>
+
+
+                        <div class="bar">
+
+
+                            <div
+                                class="barFill"
+                                id="entrepreneurDecisionBar"
+                            ></div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 STRENGTHS + IMPROVEMENTS
+            ================================== -->
+
+            <div class="twoColumns">
+
+
+
+                <!-- STRENGTHS -->
+
+                <div class="section glass">
+
+
+                    <div class="sectionHeading">
+
+
+                        <div>
+
+
+                            <p class="eyebrow">
+                                STRENGTHS
+                            </p>
+
+
+                            <h2>
+                                Your Strong Areas
+                            </h2>
+
+
+                        </div>
+
+
+                        <i class="fa-solid fa-bolt"></i>
+
+
+                    </div>
+
+
+                    <div
+                        class="traitList"
+                        id="strengthList"
+                    ></div>
+
+
+                </div>
+
+
+
+                <!-- IMPROVEMENTS -->
+
+                <div class="section glass">
+
+
+                    <div class="sectionHeading">
+
+
+                        <div>
+
+
+                            <p class="eyebrow">
+                                GROWTH
+                            </p>
+
+
+                            <h2>
+                                Areas to Improve
+                            </h2>
+
+
+                        </div>
+
+
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+
+
+                    </div>
+
+
+                    <div
+                        class="traitList"
+                        id="improvementList"
+                    ></div>
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 MISSION BREAKDOWN
+            ================================== -->
+
+            <div class="section glass">
+
+
+                <div class="sectionHeading">
+
+
+                    <div>
+
+
+                        <p class="eyebrow">
+                            MISSION DATA
+                        </p>
+
+
+                        <h2>
+                            20 Mission Breakdown
+                        </h2>
+
+
+                    </div>
+
+
+                    <i class="fa-solid fa-rocket"></i>
+
+
+                </div>
+
+
+
+                <div
+                    class="missionGrid"
+                    id="missionGrid"
+                ></div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 FINAL MESSAGE
+            ================================== -->
+
+            <div class="finalMessage glass">
+
+
+                <div class="finalIcon">
+
+                    <i class="fa-solid fa-rocket"></i>
+
+                </div>
+
+
+                <div>
+
+
+                    <p class="eyebrow">
+                        AI ENTREPRENEUR INSIGHT
+                    </p>
+
+
+                    <h2 id="finalHeading">
+                        Your Entrepreneurial Journey
+                    </h2>
+
+
+                    <p id="finalDescription">
+                        Your results are being prepared.
+                    </p>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 ACTION BUTTONS
+            ================================== -->
+
+            <div class="actions">
+
+
+                <button
+                    class="primaryBtn"
+                    id="dashboardBtn"
+                >
+
+                    <i class="fa-solid fa-house"></i>
+
+                    Back to Dashboard
+
+                </button>
+
+
+
+                <button
+                    class="secondaryBtn"
+                    id="continueBtn"
+                >
+
+                    Continue to Final Assessment
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =====================================
+         JAVASCRIPT
+    ====================================== -->
+
+    <script
+        type="module"
+        src="EnterResult.js"
+    ></script>
+
+
+</body>
+
+</html>
