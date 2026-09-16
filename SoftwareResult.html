@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Software Development Result</title>
+
+    <link
+        rel="stylesheet"
+        href="SoftwareResult.css"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- ==============================
+         BACKGROUND
+    =============================== -->
+
+    <div class="background">
+
+        <div class="grid"></div>
+
+        <div class="glow glowOne"></div>
+
+        <div class="glow glowTwo"></div>
+
+        <div class="stars"></div>
+
+    </div>
+
+
+    <!-- ==============================
+         MAIN CONTAINER
+    =============================== -->
+
+    <main class="container">
+
+
+        <!-- ==============================
+             HEADER
+        =============================== -->
+
+        <header class="header glass">
+
+            <div class="headerIcon">
+
+                <i class="fa-solid fa-code"></i>
+
+            </div>
+
+            <div>
+
+                <p class="eyebrow">
+                    SKILL ANALYZER
+                </p>
+
+                <h1>
+                    Software Development
+                </h1>
+
+                <p class="subtitle">
+                    Developer Intelligence Report
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- ==============================
+             LOADING
+        =============================== -->
+
+        <section
+            class="loading glass"
+            id="loadingSection"
+        >
+
+            <div class="loader"></div>
+
+            <h2>
+                Analyzing Your Developer Profile
+            </h2>
+
+            <p id="loadingText">
+                Reading your 20 mission results...
+            </p>
+
+        </section>
+
+
+        <!-- ==============================
+             ERROR
+        =============================== -->
+
+        <section
+            class="errorBox glass"
+            id="errorSection"
+        >
+
+            <div class="errorIcon">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+            </div>
+
+            <h2>
+                Result Cannot Be Generated
+            </h2>
+
+            <p id="errorText">
+                Something went wrong.
+            </p>
+
+            <button
+                id="backDashboardBtn"
+                class="primaryBtn"
+            >
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to Dashboard
+
+            </button>
+
+        </section>
+
+
+        <!-- ==============================
+             RESULT
+        =============================== -->
+
+        <section
+            class="result"
+            id="resultSection"
+        >
+
+
+            <!-- ==============================
+                 RESULT HERO
+            =============================== -->
+
+            <div class="hero glass">
+
+                <div class="heroText">
+
+                    <p class="eyebrow">
+                        YOUR DEVELOPER DNA
+                    </p>
+
+                    <h2 id="profileTitle">
+                        Developer Profile
+                    </h2>
+
+                    <p id="profileDescription">
+                        Analyzing your engineering approach...
+                    </p>
+
+                </div>
+
+
+                <!-- SCORE CIRCLE -->
+
+                <div class="scoreCircle">
+
+                    <div class="scoreInner">
+
+                        <span id="scoreNumber">
+                            0
+                        </span>
+
+                        <small>
+                            / 100
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==============================
+                 SUMMARY CARDS
+            =============================== -->
+
+            <div class="summaryGrid">
+
+
+                <div class="summaryCard glass">
+
+                    <div class="summaryIcon">
+
+                        <i class="fa-solid fa-trophy"></i>
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Score
+                        </span>
+
+                        <strong id="totalScore">
+                            0 / 100
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summaryCard glass">
+
+                    <div class="summaryIcon">
+
+                        <i class="fa-solid fa-list-check"></i>
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Missions Completed
+                        </span>
+
+                        <strong id="missionsCompleted">
+                            0 / 20
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summaryCard glass">
+
+                    <div class="summaryIcon">
+
+                        <i class="fa-solid fa-chart-line"></i>
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Average Decision
+                        </span>
+
+                        <strong id="averageScore">
+                            0 / 5
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ==============================
+                 SKILL ANALYSIS
+            =============================== -->
+
+            <div class="section glass">
+
+                <div class="sectionHeading">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            PERFORMANCE
+                        </p>
+
+                        <h2>
+                            Developer Skill Analysis
+                        </h2>
+
+                    </div>
+
+                    <i class="fa-solid fa-chart-simple"></i>
+
+                </div>
+
+
+                <div class="skills">
+
+
+                    <!-- PROBLEM SOLVING -->
+
+                    <div class="skill">
+
+                        <div class="skillTop">
+
+                            <span>
+                                Problem Solving
+                            </span>
+
+                            <strong id="problemSolvingValue">
+                                0%
+                            </strong>
+
+                        </div>
+
+                        <div class="bar">
+
+                            <div
+                                class="barFill"
+                                id="problemSolvingBar"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- DEBUGGING -->
+
+                    <div class="skill">
+
+                        <div class="skillTop">
+
+                            <span>
+                                Debugging
+                            </span>
+
+                            <strong id="debuggingValue">
+                                0%
+                            </strong>
+
+                        </div>
+
+                        <div class="bar">
+
+                            <div
+                                class="barFill"
+                                id="debuggingBar"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LOGICAL THINKING -->
+
+                    <div class="skill">
+
+                        <div class="skillTop">
+
+                            <span>
+                                Logical Thinking
+                            </span>
+
+                            <strong id="logicalThinkingValue">
+                                0%
+                            </strong>
+
+                        </div>
+
+                        <div class="bar">
+
+                            <div
+                                class="barFill"
+                                id="logicalThinkingBar"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- DECISION MAKING -->
+
+                    <div class="skill">
+
+                        <div class="skillTop">
+
+                            <span>
+                                Decision Making
+                            </span>
+
+                            <strong id="decisionMakingValue">
+                                0%
+                            </strong>
+
+                        </div>
+
+                        <div class="bar">
+
+                            <div
+                                class="barFill"
+                                id="decisionMakingBar"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- ==============================
+                 STRENGTHS
+            =============================== -->
+
+            <div class="twoColumns">
+
+
+                <div class="section glass">
+
+                    <div class="sectionHeading">
+
+                        <div>
+
+                            <p class="eyebrow">
+                                STRENGTHS
+                            </p>
+
+                            <h2>
+                                Your Strong Areas
+                            </h2>
+
+                        </div>
+
+                        <i class="fa-solid fa-bolt"></i>
+
+                    </div>
+
+                    <div
+                        class="traitList"
+                        id="strengthList"
+                    ></div>
+
+                </div>
+
+
+                <div class="section glass">
+
+                    <div class="sectionHeading">
+
+                        <div>
+
+                            <p class="eyebrow">
+                                GROWTH
+                            </p>
+
+                            <h2>
+                                Areas to Improve
+                            </h2>
+
+                        </div>
+
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+
+                    </div>
+
+                    <div
+                        class="traitList"
+                        id="improvementList"
+                    ></div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ==============================
+                 MISSION BREAKDOWN
+            =============================== -->
+
+            <div class="section glass">
+
+                <div class="sectionHeading">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            MISSION DATA
+                        </p>
+
+                        <h2>
+                            20 Mission Breakdown
+                        </h2>
+
+                    </div>
+
+                    <i class="fa-solid fa-code-branch"></i>
+
+                </div>
+
+
+                <div
+                    class="missionGrid"
+                    id="missionGrid"
+                ></div>
+
+            </div>
+
+
+            <!-- ==============================
+                 FINAL MESSAGE
+            =============================== -->
+
+            <div
+                class="finalMessage glass"
+                id="finalMessage"
+            >
+
+                <div class="finalIcon">
+
+                    <i class="fa-solid fa-rocket"></i>
+
+                </div>
+
+                <div>
+
+                    <p class="eyebrow">
+                        AI DEVELOPER INSIGHT
+                    </p>
+
+                    <h2 id="finalHeading">
+                        Your Developer Journey
+                    </h2>
+
+                    <p id="finalDescription">
+                        Your results are being prepared.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==============================
+                 BUTTONS
+            =============================== -->
+
+            <div class="actions">
+
+                <button
+                    class="primaryBtn"
+                    id="dashboardBtn"
+                >
+
+                    <i class="fa-solid fa-house"></i>
+
+                    Back to Dashboard
+
+                </button>
+
+
+                <button
+                    class="secondaryBtn"
+                    id="continueBtn"
+                >
+
+                    Continue to Final Assessment
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+    <script
+        type="module"
+        src="SoftwareResult.js"
+    ></script>
+
+</body>
+
+</html>
