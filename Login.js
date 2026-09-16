@@ -1,33 +1,8 @@
+import { auth } from "./firebase.js";
+
 import {
     signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-
-// ===============================
-// LOAD FIREBASE
-// ===============================
-
-let auth;
-
-try {
-
-    const firebaseModule =
-        await import("./firebase.js");
-
-    auth = firebaseModule.auth;
-
-    console.log("Firebase loaded successfully.");
-
-} catch (error) {
-
-    console.error("Firebase loading error:", error);
-
-    alert(
-        "Firebase could not load.\n\n" +
-        error.message
-    );
-
-}
 
 
 // ===============================
@@ -38,8 +13,6 @@ function togglePassword() {
 
     const password =
         document.getElementById("password");
-
-    if (!password) return;
 
     if (password.type === "password") {
 
@@ -53,8 +26,7 @@ function togglePassword() {
 
 }
 
-window.togglePassword =
-    togglePassword;
+window.togglePassword = togglePassword;
 
 
 // ===============================
@@ -65,115 +37,77 @@ const loginBtn =
     document.getElementById("loginBtn");
 
 
-if (!loginBtn) {
+loginBtn.addEventListener("click", async function () {
 
-    console.error(
-        "Login button not found."
-    );
+    console.log("LOGIN BUTTON CLICKED");
 
-} else {
+    const email =
+        document.getElementById("email").value.trim();
 
-    loginBtn.addEventListener(
-        "click",
-        async function () {
+    const password =
+        document.getElementById("password").value;
 
-            console.log(
-                "LOGIN BUTTON CLICKED"
+
+    if (email === "" || password === "") {
+
+        alert("Please enter Email and Password.");
+
+        return;
+
+    }
+
+
+    try {
+
+        console.log("Firebase Auth object:", auth);
+
+        console.log("Starting Firebase login...");
+
+
+        const userCredential =
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
             );
 
 
-            const email =
-                document
-                    .getElementById("email")
-                    .value
-                    .trim();
+        console.log(
+            "LOGIN SUCCESSFUL:",
+            userCredential.user.uid
+        );
 
 
-            const password =
-                document
-                    .getElementById("password")
-                    .value;
+        alert("Login Successful!");
 
 
-            if (email === "" ||
-                password === "") {
+        // ===============================
+        // GO TO DASHBOARD
+        // ===============================
 
-                alert(
-                    "Please enter Email and Password."
-                );
-
-                return;
-
-            }
+        window.location.href =
+            "Dashboard.html";
 
 
-            if (!auth) {
+    } catch (error) {
 
-                alert(
-                    "Firebase Authentication is not available."
-                );
-
-                return;
-
-            }
+        console.error(
+            "FIREBASE LOGIN ERROR:",
+            error
+        );
 
 
-            try {
+        alert(
+            "Login failed.\n\n" +
+            "Error code: " +
+            error.code +
+            "\n\n" +
+            error.message
+        );
 
-                console.log(
-                    "Trying Firebase login..."
-                );
+    }
 
-
-                const userCredential =
-                    await signInWithEmailAndPassword(
-                        auth,
-                        email,
-                        password
-                    );
-
-
-                console.log(
-                    "Login successful:",
-                    userCredential.user.uid
-                );
-
-
-                alert(
-                    "Login Successful!"
-                );
-
-
-                // ===============================
-                // GO TO DASHBOARD
-                // ===============================
-
-                window.location.href =
-                    "Dashboard.html";
-
-
-            } catch (error) {
-
-                console.error(
-                    "Firebase Login Error:",
-                    error
-                );
-
-
-                alert(
-                    "Login failed.\n\n" +
-                    "Error code: " +
-                    error.code +
-                    "\n\n" +
-                    error.message
-                );
-
-            }
-
-        }
-    );
-
-}
+});
 
 
 // ===============================
@@ -186,17 +120,14 @@ const forgotLink =
 
 if (forgotLink) {
 
-    forgotLink.addEventListener(
-        "click",
-        function (e) {
+    forgotLink.addEventListener("click", function (e) {
 
-            e.preventDefault();
+        e.preventDefault();
 
-            alert(
-                "Forgot Password page will be added soon."
-            );
+        alert(
+            "Forgot Password page will be added soon."
+        );
 
-        }
-    );
+    });
 
 }
