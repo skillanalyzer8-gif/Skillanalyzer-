@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Leadership Result</title>
+
+    <link
+        rel="stylesheet"
+        href="LeadResult.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     BACKGROUND
+========================================= -->
+
+<div class="background">
+
+    <div class="grid"></div>
+
+    <div class="glow glowOne"></div>
+
+    <div class="glow glowTwo"></div>
+
+    <div class="stars"></div>
+
+</div>
+
+
+<!-- =========================================
+     MAIN CONTAINER
+========================================= -->
+
+<div class="container">
+
+
+    <!-- =====================================
+         HEADER
+    ====================================== -->
+
+    <header class="header glass">
+
+        <div class="headerIcon">
+
+            <i class="fa-solid fa-crown"></i>
+
+        </div>
+
+
+        <div>
+
+            <div class="eyebrow">
+                LEADERSHIP ASSESSMENT
+            </div>
+
+            <h1>
+                Leadership Result
+            </h1>
+
+            <p class="subtitle">
+                Your Leadership DNA has been analyzed.
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================
+         LOADING
+    ====================================== -->
+
+    <section
+        id="loadingSection"
+        class="loading glass"
+    >
+
+        <div class="loader"></div>
+
+        <h2>
+            Analyzing Your Leadership...
+        </h2>
+
+        <p id="loadingText">
+            Reading Leadership Mission 1 of 20...
+        </p>
+
+    </section>
+
+
+    <!-- =====================================
+         ERROR
+    ====================================== -->
+
+    <section
+        id="errorSection"
+        class="errorBox glass"
+    >
+
+        <div class="errorIcon">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+        </div>
+
+        <h2>
+            Result Not Available
+        </h2>
+
+        <p id="errorText">
+            Unable to generate your result.
+        </p>
+
+        <br>
+
+        <button
+            class="secondaryBtn"
+            onclick="window.location.href='Dashboard.html'"
+        >
+            <i class="fa-solid fa-house"></i>
+            Back to Dashboard
+        </button>
+
+    </section>
+
+
+    <!-- =====================================
+         RESULT SECTION
+    ====================================== -->
+
+    <main
+        id="resultSection"
+        class="result"
+    >
+
+
+        <!-- =================================
+             HERO RESULT
+        ================================== -->
+
+        <section class="hero glass">
+
+
+            <div class="heroText">
+
+                <div class="eyebrow">
+                    YOUR LEADERSHIP DNA
+                </div>
+
+                <h2 id="profileTitle">
+                    Leadership Profile
+                </h2>
+
+                <p id="profileDescription">
+                    Analyzing your leadership decisions...
+                </p>
+
+            </div>
+
+
+            <!-- SCORE -->
+
+            <div class="scoreCircle">
+
+                <div class="scoreInner">
+
+                    <span id="scoreNumber">
+                        0
+                    </span>
+
+                    <small>
+                        SCORE %
+                    </small>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================
+             SUMMARY CARDS
+        ================================== -->
+
+        <section class="summaryGrid">
+
+
+            <div class="summaryCard glass">
+
+                <div class="summaryIcon">
+
+                    <i class="fa-solid fa-star"></i>
+
+                </div>
+
+                <div>
+
+                    <span>
+                        Total Score
+                    </span>
+
+                    <strong id="totalScore">
+                        0 / 100
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="summaryCard glass">
+
+                <div class="summaryIcon">
+
+                    <i class="fa-solid fa-list-check"></i>
+
+                </div>
+
+                <div>
+
+                    <span>
+                        Missions
+                    </span>
+
+                    <strong id="missionsCompleted">
+                        0 / 20
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="summaryCard glass">
+
+                <div class="summaryIcon">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                </div>
+
+                <div>
+
+                    <span>
+                        Average
+                    </span>
+
+                    <strong id="averageScore">
+                        0 / 5
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================
+             LEADERSHIP SKILLS
+        ================================== -->
+
+        <section class="section glass">
+
+
+            <div class="sectionHeading">
+
+                <h2>
+                    <i class="fa-solid fa-brain"></i>
+                    Leadership Skill Analysis
+                </h2>
+
+                <i class="fa-solid fa-chart-simple"></i>
+
+            </div>
+
+
+            <div class="skills">
+
+
+                <!-- TEAM LEADERSHIP -->
+
+                <div class="skill">
+
+                    <div class="skillTop">
+
+                        <span>
+                            Team Leadership
+                        </span>
+
+                        <strong id="teamLeadershipValue">
+                            0%
+                        </strong>
+
+                    </div>
+
+                    <div class="bar">
+
+                        <div
+                            id="teamLeadershipBar"
+                            class="barFill"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PROBLEM SOLVING -->
+
+                <div class="skill">
+
+                    <div class="skillTop">
+
+                        <span>
+                            Problem Solving
+                        </span>
+
+                        <strong id="problemSolvingValue">
+                            0%
+                        </strong>
+
+                    </div>
+
+                    <div class="bar">
+
+                        <div
+                            id="problemSolvingBar"
+                            class="barFill"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- COMMUNICATION -->
+
+                <div class="skill">
+
+                    <div class="skillTop">
+
+                        <span>
+                            Communication
+                        </span>
+
+                        <strong id="communicationValue">
+                            0%
+                        </strong>
+
+                    </div>
+
+                    <div class="bar">
+
+                        <div
+                            id="communicationBar"
+                            class="barFill"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DECISION MAKING -->
+
+                <div class="skill">
+
+                    <div class="skillTop">
+
+                        <span>
+                            Decision Making
+                        </span>
+
+                        <strong id="decisionMakingValue">
+                            0%
+                        </strong>
+
+                    </div>
+
+                    <div class="bar">
+
+                        <div
+                            id="decisionMakingBar"
+                            class="barFill"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================
+             STRENGTHS + IMPROVEMENTS
+        ================================== -->
+
+        <div class="twoColumns">
+
+
+            <!-- STRENGTHS -->
+
+            <section class="section glass">
+
+                <div class="sectionHeading">
+
+                    <h2>
+                        <i class="fa-solid fa-bolt"></i>
+                        Leadership Strengths
+                    </h2>
+
+                </div>
+
+
+                <div
+                    id="strengthList"
+                    class="traitList"
+                ></div>
+
+            </section>
+
+
+            <!-- IMPROVEMENTS -->
+
+            <section class="section glass">
+
+                <div class="sectionHeading">
+
+                    <h2>
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                        Growth Areas
+                    </h2>
+
+                </div>
+
+
+                <div
+                    id="improvementList"
+                    class="traitList"
+                ></div>
+
+            </section>
+
+
+        </div>
+
+
+        <!-- =================================
+             MISSION BREAKDOWN
+        ================================== -->
+
+        <section class="section glass">
+
+
+            <div class="sectionHeading">
+
+                <h2>
+                    <i class="fa-solid fa-layer-group"></i>
+                    Mission Performance
+                </h2>
+
+                <i class="fa-solid fa-ranking-star"></i>
+
+            </div>
+
+
+            <div
+                id="missionGrid"
+                class="missionGrid"
+            ></div>
+
+
+        </section>
+
+
+        <!-- =================================
+             FINAL MESSAGE
+        ================================== -->
+
+        <section class="finalMessage glass">
+
+
+            <div class="finalIcon">
+
+                <i class="fa-solid fa-crown"></i>
+
+            </div>
+
+
+            <div>
+
+                <h2 id="finalHeading">
+                    Your Leadership Journey
+                </h2>
+
+                <p id="finalDescription">
+                    Your leadership assessment is complete.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================
+             BUTTONS
+        ================================== -->
+
+        <div class="actions">
+
+
+            <button
+                id="backDashboardBtn"
+                class="secondaryBtn"
+            >
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Dashboard
+
+            </button>
+
+
+            <button
+                id="dashboardBtn"
+                class="secondaryBtn"
+            >
+
+                <i class="fa-solid fa-house"></i>
+
+                Home
+
+            </button>
+
+
+            <button
+                id="continueBtn"
+                class="primaryBtn"
+            >
+
+                Continue to Final Result
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+<script
+    type="module"
+    src="LeadResult.js"
+></script>
+
+
+</body>
+
+</html>
