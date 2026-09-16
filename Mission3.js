@@ -36,11 +36,20 @@ const questionId = "softwareDevelopment_q3";
 // ===============================
 
 const scores = {
+
     restoreBackup: 5,
     identifyTables: 4,
     shutdownApp: 3,
     ignoreIssue: 1
+
 };
+
+
+// ===============================
+// CORRECT ANSWER
+// ===============================
+
+const correctAnswer = "identifyTables";
 
 
 // ===============================
@@ -68,16 +77,33 @@ nextBtn.style.opacity = "0.5";
 
 function shuffleOptions() {
 
-    const optionElements = Array.from(optionsContainer.children);
+    const optionElements =
+        Array.from(optionsContainer.children);
 
-    for (let i = optionElements.length - 1; i > 0; i--) {
+    for (
+        let i = optionElements.length - 1;
+        i > 0;
+        i--
+    ) {
 
-        const randomIndex = Math.floor(Math.random() * (i + 1));
+        const randomIndex =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
 
-        optionsContainer.appendChild(
-            optionElements[randomIndex]
+        const current =
+            optionElements[i];
+
+        const random =
+            optionElements[randomIndex];
+
+        optionsContainer.insertBefore(
+            random,
+            current
         );
+
     }
+
 }
 
 
@@ -85,22 +111,34 @@ function shuffleOptions() {
 // AUTHENTICATION
 // ===============================
 
-onAuthStateChanged(auth, async function (user) {
+onAuthStateChanged(
+    auth,
+    async function (user) {
 
-    if (!user) {
+        if (!user) {
 
-        alert("Please login first.");
+            alert("Please login first.");
 
-        window.location.href = "Login.html";
+            window.location.href =
+                "Login.html";
 
-        return;
+            return;
+
+        }
+
+
+        currentUser = user;
+
+        console.log(
+            "Mission 3 user:",
+            currentUser.uid
+        );
+
+
+        await checkPreviousAnswer();
+
     }
-
-    currentUser = user;
-
-    await checkPreviousAnswer();
-
-});
+);
 
 
 // ===============================
@@ -119,35 +157,45 @@ async function checkPreviousAnswer() {
             questionId
         );
 
-        const questionSnap = await getDoc(questionRef);
+
+        const questionSnap =
+            await getDoc(questionRef);
 
 
-        // --------------------------------
-        // ALREADY ANSWERED
-        // --------------------------------
+        // ===============================
+        // ALREADY COMPLETED
+        // ===============================
 
         if (questionSnap.exists()) {
 
-            const data = questionSnap.data();
+            const data =
+                questionSnap.data();
+
 
             if (data.completed === true) {
 
-                selectedAnswer = data.answer || "";
-                selectedScore = data.score || 0;
+                selectedAnswer =
+                    data.answer || "";
+
+                selectedScore =
+                    data.score || 0;
 
                 answerLocked = true;
                 answerSaved = true;
 
+
                 showPreviouslyAnswered();
 
                 return;
+
             }
+
         }
 
 
-        // --------------------------------
+        // ===============================
         // NEW QUESTION
-        // --------------------------------
+        // ===============================
 
         shuffleOptions();
 
@@ -160,9 +208,12 @@ async function checkPreviousAnswer() {
             error
         );
 
+
         text.textContent =
-            "❌ Could not load your previous answer.";
+            "❌ Could not load Mission 3.";
+
     }
+
 }
 
 
@@ -174,12 +225,16 @@ function enableOptions() {
 
     options.forEach(function (option) {
 
+        option.style.pointerEvents =
+            "auto";
+
         option.addEventListener(
             "click",
             handleAnswer
         );
 
     });
+
 }
 
 
@@ -189,10 +244,13 @@ function enableOptions() {
 
 async function handleAnswer() {
 
-    // Prevent second selection
+    // Prevent multiple answers
     if (answerLocked) {
+
         return;
+
     }
+
 
     // Check login
     if (!currentUser) {
@@ -200,49 +258,65 @@ async function handleAnswer() {
         alert("Please login first.");
 
         return;
+
     }
 
 
-    // Get selected answer
+    // ===============================
+    // GET ANSWER
+    // ===============================
+
     selectedAnswer =
         this.dataset.answer;
 
 
-    // Get score
     selectedScore =
         scores[selectedAnswer] || 0;
 
 
-    // Lock immediately
     answerLocked = true;
 
 
-    // Disable every option
+    // ===============================
+    // LOCK OPTIONS
+    // ===============================
+
     options.forEach(function (option) {
 
-        option.style.pointerEvents = "none";
-        option.style.opacity = "0.65";
+        option.style.pointerEvents =
+            "none";
+
+        option.style.opacity =
+            "0.65";
 
     });
 
 
-    // Highlight selected option
     this.classList.add("active");
+
     this.style.opacity = "1";
 
 
-    // AI analysis
+    // ===============================
+    // SHOW ANALYSIS
+    // ===============================
+
     fill.style.width = "0%";
+
 
     text.textContent =
         "🤖 AI is analysing your decision...";
 
 
     nextBtn.disabled = true;
+
     nextBtn.style.opacity = "0.5";
 
 
-    // Progress animation
+    // ===============================
+    // SCORE ANIMATION
+    // ===============================
+
     setTimeout(function () {
 
         fill.style.width =
@@ -251,10 +325,13 @@ async function handleAnswer() {
     }, 100);
 
 
-    // Save answer
-    setTimeout(async function () {
+    // ===============================
+    // SAVE ANSWER
+    // ===============================
 
-        await saveAnswer();
+    setTimeout(function () {
+
+        saveAnswer();
 
     }, 1500);
 
@@ -275,6 +352,7 @@ async function saveAnswer() {
         answerLocked = false;
 
         return;
+
     }
 
 
@@ -293,15 +371,23 @@ async function saveAnswer() {
             questionRef,
             {
 
-                category: category,
+                category:
+                    category,
 
-                questionNumber: questionNumber,
+                questionNumber:
+                    questionNumber,
 
-                answer: selectedAnswer,
+                answer:
+                    selectedAnswer,
 
-                score: selectedScore,
+                score:
+                    selectedScore,
 
-                completed: true,
+                correct:
+                    selectedAnswer === correctAnswer,
+
+                completed:
+                    true,
 
                 completedAt:
                     new Date().toISOString()
@@ -315,17 +401,169 @@ async function saveAnswer() {
 
         answerSaved = true;
 
-        text.textContent =
-            "✅ Decision Recorded Successfully";
 
+        // ===============================
+        // RESULT MESSAGE
+        // ===============================
+
+        if (selectedAnswer === correctAnswer) {
+
+            text.textContent =
+                "✅ Excellent! Identify the corrupted tables before performing recovery.";
+
+        } else {
+
+            text.textContent =
+                "⚠️ Good attempt. The best first step is to identify the corrupted tables before restoring data.";
+
+        }
+
+
+        // ===============================
+        // ENABLE NEXT
+        // ===============================
 
         nextBtn.disabled = false;
+
         nextBtn.style.opacity = "1";
 
 
         console.log(
-            "Mission 3 saved successfully!"
+            "Mission 3 saved successfully."
         );
 
 
-    } catch (error)
+    } catch (error) {
+
+        console.error(
+            "Mission 3 Firestore Error:",
+            error
+        );
+
+
+        text.textContent =
+            "❌ Could not save your decision. Please try again.";
+
+
+        answerLocked = false;
+
+        answerSaved = false;
+
+
+        options.forEach(function (option) {
+
+            option.style.pointerEvents =
+                "auto";
+
+            option.style.opacity =
+                "1";
+
+            option.classList.remove(
+                "active"
+            );
+
+        });
+
+
+        nextBtn.disabled = true;
+
+        nextBtn.style.opacity = "0.5";
+
+    }
+
+}
+
+
+// ===============================
+// SHOW PREVIOUSLY ANSWERED
+// ===============================
+
+function showPreviouslyAnswered() {
+
+    options.forEach(function (option) {
+
+        const optionAnswer =
+            option.dataset.answer;
+
+
+        option.style.pointerEvents =
+            "none";
+
+
+        if (
+            optionAnswer ===
+            selectedAnswer
+        ) {
+
+            option.classList.add("active");
+
+            option.style.opacity =
+                "1";
+
+        } else {
+
+            option.style.opacity =
+                "0.65";
+
+        }
+
+    });
+
+
+    fill.style.width =
+        `${selectedScore * 20}%`;
+
+
+    if (
+        selectedAnswer ===
+        correctAnswer
+    ) {
+
+        text.textContent =
+            "✅ Mission 3 already completed. Excellent decision.";
+
+    } else {
+
+        text.textContent =
+            "⚠️ Mission 3 already completed. Your previous decision has been restored.";
+
+    }
+
+
+    nextBtn.disabled = false;
+
+    nextBtn.style.opacity = "1";
+
+
+    console.log(
+        "Mission 3 previous answer restored."
+    );
+
+}
+
+
+// ===============================
+// NEXT MISSION
+// ===============================
+
+nextBtn.addEventListener(
+    "click",
+    function () {
+
+        if (!answerSaved) {
+
+            return;
+
+        }
+
+
+        console.log(
+            "Moving to Mission 4..."
+        );
+
+
+        window.location.href =
+            "Mission4.html";
+
+    }
+);
