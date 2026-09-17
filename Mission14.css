@@ -1,315 +1,607 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-    }
+/* ============================================
+   MISSION 14 - ESCAPE ROOM
+      Mission14.css
+         ============================================ */
 
-    body{
+         * {
+             margin: 0;
+                 padding: 0;
+                     box-sizing: border-box;
+                         font-family: "Poppins", sans-serif;
+                         }
 
-    background:linear-gradient(135deg,#111827,#1E293B,#374151);
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+                         /* ============================================
+                            BODY
+                               ============================================ */
 
-    min-height:100vh;
+                               body {
 
-    padding:20px;
+                                   background:
+                                           linear-gradient(
+                                                       135deg,
+                                                                   #111827,
+                                                                               #1E293B,
+                                                                                           #374151
+                                                                                                   );
 
-    }
+                                                                                                       min-height: 100vh;
 
-    .container{
+                                                                                                           display: flex;
 
-    width:390px;
+                                                                                                               justify-content: center;
 
-    background:white;
+                                                                                                                   align-items: center;
 
-    border-radius:25px;
+                                                                                                                       padding: 20px;
 
-    padding:20px;
+                                                                                                                       }
 
-    box-shadow:0 10px 30px rgba(0,0,0,.35);
 
-    }
+                                                                                                                       /* ============================================
+                                                                                                                          MAIN CONTAINER
+                                                                                                                             ============================================ */
 
-    /* HEADER */
+                                                                                                                             .container {
 
-    .header{
+                                                                                                                                 width: 390px;
 
-    text-align:center;
+                                                                                                                                     max-width: 100%;
 
-    margin-bottom:20px;
+                                                                                                                                         background: white;
 
-    }
+                                                                                                                                             border-radius: 25px;
 
-    .header h1{
+                                                                                                                                                 padding: 20px;
 
-    color:#7C3AED;
+                                                                                                                                                     box-shadow:
+                                                                                                                                                             0 10px 30px rgba(0, 0, 0, 0.35);
 
-    }
+                                                                                                                                                             }
 
-    .header p{
 
-    font-weight:600;
+                                                                                                                                                             /* ============================================
+                                                                                                                                                                HEADER
+                                                                                                                                                                   ============================================ */
 
-    color:#475569;
+                                                                                                                                                                   .header {
 
-    }
+                                                                                                                                                                       text-align: center;
 
-    .header span{
+                                                                                                                                                                           margin-bottom: 20px;
 
-    font-size:14px;
+                                                                                                                                                                           }
 
-    color:#64748B;
 
-    }
+                                                                                                                                                                           .header h1 {
 
-    /* CHALLENGE */
+                                                                                                                                                                               color: #7C3AED;
 
-    .challenge{
+                                                                                                                                                                                   font-size: 28px;
 
-    background:#F5F3FF;
+                                                                                                                                                                                       margin-bottom: 5px;
 
-    border-left:6px solid #7C3AED;
+                                                                                                                                                                                       }
 
-    padding:18px;
 
-    border-radius:15px;
+                                                                                                                                                                                       .header p {
 
-    margin-bottom:20px;
+                                                                                                                                                                                           font-weight: 600;
 
-    }
+                                                                                                                                                                                               color: #475569;
 
-    .challenge h2{
+                                                                                                                                                                                                   font-size: 16px;
 
-    margin-bottom:10px;
+                                                                                                                                                                                                   }
 
-    color:#5B21B6;
 
-    }
+                                                                                                                                                                                                   .header span {
 
-    .challenge p{
+                                                                                                                                                                                                       display: block;
 
-    line-height:1.6;
+                                                                                                                                                                                                           margin-top: 3px;
 
-    color:#374151;
+                                                                                                                                                                                                               font-size: 14px;
 
-    }
+                                                                                                                                                                                                                   color: #64748B;
 
-    /* CLUES */
+                                                                                                                                                                                                                   }
 
-    .clues{
 
-    margin-bottom:20px;
+                                                                                                                                                                                                                   /* ============================================
+                                                                                                                                                                                                                      CHALLENGE
+                                                                                                                                                                                                                         ============================================ */
 
-    }
+                                                                                                                                                                                                                         .challenge {
 
-    .clues h3{
+                                                                                                                                                                                                                             background: #F5F3FF;
 
-    margin-bottom:12px;
+                                                                                                                                                                                                                                 border-left: 6px solid #7C3AED;
 
-    color:#5B21B6;
+                                                                                                                                                                                                                                     padding: 18px;
 
-    }
+                                                                                                                                                                                                                                         border-radius: 15px;
 
-    .clue{
+                                                                                                                                                                                                                                             margin-bottom: 20px;
 
-    background:#F8FAFC;
+                                                                                                                                                                                                                                             }
 
-    padding:14px;
 
-    margin-bottom:10px;
+                                                                                                                                                                                                                                             .challenge h2 {
 
-    border-radius:12px;
+                                                                                                                                                                                                                                                 margin-bottom: 10px;
 
-    border-left:5px solid #7C3AED;
+                                                                                                                                                                                                                                                     color: #5B21B6;
 
-    transition:.3s;
+                                                                                                                                                                                                                                                         font-size: 20px;
 
-    }
+                                                                                                                                                                                                                                                         }
 
-    .clue:hover{
 
-    background:#EDE9FE;
+                                                                                                                                                                                                                                                         .challenge p {
 
-    transform:translateX(5px);
+                                                                                                                                                                                                                                                             line-height: 1.6;
 
-    }
+                                                                                                                                                                                                                                                                 color: #374151;
 
-    /* QUESTION */
+                                                                                                                                                                                                                                                                     font-size: 14px;
 
-    .question{
+                                                                                                                                                                                                                                                                         margin-bottom: 8px;
 
-    text-align:center;
+                                                                                                                                                                                                                                                                         }
 
-    margin-bottom:20px;
 
-    color:#5B21B6;
+                                                                                                                                                                                                                                                                         .challenge p:last-child {
 
-    }
+                                                                                                                                                                                                                                                                             margin-bottom: 0;
 
-    /* DOORS */
+                                                                                                                                                                                                                                                                             }
 
-    .doors{
 
-    display:flex;
+                                                                                                                                                                                                                                                                             /* ============================================
+                                                                                                                                                                                                                                                                                CLUES
+                                                                                                                                                                                                                                                                                   ============================================ */
 
-    justify-content:space-between;
+                                                                                                                                                                                                                                                                                   .clues {
 
-    gap:10px;
+                                                                                                                                                                                                                                                                                       margin-bottom: 20px;
 
-    margin-bottom:25px;
+                                                                                                                                                                                                                                                                                       }
 
-    }
 
-    .door{
+                                                                                                                                                                                                                                                                                       .clues h2 {
 
-    flex:1;
+                                                                                                                                                                                                                                                                                           margin-bottom: 12px;
 
-    padding:18px 10px;
+                                                                                                                                                                                                                                                                                               color: #5B21B6;
 
-    border-radius:15px;
+                                                                                                                                                                                                                                                                                                   font-size: 20px;
 
-    text-align:center;
+                                                                                                                                                                                                                                                                                                   }
 
-    cursor:pointer;
 
-    transition:.3s;
+                                                                                                                                                                                                                                                                                                   .clue {
 
-    color:white;
+                                                                                                                                                                                                                                                                                                       background: #F8FAFC;
 
-    border:3px solid transparent;
+                                                                                                                                                                                                                                                                                                           padding: 14px;
 
-    }
+                                                                                                                                                                                                                                                                                                               margin-bottom: 10px;
 
-    .door:hover{
+                                                                                                                                                                                                                                                                                                                   border-radius: 12px;
 
-    transform:scale(1.05);
+                                                                                                                                                                                                                                                                                                                       border-left: 5px solid #7C3AED;
 
-    }
+                                                                                                                                                                                                                                                                                                                           display: flex;
 
-    .blue{
+                                                                                                                                                                                                                                                                                                                               align-items: center;
 
-    background:#2563EB;
+                                                                                                                                                                                                                                                                                                                                   gap: 12px;
 
-    }
+                                                                                                                                                                                                                                                                                                                                       transition: 0.3s;
 
-    .green{
+                                                                                                                                                                                                                                                                                                                                       }
 
-    background:#16A34A;
 
-    }
+                                                                                                                                                                                                                                                                                                                                       .clue:last-child {
 
-    .red{
+                                                                                                                                                                                                                                                                                                                                           margin-bottom: 0;
 
-    background:#DC2626;
+                                                                                                                                                                                                                                                                                                                                           }
 
-    }
 
-    .door.active{
+                                                                                                                                                                                                                                                                                                                                           .clue:hover {
 
-    border:3px solid gold;
+                                                                                                                                                                                                                                                                                                                                               background: #EDE9FE;
 
-    box-shadow:0 0 20px rgba(255,215,0,.6);
+                                                                                                                                                                                                                                                                                                                                                   transform: translateX(5px);
 
-    }
+                                                                                                                                                                                                                                                                                                                                                   }
 
-    .door{
 
-    font-size:30px;
+                                                                                                                                                                                                                                                                                                                                                   .clueNumber {
 
-    }
+                                                                                                                                                                                                                                                                                                                                                       min-width: 35px;
 
-    .door h3{
+                                                                                                                                                                                                                                                                                                                                                           height: 35px;
 
-    font-size:15px;
+                                                                                                                                                                                                                                                                                                                                                               border-radius: 50%;
 
-    margin-top:10px;
+                                                                                                                                                                                                                                                                                                                                                                   background: #7C3AED;
 
-    }
+                                                                                                                                                                                                                                                                                                                                                                       color: white;
 
-    /* ANALYSIS */
+                                                                                                                                                                                                                                                                                                                                                                           display: flex;
 
-    .analysis{
+                                                                                                                                                                                                                                                                                                                                                                               justify-content: center;
 
-    background:#F8FAFC;
+                                                                                                                                                                                                                                                                                                                                                                                   align-items: center;
 
-    padding:18px;
+                                                                                                                                                                                                                                                                                                                                                                                       font-size: 12px;
 
-    border-radius:15px;
+                                                                                                                                                                                                                                                                                                                                                                                           font-weight: 700;
 
-    }
+                                                                                                                                                                                                                                                                                                                                                                                           }
 
-    .progress{
 
-    width:100%;
+                                                                                                                                                                                                                                                                                                                                                                                           .clue p {
 
-    height:10px;
+                                                                                                                                                                                                                                                                                                                                                                                               color: #374151;
 
-    background:#CBD5E1;
+                                                                                                                                                                                                                                                                                                                                                                                                   line-height: 1.5;
 
-    border-radius:20px;
+                                                                                                                                                                                                                                                                                                                                                                                                       font-size: 13px;
 
-    overflow:hidden;
+                                                                                                                                                                                                                                                                                                                                                                                                       }
 
-    margin-bottom:15px;
 
-    }
+                                                                                                                                                                                                                                                                                                                                                                                                       .clue strong {
 
-    .fill{
+                                                                                                                                                                                                                                                                                                                                                                                                           color: #5B21B6;
 
-    width:0%;
+                                                                                                                                                                                                                                                                                                                                                                                                           }
 
-    height:100%;
 
-    background:#7C3AED;
+                                                                                                                                                                                                                                                                                                                                                                                                           /* ============================================
+                                                                                                                                                                                                                                                                                                                                                                                                              DOORS SECTION
+                                                                                                                                                                                                                                                                                                                                                                                                                 ============================================ */
 
-    transition:1.5s;
+                                                                                                                                                                                                                                                                                                                                                                                                                 .doors {
 
-    }
+                                                                                                                                                                                                                                                                                                                                                                                                                     margin-bottom: 20px;
 
-    .analysis p{
+                                                                                                                                                                                                                                                                                                                                                                                                                     }
 
-    text-align:center;
 
-    font-weight:600;
+                                                                                                                                                                                                                                                                                                                                                                                                                     .doors h2 {
 
-    color:#5B21B6;
+                                                                                                                                                                                                                                                                                                                                                                                                                         text-align: center;
 
-    margin-bottom:15px;
+                                                                                                                                                                                                                                                                                                                                                                                                                             margin-bottom: 15px;
 
-    }
+                                                                                                                                                                                                                                                                                                                                                                                                                                 color: #5B21B6;
 
-    /* BUTTON */
+                                                                                                                                                                                                                                                                                                                                                                                                                                     font-size: 20px;
 
-    #nextBtn{
+                                                                                                                                                                                                                                                                                                                                                                                                                                     }
 
-    width:100%;
 
-    padding:14px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                     /* ============================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                        DOOR LAYOUT
+                                                                                                                                                                                                                                                                                                                                                                                                                                           ============================================ */
 
-    background:#7C3AED;
+                                                                                                                                                                                                                                                                                                                                                                                                                                           .door {
 
-    color:white;
+                                                                                                                                                                                                                                                                                                                                                                                                                                               width: 100%;
 
-    border:none;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                   min-height: 95px;
 
-    border-radius:12px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                       padding: 15px 10px;
 
-    font-size:16px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                           border-radius: 15px;
 
-    font-weight:600;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                               text-align: center;
 
-    cursor:pointer;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                   cursor: pointer;
 
-    transition:.3s;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                       color: white;
 
-    }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                           border: 3px solid transparent;
 
-    #nextBtn:hover{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                               display: flex;
 
-    background:#5B21B6;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   flex-direction: column;
 
-    }
-}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       justify-content: center;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           align-items: center;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               gap: 8px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   font-size: 16px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       font-weight: 600;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           transition:
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   transform 0.3s,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           opacity 0.3s,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   box-shadow 0.3s,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           border 0.3s;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           .door i {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               font-size: 30px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               .door span {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   font-size: 15px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   /* ============================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      THREE ROOMS
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ============================================ */
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         .blueRoom {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             background: #2563EB;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             .greenRoom {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 background: #16A34A;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 .redRoom {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     background: #DC2626;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     /* ============================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        DOOR HOVER
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ============================================ */
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           .door:hover {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               transform: scale(1.03);
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               .door:active {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   transform: scale(0.98);
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   /* ============================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      SELECTED DOOR
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         Matches Mission14.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ============================================ */
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            .door.selected {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                border: 3px solid gold;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    box-shadow:
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            0 0 20px rgba(255, 215, 0, 0.7);
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                transform: scale(1.03);
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                /* ============================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   STATUS
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ============================================ */
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      .status {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          background: #F8FAFC;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              padding: 14px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  border-radius: 12px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      text-align: center;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          color: #5B21B6;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              font-size: 13px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  font-weight: 600;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      line-height: 1.5;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          margin-bottom: 15px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          /* ============================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             PROGRESS AREA
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ============================================ */
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                .progressArea {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    background: #F8FAFC;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        padding: 15px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            border-radius: 15px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                margin-bottom: 15px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                .progress {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    width: 100%;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        height: 10px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            background: #CBD5E1;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                border-radius: 20px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    overflow: hidden;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        margin-bottom: 8px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        .fill {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            width: 0%;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                height: 100%;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    background: #7C3AED;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        border-radius: 20px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            transition: width 1.5s ease;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            .progressArea p {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                text-align: center;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    font-size: 12px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        font-weight: 600;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            color: #64748B;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            /* ============================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               NEXT BUTTON
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ============================================ */
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  #nextBtn {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      width: 100%;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          padding: 14px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              background: #7C3AED;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  color: white;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      border: none;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          border-radius: 12px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              font-size: 16px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  font-weight: 600;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      cursor: pointer;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          transition:
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  background 0.3s,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          opacity 0.3s,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  transform 0.2s;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  #nextBtn:hover:not(:disabled) {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      background: #5B21B6;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          transform: translateY(-2px);
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          #nextBtn:active:not(:disabled) {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              transform: translateY(0);
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              #nextBtn:disabled {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  opacity: 0.5;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      cursor: not-allowed;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      /* ============================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         MOBILE
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ============================================ */
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @media (max-width: 430px) {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                body {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        padding: 12px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                align-items: flex-start;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        .container {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                margin-top: 10px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        padding: 17px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                border-radius: 22px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        .header h1 {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                font-size: 25px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        .challenge {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                padding: 15px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        .clue {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                padding: 12px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        .door {
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                min-height: 90px;
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
