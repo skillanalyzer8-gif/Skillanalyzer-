@@ -7,13 +7,14 @@
 
     body{
 
-    overflow:hidden;
+    overflow-x:hidden;
+    overflow-y: auto;
 
     display:flex;
     justify-content:center;
     align-items:center;
 
-    height:100vh;
+   min-height:100vh;
 
     background:#020617;
 
@@ -239,7 +240,8 @@
 
     position:relative;
 
-    height:220px;
+   min-height:220px;
+   height: auto;
 
     border-radius:22px;
 
@@ -449,4 +451,3 @@
     0 0 40px cyan;
 
     }
-}
