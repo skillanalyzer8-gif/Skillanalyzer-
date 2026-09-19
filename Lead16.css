@@ -7,8 +7,9 @@
 
     body{
 
-    overflow:hidden;
-    height:100vh;
+    overflow-x:hidden;
+    overflow-y: auto;
+    min-height:100vh;
 
     display:flex;
     justify-content:center;
@@ -229,7 +230,7 @@
 
     position:relative;
 
-    height:280px;
+   min-height:280px;
 
     border-radius:22px;
 
@@ -424,4 +425,3 @@
     0 0 40px #C084FC;
 
     }
-}

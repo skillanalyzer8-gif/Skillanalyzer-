@@ -8,13 +8,14 @@
     body{
 
     background:#081C15;
-    overflow:hidden;
+    overflow-x:hidden;
+    overflow-y: auto;
 
     display:flex;
     justify-content:center;
     align-items:center;
 
-    height:100vh;
+   min-height:100vh;
     color:white;
 
     }
@@ -228,7 +229,8 @@
 
     .healthBar{
 
-    height:16px;
+    min-height:16px;
+    height: auto;
 
     background:#1E293B;
 
@@ -431,4 +433,3 @@
     color:#E2E8F0;
 
     }
-}

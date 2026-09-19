@@ -8,6 +8,7 @@
     body{
 
     overflow-y:auto;
+    overflow-x: hidden;
     background:#010409;
     color:white;
 
