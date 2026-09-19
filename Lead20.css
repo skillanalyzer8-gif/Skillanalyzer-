@@ -7,9 +7,10 @@
 
     body{
 
-    height:100vh;
+    min-height:100vh;
 
-    overflow:hidden;
+    overflow-x:hidden;
+    overflow-y: auto;
 
     display:flex;
     justify-content:center;
@@ -286,7 +287,8 @@
 
     .scoreBar{
 
-    height:16px;
+    min-height:16px;
+    height: auto;
 
     background:#1E293B;
 
@@ -405,4 +407,3 @@
     0 0 45px #FACC15;
 
     }
-}

@@ -7,8 +7,9 @@
 
     body{
 
-    overflow:hidden;
-    height:100vh;
+    overflow-x:hidden;
+    overflow-y: auto;
+   min-height:100vh;
 
     display:flex;
     justify-content:center;
@@ -227,7 +228,8 @@
 
     .resourceBar{
 
-    height:16px;
+   min-height:16px;
+   height: auto;
 
     background:#1E293B;
 
@@ -427,4 +429,3 @@
     0 0 40px #EF4444;
 
     }
-}
