@@ -7,9 +7,10 @@
 
     body{
 
-    height:100vh;
+    min-height:100vh;
 
-    overflow:hidden;
+    overflow-x:hidden;
+    overflow-y:auto;
 
     display:flex;
 
@@ -230,7 +231,8 @@
 
     .scannerLab{
 
-    height:220px;
+    min-height:220px;
+    height:auto;
 
     display:flex;
 
@@ -403,4 +405,3 @@
     0 0 40px cyan;
 
     }
-}

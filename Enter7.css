@@ -7,8 +7,9 @@
 
     body{
 
-    height:100vh;
-    overflow:hidden;
+    min-height:100vh;
+    overflow-x:hidden;
+    overflow-y:auto;
 
     display:flex;
     justify-content:center;
@@ -216,7 +217,8 @@
 
     .officeArea{
 
-    height:250px;
+    min-height:250px;
+    height:auto;
 
     display:flex;
 
@@ -376,4 +378,3 @@
     box-shadow:0 0 20px cyan;
 
     }
-}
