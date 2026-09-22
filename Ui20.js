@@ -489,6 +489,10 @@ async function saveMission() {
 // FINISH UI/UX ASSESSMENT
 // ===============================
 
+// ===============================
+// GO TO UI/UX RESULT PAGE
+// ===============================
+
 nextBtn.addEventListener("click", () => {
 
     if (!selectedAnswer) {
@@ -513,13 +517,13 @@ nextBtn.addEventListener("click", () => {
     }
 
 
-    /*
-       Result page will be connected later.
-       For now, keep the assessment complete
-       without creating the result page.
-    */
-
+    // UI/UX assessment completed
     statusText.textContent =
         "🏆 UI/UX assessment completed successfully!";
+
+
+    // Open UI/UX result page
+    window.location.href =
+        "UIUXresult.html";
 
 });
