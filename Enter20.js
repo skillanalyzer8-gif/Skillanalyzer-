@@ -367,15 +367,41 @@ options.forEach(function (option) {
 // FINAL BUTTON
 // ===============================
 
-nextBtn.addEventListener("click", function () {
+// ===============================
+// GO TO UI/UX RESULT PAGE
+// ===============================
 
-if (!answerSaved) {
+nextBtn.addEventListener("click", () => {
 
-return;
+    if (!selectedAnswer) {
 
-}
+        alert(
+            "Please select an option first."
+        );
 
-// Result page will be connected later
-// after all 80 missions are completed.
+        return;
+
+    }
+
+
+    if (!answerSaved) {
+
+        alert(
+            "Please wait until your answer is saved."
+        );
+
+        return;
+
+    }
+
+
+    // UI/UX assessment completed
+    statusText.textContent =
+        "🏆  assessment completed successfully!";
+
+
+    // Open UI/UX result page
+    window.location.href =
+        "EnterResult.html";
 
 });
