@@ -2,7 +2,6 @@
 // SkillAnalyzer AI - AIChat.js
 // ============================================
 
-// ---------- Firebase ----------
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
 import {
@@ -39,7 +38,7 @@ const app = initializeApp(firebaseConfig);
 
 
 // ============================================
-// FIREBASE APP CHECK
+// APP CHECK
 // ============================================
 
 initializeAppCheck(app, {
@@ -51,7 +50,8 @@ initializeAppCheck(app, {
 
 
 // ============================================
-// INITIALIZE GEMINI
+// FIREBASE AI LOGIC
+// Gemini Developer API
 // ============================================
 
 const ai = getAI(app, {
@@ -66,36 +66,27 @@ const chat = model.startChat();
 
 
 // ============================================
-// GET HTML ELEMENTS
+// HTML ELEMENTS
 // ============================================
 
 const chatBox = document.getElementById("chatBox");
 const chatForm = document.getElementById("chatForm");
 const userInput = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
+
 const suggestionButtons =
     document.querySelectorAll(".suggestions button");
 
 
 // ============================================
-// CHECK ELEMENTS
-// ============================================
-
-if (!chatBox || !chatForm || !userInput || !sendBtn) {
-    console.error("SkillAnalyzer AI: Required HTML elements not found.");
-}
-
-
-// ============================================
-// ADD MESSAGE TO CHAT
+// ADD MESSAGE
 // ============================================
 
 function addMessage(text, type) {
 
     const message = document.createElement("div");
-    message.className = `message ${type}`;
+    message.className = "message " + type;
 
-    // ---------- AI MESSAGE ----------
     if (type === "bot") {
 
         const avatar = document.createElement("div");
@@ -109,10 +100,7 @@ function addMessage(text, type) {
         message.appendChild(avatar);
         message.appendChild(bubble);
 
-    }
-
-    // ---------- USER MESSAGE ----------
-    else {
+    } else {
 
         const bubble = document.createElement("div");
         bubble.className = "bubble";
@@ -123,7 +111,6 @@ function addMessage(text, type) {
 
     chatBox.appendChild(message);
 
-    // Automatically scroll to latest message
     chatBox.scrollTop = chatBox.scrollHeight;
 
     return message;
@@ -131,59 +118,51 @@ function addMessage(text, type) {
 
 
 // ============================================
-// SEND MESSAGE TO GEMINI
+// SEND MESSAGE
 // ============================================
 
 async function sendMessage(text) {
 
     text = text.trim();
 
-    if (!text) {
-        return;
-    }
+    if (!text) return;
 
 
-    // Show user's message
+    // Show user message
     addMessage(text, "user");
-
 
     // Clear input
     userInput.value = "";
 
-
-    // Disable controls while AI responds
+    // Disable controls
     sendBtn.disabled = true;
     userInput.disabled = true;
 
 
-    // Show loading message
+    // Loading message
     const loadingMessage =
         addMessage("Thinking...", "bot");
+
+    const bubble =
+        loadingMessage.querySelector(".bubble");
 
 
     try {
 
-        console.log("SkillAnalyzer AI → Sending:", text);
+        console.log(
+            "SkillAnalyzer AI: Sending message..."
+        );
 
-
-        // Send message to Gemini
-        const result = await chat.sendMessage(text);
-
+        const result =
+            await chat.sendMessage(text);
 
         console.log(
-            "SkillAnalyzer AI → Response received:",
+            "SkillAnalyzer AI: Response received",
             result
         );
 
-
-        // Get response text
         const responseText =
             result.response.text();
-
-
-        const bubble =
-            loadingMessage.querySelector(".bubble");
-
 
         if (responseText && responseText.trim()) {
 
@@ -193,70 +172,50 @@ async function sendMessage(text) {
         } else {
 
             bubble.textContent =
-                "Sorry, I couldn't generate a response. Please try again.";
+                "The AI returned an empty response.";
         }
-
 
     } catch (error) {
 
         console.error(
-            "SkillAnalyzer AI Error:",
-            error
+            "================================"
+        );
+
+        console.error(
+            "SKILLANALYZER AI ERROR"
+        );
+
+        console.error(error);
+
+        console.error(
+            "================================"
         );
 
 
-        const bubble =
-            loadingMessage.querySelector(".bubble");
+        // IMPORTANT:
+        // Show the REAL Firebase error.
+        // We are intentionally NOT hiding it.
+
+        bubble.textContent =
+            "AI ERROR:\n\n" +
+            (error?.message || String(error));
 
 
-        let errorMessage =
-            "Something went wrong. Please try again.";
+    } finally {
 
+        sendBtn.disabled = false;
+        userInput.disabled = false;
 
-        // More useful messages for common errors
-        if (
-            error.message &&
-            error.message.includes("App Check")
-        ) {
+        userInput.focus();
 
-            errorMessage =
-                "AI security verification failed. Please refresh the page and try again.";
-
-        } else if (
-            error.message &&
-            error.message.includes("API key")
-        ) {
-
-            errorMessage =
-                "AI configuration error. Please check the Firebase API configuration.";
-
-        } else if (
-            error.message &&
-            error.message.includes("429")
-        ) {
-
-            errorMessage =
-                "The AI is receiving too many requests right now. Please wait a moment and try again.";
-        }
-
-
-        bubble.textContent = errorMessage;
+        chatBox.scrollTop =
+            chatBox.scrollHeight;
     }
-
-
-    // Re-enable controls
-    sendBtn.disabled = false;
-    userInput.disabled = false;
-
-    userInput.focus();
-
-    chatBox.scrollTop =
-        chatBox.scrollHeight;
 }
 
 
 // ============================================
-// FORM SUBMISSION
+// FORM SUBMIT
 // ============================================
 
 chatForm.addEventListener(
@@ -295,7 +254,7 @@ suggestionButtons.forEach(
 
 
 // ============================================
-// ENTER KEY SUPPORT
+// ENTER KEY
 // ============================================
 
 userInput.addEventListener(
@@ -320,5 +279,5 @@ userInput.addEventListener(
 // ============================================
 
 console.log(
-    "✅ SkillAnalyzer AI initialized successfully."
+    "✅ SkillAnalyzer AI is ready."
 );
