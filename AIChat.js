@@ -2,9 +2,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/fireba
 
 import {
     getAI,
-    getGenerativeModel,
-    GoogleAIBackend
-} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-ai.js";
+        getGenerativeModel,
+            GoogleAIBackend
+            } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-ai.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAZVt5Y4OVUPMZel0oARdtKxZlT8L-ai34",
