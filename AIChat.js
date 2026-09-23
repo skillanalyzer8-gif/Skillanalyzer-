@@ -7,13 +7,15 @@ import {
             } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-ai.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAZVt5Y4OVUPMZel0oARdtKxZlT8L-ai34",
-    authDomain: "skillanalyzer-373ae.firebaseapp.com",
-    projectId: "skillanalyzer-373ae",
-    storageBucket: "skillanalyzer-373ae.firebasestorage.app",
-    messagingSenderId: "952710822091",
-    appId: "1:952710822091:web:133fbd8662f649829f834e"
-};
+        apiKey: "AIzaSyAZVt5Y4OVUPMZel0oARdtkXlZt8L-ai34",
+            authDomain: "skillanalyzer-373ae.firebaseapp.com",
+                projectId: "skillanalyzer-373ae",
+                    storageBucket: "skillanalyzer-373ae.firebasestorage.app",
+                        messagingSenderId: "952710822091",
+                            appId: "1:952710822091:web:133fbd8662f649829f834e",
+                                measurementId: "G-0E5J8Y035B"
+                                };
+}
 
 const app = initializeApp(firebaseConfig);
 
