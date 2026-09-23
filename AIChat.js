@@ -13,13 +13,14 @@ import {
 
 
                     const firebaseConfig = {
-                        apiKey: "AIzaSyAZVt5Y4OVUPMZel0oARdtKx1lZt8L-ai34",
-                            authDomain: "skillanalyzer-373ae.firebaseapp.com",
-                                projectId: "skillanalyzer-373ae",
-                                    storageBucket: "skillanalyzer-373ae.firebasestorage.app",
-                                        messagingSenderId: "952710822091",
-                                            appId: "1:952710822091:web:0f94738430db44219f834e"
-                                            };
+                            apiKey: "AIzaSyAZVt5Y4OVUPMZel0oARdtkXlZt8L-ai34",
+                                authDomain: "skillanalyzer-373ae.firebaseapp.com",
+                                    projectId: "skillanalyzer-373ae",
+                                        storageBucket: "skillanalyzer-373ae.firebasestorage.app",
+                                            messagingSenderId: "952710822091",
+                                                appId: "1:952710822091:web:0f94738430db44219f834e"
+                                                };
+                    }
 
 
                                             const app = initializeApp(firebaseConfig);
