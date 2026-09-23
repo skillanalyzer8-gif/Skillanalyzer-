@@ -1,128 +1,148 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-alert("AIChat.js is loaded!");
+
 import {
-    getAI,
-        getGenerativeModel,
-            GoogleAIBackend
-            } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-ai.js";
+    initializeAppCheck,
+        ReCaptchaEnterpriseProvider
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check.js";
 
-const firebaseConfig = {
-        apiKey: "AIzaSyAZVt5Y4OVUPMZel0oARdtKx1lZt8L-ai34",
-            authDomain: "skillanalyzer-373ae.firebaseapp.com",
-                projectId: "skillanalyzer-373ae",
-                    storageBucket: "skillanalyzer-373ae.firebasestorage.app",
-                        messagingSenderId: "952710822091",
-                            appId: "1:952710822091:web:0f94738430db44219f834e"
-                            };
-}
+        import {
+            getAI,
+                getGenerativeModel,
+                    GoogleAIBackend
+                    } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-ai.js";
 
 
-const app = initializeApp(firebaseConfig);
+                    const firebaseConfig = {
+                        apiKey: "AIzaSyAZVt5Y4OVUPMZel0oARdtKx1lZt8L-ai34",
+                            authDomain: "skillanalyzer-373ae.firebaseapp.com",
+                                projectId: "skillanalyzer-373ae",
+                                    storageBucket: "skillanalyzer-373ae.firebasestorage.app",
+                                        messagingSenderId: "952710822091",
+                                            appId: "1:952710822091:web:0f94738430db44219f834e"
+                                            };
 
-const ai = getAI(app, {
-    backend: new GoogleAIBackend()
-});
 
-const model = getGenerativeModel(ai, {
-    model: "gemini-3.8-flash"
-});
+                                            const app = initializeApp(firebaseConfig);
 
-const chat = model.startChat();
 
-const chatBox = document.getElementById("chatBox");
-const chatForm = document.getElementById("chatForm");
-const userInput = document.getElementById("userInput");
-const sendBtn = document.getElementById("sendBtn");
+                                            // Firebase App Check
+                                            const appCheck = initializeAppCheck(app, {
+                                                provider: new ReCaptchaEnterpriseProvider(
+                                                        "6LfJjsotAAAAAJJiVEWLngTEIqwMFNpVHxET2Sm6"
+                                                            ),
+                                                                isTokenAutoRefreshEnabled: true
+                                                                });
 
-function addMessage(text, type) {
-    const message = document.createElement("div");
 
-    message.className = "message " + type;
+                                                                // Firebase AI
+                                                                const ai = getAI(app, {
+                                                                    backend: new GoogleAIBackend()
+                                                                    });
 
-    if (type === "bot") {
-        const avatar = document.createElement("div");
-        avatar.className = "avatar";
-        avatar.textContent = "AI";
+                                                                    const model = getGenerativeModel(ai, {
+                                                                        model: "gemini-3.8-flash"
+                                                                        });
 
-        const bubble = document.createElement("div");
-        bubble.className = "bubble";
-        bubble.textContent = text;
+                                                                        const chat = model.startChat();
 
-        message.appendChild(avatar);
-        message.appendChild(bubble);
-    } else {
-        const bubble = document.createElement("div");
-        bubble.className = "bubble";
-        bubble.textContent = text;
 
-        message.appendChild(bubble);
-    }
+                                                                        const chatBox = document.getElementById("chatBox");
+                                                                        const chatForm = document.getElementById("chatForm");
+                                                                        const userInput = document.getElementById("userInput");
+                                                                        const sendBtn = document.getElementById("sendBtn");
 
-    chatBox.appendChild(message);
-    chatBox.scrollTop = chatBox.scrollHeight;
 
-    return message;
-}
+                                                                        function addMessage(text, type) {
+                                                                            const message = document.createElement("div");
 
-async function sendMessage(text) {
-    text = text.trim();
+                                                                                message.className = "message " + type;
 
-    if (!text) {
-        return;
-    }
+                                                                                    if (type === "bot") {
+                                                                                            const avatar = document.createElement("div");
+                                                                                                    avatar.className = "avatar";
+                                                                                                            avatar.textContent = "AI";
 
-    addMessage(text, "user");
+                                                                                                                    const bubble = document.createElement("div");
+                                                                                                                            bubble.className = "bubble";
+                                                                                                                                    bubble.textContent = text;
 
-    userInput.value = "";
-    sendBtn.disabled = true;
-    userInput.disabled = true;
+                                                                                                                                            message.appendChild(avatar);
+                                                                                                                                                    message.appendChild(bubble);
+                                                                                                                                                        } else {
+                                                                                                                                                                const bubble = document.createElement("div");
+                                                                                                                                                                        bubble.className = "bubble";
+                                                                                                                                                                                bubble.textContent = text;
 
-    const loadingMessage = addMessage("Thinking...", "bot");
+                                                                                                                                                                                        message.appendChild(bubble);
+                                                                                                                                                                                            }
 
-    try {
-        console.log("Sending:", text);
+                                                                                                                                                                                                chatBox.appendChild(message);
+                                                                                                                                                                                                    chatBox.scrollTop = chatBox.scrollHeight;
 
-        const result = await chat.sendMessage(text);
+                                                                                                                                                                                                        return message;
+                                                                                                                                                                                                        }
 
-        console.log("AI response:", result);
 
-        const responseText = result.response.text();
+                                                                                                                                                                                                        async function sendMessage(text) {
+                                                                                                                                                                                                            text = text.trim();
 
-        const bubble = loadingMessage.querySelector(".bubble");
+                                                                                                                                                                                                                if (!text) {
+                                                                                                                                                                                                                        return;
+                                                                                                                                                                                                                            }
 
-        if (responseText) {
-            bubble.textContent = responseText;
-        } else {
-            bubble.textContent = "The AI returned an empty response.";
-        }
+                                                                                                                                                                                                                                addMessage(text, "user");
 
-    } catch (error) {
-        console.error("FIREBASE AI ERROR:", error);
+                                                                                                                                                                                                                                    userInput.value = "";
+                                                                                                                                                                                                                                        sendBtn.disabled = true;
+                                                                                                                                                                                                                                            userInput.disabled = true;
 
-        const bubble = loadingMessage.querySelector(".bubble");
+                                                                                                                                                                                                                                                const loadingMessage = addMessage("Thinking...", "bot");
 
-        bubble.textContent =
-            "AI Error: " + (error.message || "Unknown error");
-    }
+                                                                                                                                                                                                                                                    try {
+                                                                                                                                                                                                                                                            console.log("Sending:", text);
 
-    sendBtn.disabled = false;
-    userInput.disabled = false;
-    userInput.focus();
+                                                                                                                                                                                                                                                                    const result = await chat.sendMessage(text);
 
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
+                                                                                                                                                                                                                                                                            console.log("AI response:", result);
 
-chatForm.addEventListener("submit", function(event) {
-    event.preventDefault();
+                                                                                                                                                                                                                                                                                    const responseText = result.response.text();
 
-    sendMessage(userInput.value);
-});
+                                                                                                                                                                                                                                                                                            const bubble = loadingMessage.querySelector(".bubble");
 
-const suggestionButtons =
-    document.querySelectorAll(".suggestions button");
+                                                                                                                                                                                                                                                                                                    if (responseText) {
+                                                                                                                                                                                                                                                                                                                bubble.textContent = responseText;
+                                                                                                                                                                                                                                                                                                                        } else {
+                                                                                                                                                                                                                                                                                                                                    bubble.textContent = "The AI returned an empty response.";
+                                                                                                                                                                                                                                                                                                                                            }
 
-suggestionButtons.forEach(function(button) {
-    button.addEventListener("click", function() {
-        sendMessage(button.dataset.question);
-    });
-});
+                                                                                                                                                                                                                                                                                                                                                } catch (error) {
+                                                                                                                                                                                                                                                                                                                                                        console.error("FIREBASE AI ERROR:", error);
+
+                                                                                                                                                                                                                                                                                                                                                                const bubble = loadingMessage.querySelector(".bubble");
+
+                                                                                                                                                                                                                                                                                                                                                                        bubble.textContent =
+                                                                                                                                                                                                                                                                                                                                                                                    "AI Error: " + (error.message || "Unknown error");
+                                                                                                                                                                                                                                                                                                                                                                                        }
+
+                                                                                                                                                                                                                                                                                                                                                                                            sendBtn.disabled = false;
+                                                                                                                                                                                                                                                                                                                                                                                                userInput.disabled = false;
+                                                                                                                                                                                                                                                                                                                                                                                                    userInput.focus();
+
+                                                                                                                                                                                                                                                                                                                                                                                                        chatBox.scrollTop = chatBox.scrollHeight;
+                                                                                                                                                                                                                                                                                                                                                                                                        }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                        chatForm.addEventListener("submit", function(event) {
+                                                                                                                                                                                                                                                                                                                                                                                                            event.preventDefault();
+                                                                                                                                                                                                                                                                                                                                                                                                                sendMessage(userInput.value);
+                                                                                                                                                                                                                                                                                                                                                                                                                });
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                const suggestionButtons =
+                                                                                                                                                                                                                                                                                                                                                                                                                    document.querySelectorAll(".suggestions button");
+
+                                                                                                                                                                                                                                                                                                                                                                                                                    suggestionButtons.forEach(function(button) {
+                                                                                                                                                                                                                                                                                                                                                                                                                        button.addEventListener("click", function() {
+                                                                                                                                                                                                                                                                                                                                                                                                                                sendMessage(button.dataset.question);
+                                                                                                                                                                                                                                                                                                                                                                                                                                    });
+                                                                                                                                                                                                                                                                                                                                                                                                                                    });
