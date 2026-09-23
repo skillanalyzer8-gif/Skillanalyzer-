@@ -21,7 +21,7 @@ import {
 // ============================================
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAZVt5Y4OVUPMZel0oARdtKxZlT8L-ai34",
+apiKey: "AIzaSyAZVt5Y4OVUPMZel0oARdtKxZlZt8L-ai34",,
     authDomain: "skillanalyzer-373ae.firebaseapp.com",
     projectId: "skillanalyzer-373ae",
     storageBucket: "skillanalyzer-373ae.firebasestorage.app",
