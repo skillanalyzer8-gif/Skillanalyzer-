@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillAnalyzer AI</title>
+    <link rel="stylesheet" href="AIChat.css">
+</head>
+<body>
+
+```
+<div class="chat-app">
+
+    <header class="chat-header">
+        <div>
+            <h1>SkillAnalyzer AI</h1>
+            <p>Your AI learning assistant</p>
+        </div>
+        <a href="index.html" class="back-btn">← Back</a>
+    </header>
+
+    <main id="chatBox" class="chat-box">
+        <div class="message bot">
+            <div class="avatar">AI</div>
+            <div class="bubble">
+                Hi! 👋 I'm SkillAnalyzer AI.<br><br>
+                Ask me about coding, DSA, UI/UX, projects, interviews, or your learning path.
+            </div>
+        </div>
+    </main>
+
+    <div class="suggestions">
+        <button data-question="How should I start learning Python?">Learn Python</button>
+        <button data-question="How should I prepare for DSA?">DSA Roadmap</button>
+        <button data-question="Give me a project idea for a CSE student.">Project Idea</button>
+    </div>
+
+    <form id="chatForm" class="input-area">
+        <input
+            id="userInput"
+            type="text"
+            placeholder="Ask SkillAnalyzer AI..."
+            autocomplete="off"
+            required
+        >
+        <button id="sendBtn" type="submit">Send</button>
+    </form>
+
+</div>
+
+<script type="module" src="AIChat.js"></script>
+```
+
+</body>
+</html>
