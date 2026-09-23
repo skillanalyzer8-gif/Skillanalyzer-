@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-
+alert("AIChat.js is loaded!");
 import {
     getAI,
         getGenerativeModel,
