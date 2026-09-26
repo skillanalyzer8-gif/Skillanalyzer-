@@ -43,12 +43,12 @@ const app = initializeApp(firebaseConfig);
 
 initializeAppCheck(app, {
     provider: new ReCaptchaEnterpriseProvider(
-        "6LfJjsotAAAAAC00zXtTvYmAxP4DgTJKqZ7TqgEm"
+        "6LfJjsotAAAAAJJiVEWLngTEIqwMFNpVHxET2Sm6"
     ),
     isTokenAutoRefreshEnabled: true
 });
 
-
+console.log("APP CHECK INITIALIZED");
 // ============================================
 // FIREBASE AI LOGIC
 // Gemini Developer API
