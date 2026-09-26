@@ -163,7 +163,7 @@ async function verifyAppCheck() {
 
 
         const tokenResult =
-            await getToken(appCheck, true);
+            await getToken(appCheck, false);
 
 
         if (!tokenResult || !tokenResult.token) {
