@@ -2,11 +2,14 @@
 // SkillAnalyzer AI - AIChat.js
 // ============================================
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
 import {
     initializeAppCheck,
-    ReCaptchaEnterpriseProvider
+    ReCaptchaEnterpriseProvider,
+    getToken
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check.js";
 
 import {
@@ -21,7 +24,7 @@ import {
 // ============================================
 
 const firebaseConfig = {
-    apiKey:"AIzaSyBEYAmAoQ4rtLD3CPaBbfnUZBqek3cB7SA",
+    apiKey: "AIzaSyAZVt5Y4OVUPMZel0oARdtKxZlT8L-ai34",
     authDomain: "skillanalyzer-373ae.firebaseapp.com",
     projectId: "skillanalyzer-373ae",
     storageBucket: "skillanalyzer-373ae.firebasestorage.app",
@@ -39,19 +42,23 @@ const app = initializeApp(firebaseConfig);
 
 // ============================================
 // APP CHECK
+// IMPORTANT:
+// This is the SAME key shown in Firebase
+// App Check -> Skill -> reCAPTCHA Enterprise
 // ============================================
 
-initializeAppCheck(app, {
+const appCheck = initializeAppCheck(app, {
     provider: new ReCaptchaEnterpriseProvider(
         "6LfJjsotAAAAAJJiVEWLngTEIqwMFNpVHxET2Sm6"
     ),
     isTokenAutoRefreshEnabled: true
 });
 
-console.log("APP CHECK INITIALIZED");
+console.log("SkillAnalyzer AI: App Check initialized.");
+
+
 // ============================================
-// FIREBASE AI LOGIC
-// Gemini Developer API
+// AI
 // ============================================
 
 const ai = getAI(app, {
@@ -79,41 +86,114 @@ const suggestionButtons =
 
 
 // ============================================
+// SAFETY CHECK FOR HTML
+// ============================================
+
+if (!chatBox || !chatForm || !userInput || !sendBtn) {
+    console.error(
+        "SkillAnalyzer AI: Required HTML elements are missing."
+    );
+}
+
+
+// ============================================
 // ADD MESSAGE
 // ============================================
 
 function addMessage(text, type) {
 
     const message = document.createElement("div");
-    message.className = "message " + type;
+
+    message.className = `message ${type}`;
+
 
     if (type === "bot") {
 
         const avatar = document.createElement("div");
+
         avatar.className = "avatar";
+
         avatar.textContent = "AI";
 
+
         const bubble = document.createElement("div");
+
         bubble.className = "bubble";
+
         bubble.textContent = text;
 
+
         message.appendChild(avatar);
+
         message.appendChild(bubble);
 
     } else {
 
         const bubble = document.createElement("div");
+
         bubble.className = "bubble";
+
         bubble.textContent = text;
+
 
         message.appendChild(bubble);
     }
+
 
     chatBox.appendChild(message);
 
     chatBox.scrollTop = chatBox.scrollHeight;
 
+
     return message;
+}
+
+
+// ============================================
+// CHECK APP CHECK TOKEN
+// ============================================
+
+async function verifyAppCheck() {
+
+    try {
+
+        console.log(
+            "SkillAnalyzer AI: Requesting fresh App Check token..."
+        );
+
+
+        const tokenResult =
+            await getToken(appCheck, true);
+
+
+        if (!tokenResult || !tokenResult.token) {
+
+            throw new Error(
+                "Firebase App Check did not return a token."
+            );
+        }
+
+
+        console.log(
+            "SkillAnalyzer AI: App Check token received."
+        );
+
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "SkillAnalyzer AI: App Check token error:",
+            error
+        );
+
+
+        throw new Error(
+            "App Check verification failed.\n\n" +
+            (error?.message || String(error))
+        );
+    }
 }
 
 
@@ -125,17 +205,20 @@ async function sendMessage(text) {
 
     text = text.trim();
 
-    if (!text) return;
+
+    if (!text) {
+        return;
+    }
 
 
-    // Show user message
+    // User message
     addMessage(text, "user");
 
-    // Clear input
+
     userInput.value = "";
 
-    // Disable controls
     sendBtn.disabled = true;
+
     userInput.disabled = true;
 
 
@@ -143,67 +226,72 @@ async function sendMessage(text) {
     const loadingMessage =
         addMessage("Thinking...", "bot");
 
-    const bubble =
+
+    const loadingBubble =
         loadingMessage.querySelector(".bubble");
 
 
     try {
 
+        // ----------------------------------------
+        // STEP 1: Verify App Check
+        // ----------------------------------------
+
+        await verifyAppCheck();
+
+
+        // ----------------------------------------
+        // STEP 2: Send message to Gemini
+        // ----------------------------------------
+
         console.log(
-            "SkillAnalyzer AI: Sending message..."
+            "SkillAnalyzer AI: Sending message to Gemini..."
         );
+
 
         const result =
             await chat.sendMessage(text);
 
+
         console.log(
-            "SkillAnalyzer AI: Response received",
-            result
+            "SkillAnalyzer AI: Gemini response received."
         );
+
 
         const responseText =
             result.response.text();
 
+
         if (responseText && responseText.trim()) {
 
-            bubble.textContent =
+            loadingBubble.textContent =
                 responseText.trim();
 
         } else {
 
-            bubble.textContent =
+            loadingBubble.textContent =
                 "The AI returned an empty response.";
         }
+
 
     } catch (error) {
 
         console.error(
-            "================================"
-        );
-
-        console.error(
-            "SKILLANALYZER AI ERROR"
-        );
-
-        console.error(error);
-
-        console.error(
-            "================================"
+            "SKILLANALYZER AI ERROR:",
+            error
         );
 
 
-        // IMPORTANT:
-        // Show the REAL Firebase error.
-        // We are intentionally NOT hiding it.
-
-        bubble.textContent =
+        loadingBubble.textContent =
             "AI ERROR:\n\n" +
             (error?.message || String(error));
+    }
 
 
-    } finally {
+    finally {
 
         sendBtn.disabled = false;
+
         userInput.disabled = false;
 
         userInput.focus();
@@ -243,6 +331,7 @@ suggestionButtons.forEach(
                 const question =
                     button.dataset.question;
 
+
                 if (question) {
 
                     sendMessage(question);
@@ -273,10 +362,6 @@ userInput.addEventListener(
     }
 );
 
-
-// ============================================
-// READY
-// ============================================
 
 console.log(
     "✅ SkillAnalyzer AI is ready."
