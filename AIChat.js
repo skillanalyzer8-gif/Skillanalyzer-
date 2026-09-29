@@ -1,4 +1,3 @@
-```js
 // ============================================
 // SkillAnalyzer AI - AIChat.js
 // ============================================
@@ -46,7 +45,7 @@ console.log("SkillAnalyzer AI: Firebase initialized.");
 // APP CHECK
 // ============================================
 
-const appCheck = initializeAppCheck(app, {
+initializeAppCheck(app, {
     provider: new ReCaptchaEnterpriseProvider(
         "6LeNHNAtAAAAAN-yQbwQhQM4c-Sn2ZdMUng2jPxi"
     ),
@@ -58,9 +57,8 @@ console.log("SkillAnalyzer AI: App Check initialized.");
 
 // ============================================
 // FIREBASE AI
-// IMPORTANT:
-// Limited-use App Check tokens are enabled
-// because Replay Protection is enforced.
+// Replay Protection is enforced,
+// so use limited-use App Check tokens.
 // ============================================
 
 const ai = getAI(app, {
@@ -91,67 +89,45 @@ const suggestionButtons =
 
 
 // ============================================
-// HTML ELEMENT CHECK
-// ============================================
-
-if (!chatBox || !chatForm || !userInput || !sendBtn) {
-
-    console.error(
-        "SkillAnalyzer AI: Required HTML elements are missing."
-    );
-}
-
-
-// ============================================
 // ADD MESSAGE
 // ============================================
 
 function addMessage(text, type) {
 
-    const message = document.createElement("div");
+    const messageElement = document.createElement("div");
 
-    message.className = `message ${type}`;
-
+    messageElement.className = `message ${type}`;
 
     if (type === "bot") {
 
         const avatar = document.createElement("div");
 
         avatar.className = "avatar";
-
         avatar.textContent = "AI";
-
 
         const bubble = document.createElement("div");
 
         bubble.className = "bubble";
-
         bubble.textContent = text;
 
-
-        message.appendChild(avatar);
-
-        message.appendChild(bubble);
+        messageElement.appendChild(avatar);
+        messageElement.appendChild(bubble);
 
     } else {
 
         const bubble = document.createElement("div");
 
         bubble.className = "bubble";
-
         bubble.textContent = text;
 
-
-        message.appendChild(bubble);
+        messageElement.appendChild(bubble);
     }
 
-
-    chatBox.appendChild(message);
+    chatBox.appendChild(messageElement);
 
     chatBox.scrollTop = chatBox.scrollHeight;
 
-
-    return message;
+    return messageElement;
 }
 
 
@@ -163,35 +139,26 @@ async function sendMessage(text) {
 
     text = text.trim();
 
-
     if (!text) {
         return;
     }
 
-
-    // ----------------------------------------
-    // USER MESSAGE
-    // ----------------------------------------
-
+    // Show user message
     addMessage(text, "user");
 
+    // Clear input
     userInput.value = "";
 
+    // Disable controls
     sendBtn.disabled = true;
-
     userInput.disabled = true;
 
-
-    // ----------------------------------------
-    // LOADING MESSAGE
-    // ----------------------------------------
-
+    // Show loading message
     const loadingMessage =
         addMessage("Thinking...", "bot");
 
     const loadingBubble =
         loadingMessage.querySelector(".bubble");
-
 
     try {
 
@@ -199,23 +166,15 @@ async function sendMessage(text) {
             "SkillAnalyzer AI: Sending message to Gemini..."
         );
 
-
-        // Firebase AI Logic automatically obtains
-        // a limited-use App Check token for this
-        // request because replay protection is enabled.
-
         const result =
             await chat.sendMessage(text);
-
 
         console.log(
             "SkillAnalyzer AI: Gemini response received."
         );
 
-
         const responseText =
             result.response.text();
-
 
         if (responseText && responseText.trim()) {
 
@@ -228,7 +187,6 @@ async function sendMessage(text) {
                 "The AI returned an empty response.";
         }
 
-
     } catch (error) {
 
         console.error(
@@ -236,21 +194,13 @@ async function sendMessage(text) {
             error
         );
 
-
-        const errorMessage =
-            error?.message || String(error);
-
-
         loadingBubble.textContent =
             "AI ERROR:\n\n" +
-            errorMessage;
-    }
+            (error?.message || String(error));
 
-
-    finally {
+    } finally {
 
         sendBtn.disabled = false;
-
         userInput.disabled = false;
 
         userInput.focus();
@@ -290,9 +240,7 @@ suggestionButtons.forEach(
                 const question =
                     button.dataset.question;
 
-
                 if (question) {
-
                     sendMessage(question);
                 }
             }
@@ -327,6 +275,5 @@ userInput.addEventListener(
 // ============================================
 
 console.log(
-    "✅ SkillAnalyzer AI is ready."
+    "SkillAnalyzer AI is ready."
 );
-```
