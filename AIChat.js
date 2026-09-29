@@ -31,7 +31,7 @@ console.log("SkillAnalyzer AI: Firebase initialized.");
 self.FIREBASE_APPCHECK_DEBUG_TOKEN = "02D00F98-31D1-4BDB-BE65-2CFECCC51CD5";
 
 initializeAppCheck(app, {
-    provider: new ReCaptchaEnterpriseProvider(
+    provider: new ReCaptchaV3Provider(
         "6LeNHNAtAAAAAN-yQbwQhQM4c-Sn2ZdMUng2jPxi"
     ),
     isTokenAutoRefreshEnabled: true
