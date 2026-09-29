@@ -44,6 +44,19 @@ console.log("SkillAnalyzer AI: Firebase initialized.");
 // ============================================
 // APP CHECK
 // ============================================
+// ============================================
+// APP CHECK
+// ============================================
+
+// Enable App Check debug mode for local development
+if (
+    location.hostname === "localhost" || 
+    location.hostname === "127.0.0.1" || 
+    location.hostname.startsWith("192.168.")
+) {
+    self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+    console.log("SkillAnalyzer AI: App Check debug mode active.");
+}
 
 initializeAppCheck(app, {
     provider: new ReCaptchaEnterpriseProvider(
@@ -53,6 +66,7 @@ initializeAppCheck(app, {
 });
 
 console.log("SkillAnalyzer AI: App Check initialized.");
+
 
 
 // ============================================
