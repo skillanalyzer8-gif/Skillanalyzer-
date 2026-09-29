@@ -1,3 +1,4 @@
+```js
 // ============================================
 // SkillAnalyzer AI - AIChat.js
 // ============================================
@@ -8,8 +9,7 @@ import {
 
 import {
     initializeAppCheck,
-    ReCaptchaEnterpriseProvider,
-    getToken
+    ReCaptchaEnterpriseProvider
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check.js";
 
 import {
@@ -24,7 +24,7 @@ import {
 // ============================================
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAZVt5Y4OVUPMZel0oARdtkXlZt8L-ai34",
+    apiKey: "AIzaSyAZVt5Y4OVUPMZel0oARdtKxZlT8L-ai34",
     authDomain: "skillanalyzer-373ae.firebaseapp.com",
     projectId: "skillanalyzer-373ae",
     storageBucket: "skillanalyzer-373ae.firebasestorage.app",
@@ -39,12 +39,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+console.log("SkillAnalyzer AI: Firebase initialized.");
+
 
 // ============================================
 // APP CHECK
-// IMPORTANT:
-// This is the SAME key shown in Firebase
-// App Check -> Skill -> reCAPTCHA Enterprise
 // ============================================
 
 const appCheck = initializeAppCheck(app, {
@@ -58,11 +57,15 @@ console.log("SkillAnalyzer AI: App Check initialized.");
 
 
 // ============================================
-// AI
+// FIREBASE AI
+// IMPORTANT:
+// Limited-use App Check tokens are enabled
+// because Replay Protection is enforced.
 // ============================================
 
 const ai = getAI(app, {
-    backend: new GoogleAIBackend()
+    backend: new GoogleAIBackend(),
+    useLimitedUseAppCheckTokens: true
 });
 
 const model = getGenerativeModel(ai, {
@@ -70,6 +73,8 @@ const model = getGenerativeModel(ai, {
 });
 
 const chat = model.startChat();
+
+console.log("SkillAnalyzer AI: AI model initialized.");
 
 
 // ============================================
@@ -86,10 +91,11 @@ const suggestionButtons =
 
 
 // ============================================
-// SAFETY CHECK FOR HTML
+// HTML ELEMENT CHECK
 // ============================================
 
 if (!chatBox || !chatForm || !userInput || !sendBtn) {
+
     console.error(
         "SkillAnalyzer AI: Required HTML elements are missing."
     );
@@ -150,54 +156,6 @@ function addMessage(text, type) {
 
 
 // ============================================
-// CHECK APP CHECK TOKEN
-// ============================================
-
-async function verifyAppCheck() {
-
-    try {
-
-        console.log(
-            "SkillAnalyzer AI: Requesting fresh App Check token..."
-        );
-
-
-        const tokenResult =
-            await getToken(appCheck, false);
-
-
-        if (!tokenResult || !tokenResult.token) {
-
-            throw new Error(
-                "Firebase App Check did not return a token."
-            );
-        }
-
-
-        console.log(
-            "SkillAnalyzer AI: App Check token received."
-        );
-
-
-        return true;
-
-    } catch (error) {
-
-        console.error(
-            "SkillAnalyzer AI: App Check token error:",
-            error
-        );
-
-
-        throw new Error(
-            "App Check verification failed.\n\n" +
-            (error?.message || String(error))
-        );
-    }
-}
-
-
-// ============================================
 // SEND MESSAGE
 // ============================================
 
@@ -211,9 +169,11 @@ async function sendMessage(text) {
     }
 
 
-    // User message
-    addMessage(text, "user");
+    // ----------------------------------------
+    // USER MESSAGE
+    // ----------------------------------------
 
+    addMessage(text, "user");
 
     userInput.value = "";
 
@@ -222,10 +182,12 @@ async function sendMessage(text) {
     userInput.disabled = true;
 
 
-    // Loading message
+    // ----------------------------------------
+    // LOADING MESSAGE
+    // ----------------------------------------
+
     const loadingMessage =
         addMessage("Thinking...", "bot");
-
 
     const loadingBubble =
         loadingMessage.querySelector(".bubble");
@@ -233,21 +195,14 @@ async function sendMessage(text) {
 
     try {
 
-        // ----------------------------------------
-        // STEP 1: Verify App Check
-        // ----------------------------------------
-
-        await verifyAppCheck();
-
-
-        // ----------------------------------------
-        // STEP 2: Send message to Gemini
-        // ----------------------------------------
-
         console.log(
             "SkillAnalyzer AI: Sending message to Gemini..."
         );
 
+
+        // Firebase AI Logic automatically obtains
+        // a limited-use App Check token for this
+        // request because replay protection is enabled.
 
         const result =
             await chat.sendMessage(text);
@@ -282,9 +237,13 @@ async function sendMessage(text) {
         );
 
 
+        const errorMessage =
+            error?.message || String(error);
+
+
         loadingBubble.textContent =
             "AI ERROR:\n\n" +
-            (error?.message || String(error));
+            errorMessage;
     }
 
 
@@ -363,6 +322,11 @@ userInput.addEventListener(
 );
 
 
+// ============================================
+// READY
+// ============================================
+
 console.log(
     "✅ SkillAnalyzer AI is ready."
 );
+```
